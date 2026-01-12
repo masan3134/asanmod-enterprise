@@ -1,0 +1,29 @@
+# ASANMOD Enterprise Distribution
+
+node_modules/
+.env
+.env.local
+.next/
+dist/
+build/
+
+# ASANMOD State
+.asanmod/state/
+.asanmod/logs/
+.asanmod/checkpoints/
+.asanmod/artifacts/
+
+# OS
+.DS_Store
+*.pem
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

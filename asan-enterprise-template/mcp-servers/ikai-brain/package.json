@@ -1,0 +1,47 @@
+{
+  "name": "@ikai/brain",
+  "version": "1.0.0",
+  "description": "IKAI Memory Brain - Persistent learning system for AI agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "npx tsx src/index.ts",
+    "migrate": "npx tsx scripts/migrate-from-memory-mcp.ts",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --ci"
+  },
+  "keywords": [
+    "ikai",
+    "brain",
+    "memory",
+    "learning",
+    "ai",
+    "agent",
+    "sqlite",
+    "mcp"
+  ],
+  "author": "IKAI Team",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^22.10.0",
+    "@types/supertest": "^6.0.0",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

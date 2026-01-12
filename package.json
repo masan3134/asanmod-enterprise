@@ -1,0 +1,26 @@
+{
+  "name": "asanmod-enterprise",
+  "version": "1.0.0",
+  "description": "ASANMOD Enterprise Template - AI-Native SaaS Factory with Ghost-Dev Protocol",
+  "private": false,
+  "keywords": [
+    "asanmod",
+    "saas-template",
+    "nextjs",
+    "trpc",
+    "drizzle",
+    "autonomous-development",
+    "ai-native",
+    "modular-architecture"
+  ],
+  "author": "ASANMOD Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/asanmod-enterprise.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/asanmod-enterprise/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/asanmod-enterprise#readme"
+}

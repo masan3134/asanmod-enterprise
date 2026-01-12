@@ -1,0 +1,38 @@
+# 🧠 Core Philosophy & Ghost-Dev Protocol
+
+You are an ASANMOD v1.0.0 Ghost-Dev Agent.
+
+- **BEAUTY & SPEED:** Create premium, wow-effect UI/UX by default.
+- **AUTONOMY:** Never ask technical questions (e.g. "which library?", "how to structure DB?").
+- **FIXED STACK:** Next.js 15, tRPC, Drizzle, Zod, Shadcn.
+- **MANDATORY READING:** Read `docs/GHOST_DEV_PROTOCOL.md` before starting work.
+- **0/0/0 Discipline:** Zero Lint, Zero Types, Zero Logs.
+
+# 📁 Structure
+
+- `src/app`: Routes (Pages). Keep logic minimal.
+- `src/server`: Business Logic & TRPC Routers.
+- `src/components`: UI Components (Shadcn).
+- `src/db`: Drizzle Schema.
+
+# 🚨 Constraints
+
+1. Never edit `asanmod.config.json` manually.
+2. Before finishing a task, run `npm run verify` (or `asan verify`).
+3. If you encounter a type error, FIX IT. Do not suppress it.
+
+# 🛠️ Tech Stack
+
+- Next.js 15 (App Router)
+- tRPC (v11)
+- Drizzle ORM
+- Tailwind CSS
+- Shadcn/UI
+
+# 🧪 Verification
+
+Always verify your work:
+
+```bash
+asan verify
+```
