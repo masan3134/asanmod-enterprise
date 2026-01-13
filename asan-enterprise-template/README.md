@@ -1,181 +1,85 @@
-# ASAN Enterprise Template
+# ASANMOD Enterprise Template
 
-> **Type-Safe Vibe Coding Starter Kit (ASANMOD v1.0.0)**
+> **Production-ready SaaS foundation with autonomous governance.**
 
-## 🚀 Getting Started
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](./CHANGELOG.md)
+[![ASANMOD](https://img.shields.io/badge/ASANMOD-v2.0-green.svg)](./docs/AGENT_QUICK_REF.md)
 
-1. **Clone & Detach**
-
-   ```bash
-   cp -r packages/asan-enterprise-template my-new-saas
-   cd my-new-saas
-   ```
-
-2. **Install Dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Install ASAN CLI (If not global)**
-
-   ```bash
-   npm link @asanmod/cli
-   ```
-
-   ```bash
-
-   ```
-
-# 🚀 ASAN Enterprise Template v1.0.0
-
-**AI-Native SaaS Skeleton | Ghost-Dev Protocol | ASANMOD Governance**
-
-## 🎯 What Is This?
-
-This is **not** a boilerplate. This is a **Software Factory**—a self-governed workspace that enables autonomous AI agents to build production-grade SaaS applications from a strategic interview.
-
-### Core Stack (Type-Safe Vibe Coding)
-
-- **Next.js 15** (App Router)
-- **tRPC v11** (Type-safe API)
-- **Drizzle ORM** (PostgreSQL)
-- **Zod** (Validation)
-- **Shadcn/UI + Tailwind CSS** (Components)
-
-### Built-In Governance (ASANMOD v1.0.0)
-
-- ✅ Physical quality barriers (Lint, TSC, State TTL)
-- ✅ 40+ automation scripts (`scripts/mod-tools/`)
-- ✅ MCP servers for agent-to-agent communication
-- ✅ Ghost-Dev protocol for autonomous development
-
----
-
-## 📋 Quick Start (For AI Agents)
-
-### Step 1: Initialize the Project
+## 🚀 Quick Start
 
 ```bash
-cd asan-enterprise-template
-asan init
-```
+# 1. Clone or use this template
+git clone https://github.com/your-org/your-project.git
+cd your-project
 
-This creates `.env`, ASANMOD state directories, and prepares the workspace.
-
-### Step 2: Strategic Interview (Ghost-Dev Entry)
-
-```bash
-asan wizard
-```
-
-Answer 7 business questions. The agent will then:
-
-- Generate database schemas
-- Scaffold tRPC routers
-- Create UI components
-- Configure integrations
-
-### Step 3: Install Dependencies
-
-```bash
+# 2. Install dependencies
 npm install
-```
 
-### Step 4: Setup Database
+# 3. Run the setup wizard
+npm run wizard
 
-```bash
-# Update .env with your DATABASE_URL
-npm run db:generate
-npm run db:migrate
-```
-
-### Step 5: Verify Integrity
-
-```bash
-asan verify
-```
-
-### Step 6: Start Development
-
-```bash
+# 4. Start development
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+## 📦 What's Included
 
----
+### Tech Stack
 
-## 🛡️ Agent Rules (READ FIRST)
+- **Framework:** Next.js 15 (App Router)
+- **API:** tRPC (End-to-end type safety)
+- **Database:** Drizzle ORM + PostgreSQL
+- **Styling:** Tailwind CSS + Shadcn/UI
+- **Validation:** Zod
 
-**MANDATORY:** Read `docs/GHOST_DEV_PROTOCOL.md` before making changes.
+### ASANMOD Governance
 
-**Key Constraints:**
+- **Physical Barriers:** Git hooks enforce quality (0/0/0 policy)
+- **Single Source of Truth:** `docs/asanmod-core.json`
+- **Agent Protocols:** CLAUDE.md, GEMINI.md, CURSOR.md
+- **Automation:** 50+ scripts in `scripts/mod-tools/`
 
-- Never ask technical questions (library choices, DB structure, etc.)
-- All UI must be mobile-first (`sm:`, `md:` prefixes)
-- No `any` types—use Zod for all validation
-- No `console.log` in `src/server/`—use proper logging
-- Run `asan verify` before every commit
-
----
-
-## 📂 Directory Structure
+## 📁 Project Structure
 
 ```
 ├── src/
-│   ├── app/           # Next.js routes (Pages)
-│   ├── server/        # tRPC routers (Business logic)
-│   ├── db/            # Drizzle schema & client
-│   ├── components/    # Shadcn/UI components
-│   └── lib/           # Utilities
-├── scripts/mod-tools/ # ASANMOD automation
-├── mcp-servers/       # Agent communication
-├── docs/              # Protocols & guides
-└── .asanmod/          # State & logs
+│   ├── app/          # Next.js pages
+│   ├── components/   # UI components
+│   ├── server/       # tRPC routers
+│   └── db/           # Drizzle schema
+├── scripts/
+│   └── mod-tools/    # ASANMOD automation
+├── docs/             # Documentation
+└── .asanmod/         # Agent state
 ```
 
----
+## 🛠️ Commands
 
-## ⚡ Core Commands
-
-| Command         | Purpose                    |
-| --------------- | -------------------------- |
-| `asan verify`   | Full quality check (0/0/0) |
-| `asan status`   | System health dashboard    |
-| `asan wizard`   | Strategic interview        |
-| `npm run dev`   | Start dev server           |
-| `npm run build` | Production build           |
-
----
-
-## 🧠 Philosophy: Ghost-Dev Protocol
-
-This template operates under the **Zero-Question Autonomy** principle:
-
-1. **Strategic Interview:** Agent asks 7 business questions
-2. **Autonomous Mapping:** Agent decides all technical details
-3. **Sealed Execution:** User receives completed, tested features
-4. **0/0/0 Discipline:** Zero Lint, Zero Types, Zero Logs
-
-**Result:** A production-ready SaaS without technical micromanagement.
-
----
+| Command               | Description                  |
+| --------------------- | ---------------------------- |
+| `npm run dev`         | Start development server     |
+| `npm run build`       | Build for production         |
+| `npm run verify`      | Quality check (lint + types) |
+| `npm run fix`         | Auto-fix linting issues      |
+| `npm run status`      | Show ASANMOD dashboard       |
+| `npm run wizard`      | Run setup wizard             |
+| `npm run deploy-prod` | Deploy to production         |
 
 ## 📖 Documentation
 
-- `docs/GHOST_DEV_PROTOCOL.md` - Agent operational rules
-- `docs/AGENT_QUICK_REF.md` - Quick reference for constraints
-- `.cursorrules` - IDE-level enforcement
+- **Quick Reference:** [docs/AGENT_QUICK_REF.md](./docs/AGENT_QUICK_REF.md)
+- **Patterns:** [docs/PATTERNS.md](./docs/PATTERNS.md)
+- **Configuration:** [docs/asanmod-core.json](./docs/asanmod-core.json)
 
----
+## 🛡️ Quality Gates
 
-## 🔐 License
+All commits must pass:
 
-MIT (Internal v1.0.0)
+1. **Lint Check:** Zero ESLint errors
+2. **Type Check:** Zero TypeScript errors
+3. **Console Ban:** No `console.log` in production code
+4. **Commit Format:** `ID: TASK-001 | Description`
 
-**ASANMOD v1.0.0 | Era of Vibe Coding**
-before every commit.
+## 📄 License
 
-- Mobile-first CSS always.
-- No `any` types allowed.
+Private - See [LICENSE](./LICENSE)

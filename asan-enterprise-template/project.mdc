@@ -1,0 +1,103 @@
+<!--
+ASANMOD v2.0 - PROJECT CONTEXT
+ID: CONST-005
+STATUS: TEMPLATE
+TYPE: RULES
+LAST_UPDATED: [WIZARD_WILL_FILL]
+VERSION: v2.0.0
+-->
+
+# [PROJECT_NAME] - ASANMOD PROJECT CONTEXT
+
+## 📌 PROJECT IDENTITY
+
+- **App:** [PROJECT_NAME] ([PROJECT_DESCRIPTION])
+- **Stack:** Next.js 15 (App Router), tRPC, Drizzle ORM, PostgreSQL, TailwindCSS
+- **Governance:** ASANMOD v2.0
+
+## 🚀 QUICK START
+
+**Single Reference:** `docs/AGENT_QUICK_REF.md`
+
+### Quick Commands
+
+```bash
+npm run verify      # Quality check (0/0/0)
+npm run fix         # Auto-fix lint
+npm run status      # System dashboard
+npm run dev         # Start development
+npm run deploy-prod # Production deploy
+```
+
+---
+
+## 🛡️ IRON CURTAIN ISOLATION
+
+> **SOURCE OF TRUTH:** `docs/asanmod-core.json`
+
+| Service | DEV | PROD |
+|---------|-----|------|
+| Frontend | 3000 | 3002 |
+| Backend | 3001 | 3003 |
+
+**PROD Binding:** `127.0.0.1` (MANDATORY - No external access)
+
+**Verification:**
+- **Dev Check:** `curl -I http://localhost:3000`
+- **Prod Check:** `curl -I http://localhost:3002`
+
+---
+
+## 🧩 CODING PATTERNS (STRICT)
+
+### 1. Next.js App Router
+- **Client Components:** `'use client'` at top.
+- **Server Components:** Default (no directive).
+
+### 2. TypeScript Safety
+- **No `any`:** Prohibited. Use proper types or `unknown`.
+- **Async/Await:** Always handle with `try/catch`.
+
+### 3. tRPC Patterns
+- **Routers:** `src/server/routers/`
+- **Validation:** Zod schemas required for all inputs
+- **Naming:** Singular endpoints (`/customer` not `/customers`)
+
+### 4. ASANMOD Protocols
+- **Verify:** `npm run verify` before commit
+- **Fix:** `npm run fix` for auto-linting
+- **State:** Track progress in `.asanmod/state/`
+
+---
+
+## 📁 FILE STRUCTURE
+
+```
+src/
+├── app/          → Pages (Next.js App Router)
+├── components/   → UI Components
+├── server/       → tRPC routers
+│   └── routers/  → Module routers
+├── db/           → Drizzle schema
+│   └── schema/   → Table definitions
+└── lib/          → Utility functions
+```
+
+---
+
+## 🟢 AGENT INITIALIZATION
+
+1. `read_file("docs/AGENT_QUICK_REF.md")`
+2. `read_file("docs/asanmod-core.json")`
+3. Check `.asanmod/installed.lock` exists
+4. Report: "**ASANMOD v2.0 ONLINE. Project: [PROJECT_NAME]**"
+
+---
+
+## 📋 PROJECT MODULES
+
+[WIZARD_WILL_FILL: List of enabled modules]
+
+## 🔐 CREDENTIALS
+
+See `CREDENTIALS.md` for test accounts.

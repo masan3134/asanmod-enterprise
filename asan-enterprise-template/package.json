@@ -1,6 +1,6 @@
 {
   "name": "asan-enterprise-template",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,7 +14,10 @@
     "status": "node scripts/mod-tools/v10-dashboard.cjs",
     "wizard": "node scripts/mod-tools/asan-wizard.js",
     "init": "node scripts/mod-tools/asan-init.js",
-    "deploy-prod": "bash scripts/mod-tools/deploy-prod.sh"
+    "deploy-prod": "bash scripts/mod-tools/deploy-prod.sh",
+    "seed": "npx tsx scripts/seed.ts",
+    "backup": "bash scripts/backup-db.sh",
+    "health": "bash scripts/mod-tools/health-check.sh"
   },
   "dependencies": {
     "next": "15.0.0",

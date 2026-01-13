@@ -1,49 +1,86 @@
-# 🚀 ASANMOD v1.0.0 | Enterprise Template Quick Ref
+# ASANMOD Quick Reference
 
-> **SINGLE SOURCE OF TRUTH FOR AGENTS WORKING ON THIS PROJECT.**
+> **Single Source of Truth for Agent Operations**
 
-## 🛡️ HARD CONSTRAINTS
+## 🔧 Essential Commands
 
-- **0/0/0 Discipline:** Sıfır Lint, Sıfır Tip Hatası, Sıfır Log Kirliliği.
-- **Physical Barriers:** `asan verify` geçmeden commit/deploy yapılamaz.
-- **Mobile First:** Tailwind kullanırken responsive prefixler (`sm:`, `md:`, `lg:`) zorunludur.
+| Command               | Description                  |
+| --------------------- | ---------------------------- |
+| `npm run dev`         | Start development server     |
+| `npm run build`       | Build for production         |
+| `npm run verify`      | Quality check (lint + types) |
+| `npm run fix`         | Auto-fix linting issues      |
+| `npm run status`      | Show system dashboard        |
+| `npm run wizard`      | Run setup wizard             |
+| `npm run deploy-prod` | Deploy to production         |
+| `npm run seed`        | Load initial data            |
 
-## 🏗️ TECH STACK & PORTS
+## 🌐 Network Ports
 
-- **Frontend/Backend:** Next.js 15 (App Router) -> Port 3000
-- **Bridge:** tRPC v11
-- **ORM:** Drizzle (PostgreSQL)
-- **Validation:** Zod
+| Service  | Development | Production |
+| -------- | ----------- | ---------- |
+| Frontend | 3000        | 3002       |
+| Backend  | 3001        | 3003       |
 
-## 📂 CRITICAL PATHS
+**Dev Binding:** `0.0.0.0`
+**Prod Binding:** `127.0.0.1` (localhost only)
 
-- `src/app/`: Next.js Routes & Pages
-- `src/server/`: tRPC Routers & Business Logic
-- `src/db/schema.ts`: Drizzle Schema Definitions
-- `src/components/`: UI Components (Shadcn)
-- `scripts/mod-tools/`: ASANMOD Governance Scripts
+## 📁 Key Paths
 
-## ⚡ CORE COMMANDS
+| Purpose      | Path                     |
+| ------------ | ------------------------ |
+| Pages        | `src/app/`               |
+| Components   | `src/components/`        |
+| tRPC Routers | `src/server/routers/`    |
+| DB Schema    | `src/db/schema/`         |
+| Utilities    | `src/lib/`               |
+| Scripts      | `scripts/mod-tools/`     |
+| State        | `.asanmod/state/`        |
+| Config       | `docs/asanmod-core.json` |
 
-```bash
-# Geliştirme Ortamı
-npm run dev          # Sunucuyu başlat
+## 🛡️ Quality Gates
 
-# Doğrulama & Kalite
-asan verify          # Full Check (Lint + TSC + State)
-asan status          # Sistem durumunu göster
+All commits must pass:
 
-# Veritabanı
-npm run db:generate  # Şema değişikliklerini algıla
-npm run db:migrate   # Değişiklikleri uygula
+1. **ESLint:** Zero errors
+2. **TypeScript:** Zero errors
+3. **Console Ban:** No `console.log` in src/
+4. **Commit Format:** `ID: TASK-001 | Description`
+
+## 📋 Patterns
+
+### Add a New Page
+
+```
+src/app/[page-name]/page.tsx
 ```
 
-## 🧠 AGENT GUIDELINES
+### Add a New tRPC Router
 
-1. **Always Type-Safe:** `any` kullanma. Zod şemalarını mürşid edin.
-2. **Atomic Actions:** Büyük değişiklikleri parçalara böl ve her parçada `asan verify` çalıştır.
-3. **No Placeholders:** Gerçek veri ve gerçek logic kullan.
+```
+src/server/routers/[module].ts
+```
 
----
+Then register in `src/server/routers/_app.ts`
 
-_Generated: 2026-01-13 | ASANMOD v1.0.0 Ready._
+### Add a New DB Table
+
+```
+src/db/schema/[table].ts
+```
+
+Then run: `npm run db:generate && npm run db:migrate`
+
+## 🚨 Common Errors
+
+| Error                  | Solution                  |
+| ---------------------- | ------------------------- |
+| "Port already in use"  | `npm run kill-port 3000`  |
+| "DB connection failed" | Check `.env` DATABASE_URL |
+| "Type error in tRPC"   | Ensure Zod schema matches |
+
+## 📖 Reference Files
+
+- **Config:** [docs/asanmod-core.json](./asanmod-core.json)
+- **Patterns:** [docs/PATTERNS.md](./PATTERNS.md)
+- **Conventions:** [docs/CONVENTIONS.md](./CONVENTIONS.md)
