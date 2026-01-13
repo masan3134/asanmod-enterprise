@@ -15,8 +15,6 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push:pg",
-    "verify": "node scripts/mod-tools/verify-core.cjs",
-    "status": "node scripts/mod-tools/v10-dashboard.cjs",
     "wizard": "node scripts/mod-tools/asan-wizard.js",
     "init": "node scripts/mod-tools/asan-init.js",
     "deploy-prod": "bash scripts/mod-tools/deploy-prod.sh",

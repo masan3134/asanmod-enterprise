@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
-# ASANMOD v8.1: HARD CONSTRAINT - AUTOMATED VERIFICATION
-# Runs surgical verification on changed files.
-node scripts/mod-tools/verify-core.cjs --depth=surgical
+# Pre-commit hook: Run linting and type checking
+npm run lint --quiet
+npm run tsc --noEmit
