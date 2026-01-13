@@ -1,0 +1,80 @@
+<!--
+ASANMOD v1.1.1 - DOCUMENTATION HEADER
+ID: CONST-005
+STATUS: ACTIVE
+TYPE: RULES
+LAST_UPDATED: 2026-01-13 (UTC)
+VERSION: v1.1.1
+-->
+
+# IKAI & ASANMOD PROJECT CONTEXT (v1.1.1 EXECUTABLE RULES)
+
+## 📌 PROJECT IDENTITY
+
+- **App:** IKAI HR Platform (SaaS)
+- **Stack:** Next.js 15 (App Router), Node.js (Express), PostgreSQL, Prisma, TailwindCSS.
+- **AI:** Gemini 2.0, Milvus (Vector DB), Ollama.
+- **Governance:** ASANMOD v1.1.1
+
+## 🚀 v1.1.1 QUICK START
+
+**Single Reference:** `docs/AGENT_QUICK_REF.md`
+
+### PM2 Commands (USE WRAPPER!)
+
+```bash
+./scripts/mod-tools/pm prod status
+./scripts/mod-tools/pm prod restart backend
+```
+
+### Quick Commands
+
+```bash
+npm run verify    # Quality check
+npm run fix       # Auto-fix lint
+npm run status    # System status
+npm run deploy-prod # Production deploy (Atomic)
+```
+
+---
+
+## 🛡️ IRON CURTAIN ISOLATION
+
+> **SOURCE OF TRUTH:** `docs/asanmod-core.json`
+
+| Service | DEV | PROD |
+|---------|-----|------|
+| Frontend | 3000 | 8205 |
+| Backend | 3001 | 8204 |
+| Brain | - | 8250 |
+
+**PROD Binding:** `127.0.0.1` (MANDATORY)
+
+**Verification:**
+- **Dev Check:** `curl -I http://localhost:3000`
+- **Prod Check:** `curl -I http://localhost:3002`
+
+---
+
+## 🧩 CODING PATTERNS (STRICT)
+
+### 1. Next.js App Router
+- **Client Components:** `'use client'` at top.
+- **Server Components:** Default.
+
+### 2. TypeScript Safety
+- **No `any`:** Prohibited.
+- **Async/Await:** Handle with `try/catch`.
+
+### 3. ASANMOD v1.1.1 Protocols
+- **PM2:** Use `./scripts/mod-tools/pm`
+- **Ports:** Read from `docs/asanmod-core.json`
+- **Verify:** `npm run verify` before commit
+- **Fix:** `npm run fix` for auto-linting
+
+---
+
+## 🟢 INITIALIZATION
+
+1. `read_file("docs/ASANMOD_DOC_REGISTRY.md")`
+2. Start working!
