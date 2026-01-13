@@ -1,3 +1,4 @@
+import React from "react";
 "use client";
 
 import { Component, ReactNode } from "react";
