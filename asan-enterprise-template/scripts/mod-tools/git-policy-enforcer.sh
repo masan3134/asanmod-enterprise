@@ -27,11 +27,12 @@ fi
 # List staged files
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
-# Check for console.log in server code (Allow specific logger usage)
+# Check for console.log in backend (Allow specific logger usage)
 for FILE in $STAGED_FILES; do
-    if [[ "$FILE" == *"src/server/"* ]] && [[ "$FILE" == *".ts" ]]; then
+    if [[ "$FILE" == *"backend/"* ]] && [[ "$FILE" == *".js" ]]; then
         if grep -q "console.log" "$FILE"; then
-             echo "❌ ASANMOD BLOCK: Forbidden 'console.log' found in server file: $FILE"
+             # Allow explicitly ignored lines? For now, STRICT MODE.
+             echo "❌ ASANMOD BLOCK: Forbidden 'console.log' found in backend file: $FILE"
              echo "Use the official Logger instead."
              exit 1
         fi

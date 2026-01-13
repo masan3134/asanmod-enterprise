@@ -1,8 +1,16 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-# ASANMOD v1.0.0: PM2 ALIAS WRAPPER (Portable)
+# ASANMOD v9: PM2 ALIAS WRAPPER
 # ═══════════════════════════════════════════════════════════════════
 # Usage: ./scripts/mod-tools/pm <env> <action> [service]
+#
+# Examples:
+#   ./scripts/mod-tools/pm prod status           # All prod services status
+#   ./scripts/mod-tools/pm prod restart backend  # Restart prod backend
+#   ./scripts/mod-tools/pm dev logs frontend     # Show dev frontend logs
+#   ./scripts/mod-tools/pm prod restart all      # Restart all prod services
+#
+# ───────────────────────────────────────────────────────────────────
 
 set -e
 
@@ -20,14 +28,35 @@ NC='\033[0m' # No Color
 print_usage() {
     echo ""
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}ASANMOD v1.0.0: PM2 ALIAS WRAPPER${NC}"
+    echo -e "${GREEN}ASANMOD v9: PM2 ALIAS WRAPPER${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo "Usage: ./scripts/mod-tools/pm <env> <action> [service]"
     echo ""
-    echo -e "${YELLOW}Environments:${NC} dev, prod"
-    echo -e "${YELLOW}Actions:${NC} start, stop, restart, status, logs, flush"
-    echo -e "${YELLOW}Services:${NC} frontend, backend, all"
+    echo -e "${YELLOW}Environments:${NC}"
+    echo "  dev     Development environment (ports 3000/3001)"
+    echo "  prod    Production environment (ports 8204/8205)"
+    echo ""
+    echo -e "${YELLOW}Actions:${NC}"
+    echo "  start     Start service(s)"
+    echo "  stop      Stop service(s)"
+    echo "  restart   Restart service(s)"
+    echo "  reload    Graceful reload (prod only)"
+    echo "  status    Show status"
+    echo "  logs      Show logs (real-time)"
+    echo "  flush     Clear logs"
+    echo ""
+    echo -e "${YELLOW}Services:${NC}"
+    echo "  frontend  Frontend service"
+    echo "  backend   Backend service"
+    echo "  brain     IKAI Brain (prod only)"
+    echo "  all       All services for the environment"
+    echo ""
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  ./scripts/mod-tools/pm prod status"
+    echo "  ./scripts/mod-tools/pm prod restart backend"
+    echo "  ./scripts/mod-tools/pm dev logs frontend"
+    echo "  ./scripts/mod-tools/pm prod restart all"
     echo ""
     exit 1
 }
@@ -37,11 +66,38 @@ if [[ -z "$ENV" || -z "$ACTION" ]]; then
     print_usage
 fi
 
-# Helper: Resolve PM2 Name via Node bridge
+if [[ "$ENV" != "dev" && "$ENV" != "prod" ]]; then
+    echo -e "${RED}❌ Invalid environment: $ENV${NC}"
+    echo "   Valid options: dev, prod"
+    exit 1
+fi
+
+# Map service names to PM2 process names
 get_pm2_name() {
     local env=$1
     local service=$2
-    node -e "const helper = require('./scripts/mod-tools/env-helper.cjs'); console.log(helper.pm2Name('$service', '$env'))" 2>/dev/null
+
+    case "$env-$service" in
+        "dev-frontend")  echo "ikai-dev-frontend" ;;
+        "dev-backend")   echo "ikai-dev-backend" ;;
+        "prod-frontend") echo "ikai-prod-frontend" ;;
+        "prod-backend")  echo "ikai-prod-backend" ;;
+        "prod-brain")    echo "ikai-brain" ;;
+        *)
+            echo ""
+            return 1
+            ;;
+    esac
+}
+
+# Get all services for an environment
+get_all_services() {
+    local env=$1
+    if [[ "$env" == "prod" ]]; then
+        echo "ikai-prod-frontend ikai-prod-backend ikai-brain"
+    else
+        echo "ikai-dev-frontend ikai-dev-backend"
+    fi
 }
 
 # Execute PM2 command
@@ -63,9 +119,11 @@ case "$ACTION" in
         fi
         ;;
     "flush")
-        echo -e "${YELLOW}🧹 Flushing all PM2 logs...${NC}"
-        pm2 flush
-        exit 0
+        if [[ -z "$SERVICE" || "$SERVICE" == "all" ]]; then
+            echo -e "${YELLOW}🧹 Flushing all PM2 logs...${NC}"
+            pm2 flush
+            exit 0
+        fi
         ;;
 esac
 
@@ -77,13 +135,10 @@ fi
 
 # Handle "all" services
 if [[ "$SERVICE" == "all" ]]; then
-    SERVICES="frontend backend" # Assuming these are the common services across envs
+    TARGETS=$(get_all_services "$ENV")
     echo -e "${GREEN}🎯 Target: $ENV all services${NC}"
-    for s in $SERVICES; do
-        NAME=$(get_pm2_name "$ENV" "$s")
-        if [ -n "$NAME" ]; then
-            execute_pm2 "$ACTION" "$NAME"
-        fi
+    for target in $TARGETS; do
+        execute_pm2 "$ACTION" "$target"
     done
     exit 0
 fi
@@ -92,7 +147,11 @@ fi
 PM2_NAME=$(get_pm2_name "$ENV" "$SERVICE")
 
 if [[ -z "$PM2_NAME" ]]; then
-    echo -e "${RED}❌ Could not resolve PM2 name for $SERVICE ($ENV)${NC}"
+    echo -e "${RED}❌ Invalid service: $SERVICE for environment: $ENV${NC}"
+    echo ""
+    echo "Valid services:"
+    echo "  dev:  frontend, backend"
+    echo "  prod: frontend, backend, brain"
     exit 1
 fi
 
@@ -119,7 +178,7 @@ case "$ACTION" in
         ;;
     *)
         echo -e "${RED}❌ Invalid action: $ACTION${NC}"
-        exit 1
+        print_usage
         ;;
 esac
 

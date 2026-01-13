@@ -2,8 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// ASANMOD v1.0.0 - TEMPLATE VERIFICATION ENGINE
-// Optimized for Next.js 15 Monolithic Structure
+// ASANMOD v10.0 - VERIFICATION ENGINE
+// Usage: node verify-core.cjs --target=<file> --depth=<surgical|full>
+// v10 PHYSICAL BARRIER: Stale state blocks verification
 
 const args = process.argv.slice(2);
 const targetArg = args.find((a) => a.startsWith("--target="));
@@ -23,9 +24,9 @@ const results = {
   errors: [],
 };
 
-console.log(`🔍 ASAN-VERIFY: Target=${target || "ALL"} Depth=${depth}`);
+console.log(`🔍 VERIFY-CORE v10: Target=${target || "ALL"} Depth=${depth}`);
 
-// 1. PHYSICAL BARRIER: State TTL Check
+// v10 PHYSICAL BARRIER: State TTL Check
 if (!skipStateCheck && fs.existsSync(path.join(__dirname, "state-manager-v10.cjs"))) {
   try {
     const StateManager = require("./state-manager-v10.cjs");
@@ -46,14 +47,14 @@ if (!skipStateCheck && fs.existsSync(path.join(__dirname, "state-manager-v10.cjs
   }
 }
 
+
 try {
-  // 2. ESLINT CHECK
-  if (fs.existsSync(path.join(process.cwd(), "package.json"))) {
+  // 1. ESLINT CHECK
+  if (fs.existsSync("node_modules/.bin/eslint")) {
     try {
       const fileToScan = target || ".";
-      console.log(`RUNNING ESLINT: ${fileToScan}...`);
       execSync(`npx eslint "${fileToScan}" --max-warnings=0`, {
-        stdio: "inherit",
+        stdio: "pipe",
       });
       results.checks.eslint = "PASS";
     } catch (e) {
@@ -61,23 +62,42 @@ try {
       results.checks.eslint = "FAIL";
       results.errors.push({
         source: "ESLint",
-        message: "Lint errors found. Check stdout.",
+        message: e.stderr?.toString() || e.message,
       });
     }
   }
 
-  // 3. TSC CHECK (Type Safety)
-  if (fs.existsSync(path.join(process.cwd(), "tsconfig.json"))) {
+  // 2. TSC CHECK (Type Safety)
+  // Smart-path: Check where the target file lives
+  if (fs.existsSync("node_modules/.bin/tsc")) {
     try {
-      console.log(`TYPE-CHECK: Running in root...`);
-      execSync("npx tsc --noEmit", { stdio: "inherit" });
-      results.checks.tsc = "PASS";
+      let tscDir = ".";
+      if (target && target.startsWith("frontend/")) {
+        if (fs.existsSync("frontend/tsconfig.json")) tscDir = "frontend";
+      } else if (
+        fs.existsSync("frontend/tsconfig.json") &&
+        (!target || target === ".")
+      ) {
+        // Full check: include frontend
+        // For now, if full check, we prioritize frontend check as it's the main TS source
+        tscDir = "frontend";
+      }
+
+      const hasConfig = fs.existsSync(path.join(tscDir, "tsconfig.json"));
+
+      if (hasConfig) {
+        console.log(`TYPE-CHECK: Running in ${tscDir}...`);
+        execSync("npx tsc --noEmit", { stdio: "pipe", cwd: tscDir });
+        results.checks.tsc = "PASS";
+      } else {
+        results.checks.tsc = "SKIPPED (No tsconfig)";
+      }
     } catch (e) {
       results.status = "FAIL";
       results.checks.tsc = "FAIL";
       results.errors.push({
         source: "TSC",
-        message: "TypeScript errors found. Check stdout.",
+        message: e.stdout?.toString() || e.message,
       });
     }
   }
@@ -86,9 +106,8 @@ try {
   results.errors.push({ source: "System", message: err.message });
 }
 
+console.log(JSON.stringify(results, null, 2));
+
 if (results.status !== "PASS") {
-  console.log(JSON.stringify(results, null, 2));
   process.exit(1);
-} else {
-  console.log("✅ ASANMOD VERIFICATION PASSED");
 }
