@@ -1,6 +1,34 @@
 # ASANMOD Enterprise Template
 
-> **Production-ready SaaS foundation with autonomous governance.**
+>This is a production-ready enterprise template with tRPC, Next.js 15, Drizzle ORM, and complete testing infrastructure.
+
+## Prerequisites
+
+Before you begin, ensure you have installed:
+
+- **Node.js 20+** (verify with `node -v`)
+- **PostgreSQL** (local or remote instance)
+- **Git** for version control
+
+### Install Node.js
+
+```bash
+# Using nvm (recommended)
+nvm install 20
+nvm use 20
+```
+
+### Install PostgreSQL
+
+```bash
+# macOS
+brew install postgresql@15
+brew services start postgresql@15
+
+# Ubuntu/Debian
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+```
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](./CHANGELOG.md)
 [![ASANMOD](https://img.shields.io/badge/ASANMOD-v2.0-green.svg)](./docs/AGENT_QUICK_REF.md)

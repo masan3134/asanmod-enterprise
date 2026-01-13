@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+/node_modules/
 .pnp
 .pnp.js
 
@@ -9,6 +10,8 @@ coverage/
 # Next.js
 .next/
 out/
+build/
+dist/
 
 # Production
 build/
@@ -42,3 +45,15 @@ next-env.d.ts
 .asanmod/logs/
 .asanmod/checkpoints/
 .asanmod/artifacts/
+
+# ASANMOD State (CRITICAL - DO NOT COMMIT)
+.asanmod/installed.lock
+
+# Testing
+.nyc_output/
+
+# Environment
+.env.production
+
+# Misc
+*.log
