@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+# ASANMOD v8.1: HARD CONSTRAINT - MSG & CONTENT POLICY
+./scripts/mod-tools/git-policy-enforcer.sh "$1"

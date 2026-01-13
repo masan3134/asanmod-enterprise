@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Post-commit hook - PROD Fix → DEV Sync Check
+# Rule 9: PROD Fix → DEV Sync (MANDATORY!)
+
+# Get last commit message
+COMMIT_MSG=$(git log -1 --pretty=%B)
+COMMIT_HASH=$(git rev-parse HEAD)
+
+# Check if commit contains [PROD-FIX] tag
+if echo "$COMMIT_MSG" | grep -q "\[PROD-FIX\]"; then
+  echo ""
+  echo "🔄 PROD Fix detected in commit: $COMMIT_HASH"
+  echo "📋 Commit message: $(echo "$COMMIT_MSG" | head -1)"
+  echo ""
+  echo "⚠️  PROD Fix → DEV Sync check required!"
+  echo "   Running: scripts/check-prod-fix-sync.sh"
+  echo ""
+
+  # Check if sync script exists
+  if [ -f "scripts/mod-tools/check-prod-fix-sync.sh" ]; then
+    chmod +x scripts/mod-tools/check-prod-fix-sync.sh
+    scripts/mod-tools/check-prod-fix-sync.sh "$COMMIT_HASH"
+    SYNC_EXIT_CODE=$?
+
+    if [ $SYNC_EXIT_CODE -eq 0 ]; then
+      echo ""
+      echo "✅ PROD Fix → DEV Sync check completed"
+    else
+      echo ""
+      echo "⚠️  PROD Fix → DEV Sync check found issues"
+      echo "   Please review and sync manually if needed"
+    fi
+  else
+    echo "⚠️  Sync check script not found: scripts/mod-tools/check-prod-fix-sync.sh"
+    echo "   Please create the script or sync manually"
+  fi
+
+  echo ""
+fi
+
+exit 0
+
