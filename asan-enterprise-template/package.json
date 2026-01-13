@@ -14,6 +14,7 @@
     "test:coverage": "jest --coverage",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push:pg",
     "verify": "node scripts/mod-tools/verify-core.cjs",
     "status": "node scripts/mod-tools/v10-dashboard.cjs",
     "wizard": "node scripts/mod-tools/asan-wizard.js",
@@ -45,7 +46,8 @@
     "react-hook-form": "^7.49.3",
     "@hookform/resolvers": "^3.3.4",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "superjson": "^2.2.1"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
