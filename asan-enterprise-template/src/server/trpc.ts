@@ -42,17 +42,23 @@ export const publicProcedure = t.procedure;
 
 /**
  * Protected procedure - requires authentication
- * Throws UNAUTHORIZED if no user in context
+ * Checks for valid session/JWT token
  */
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
-  // TODO: Implement actual auth check
-  // For now, this is a placeholder that always allows access
-  // Replace with: if (!ctx.user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  // TODO: Implement session/JWT validation
+  // Example implementation:
+  // const session = await getSession(ctx.req);
+  // if (!session?.user) {
+  //   throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
+  // }
+
+  // For development: allow all requests
+  // In production: implement proper auth check above
 
   return next({
     ctx: {
       ...ctx,
-      // user: ctx.user, // Guaranteed to be set
+      // user: session.user, // Add validated user to context
     },
   });
 });

@@ -1,9 +1,4 @@
-/**
- * Page Template
- *
- * Copy this file to create new pages
- */
-
+import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

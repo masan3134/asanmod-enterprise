@@ -7,29 +7,49 @@
  */
 
 import { db } from "@/db";
-// import { users } from "@/db/schema";
-// import bcrypt from "bcryptjs";
+import { users } from "@/db/schema";
+import { hashPassword } from "@/lib/auth";
 
 async function seed() {
   console.log("🌱 Starting database seed...");
 
   try {
-    // Create admin user
-    // const hashedPassword = await bcrypt.hash("admin123", 12);
-    // await db.insert(users).values({
-    //   email: "admin@example.com",
-    //   password: hashedPassword,
-    //   name: "Admin User",
-    //   role: "admin",
-    // });
-    // console.log("✅ Created admin user: admin@example.com / admin123");
+    // Create test users
+    const testPassword = await hashPassword("test123");
 
-    // Add more seed data as needed
+    const testUsers = [
+      {
+        email: "admin@example.com",
+        name: "Admin User",
+        password: await hashPassword("admin123"),
+        role: "admin",
+      },
+      {
+        email: "user@example.com",
+        name: "Test User",
+        password: testPassword,
+        role: "user",
+      },
+      {
+        email: "demo@example.com",
+        name: "Demo User",
+        password: testPassword,
+        role: "user",
+      },
+    ];
+
+    for (const user of testUsers) {
+      await db.insert(users).values(user).onConflictDoNothing();
+      console.log(`✅ Created user: ${user.email}`);
+    }
+
+    console.log("");
     console.log("✅ Seed completed successfully!");
     console.log("");
     console.log("📝 Test Credentials:");
-    console.log("   Email: admin@example.com");
-    console.log("   Password: admin123");
+    console.log("   Admin: admin@example.com / admin123");
+    console.log("   User:  user@example.com / test123");
+    console.log("   Demo:  demo@example.com / test123");
   } catch (error) {
     console.error("❌ Seed failed:", error);
     process.exit(1);
