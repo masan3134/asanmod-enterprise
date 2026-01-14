@@ -5,7 +5,7 @@ const { execSync } = require('child_process');
 const readline = require('readline');
 
 /**
- * 🧙‍♂️ ASANMOD v2.1.0-alpha: First-Run Wizard
+ * 🧙‍♂️ ASANMOD v3.0.0-alpha: First-Run Wizard
  * Complete autonomous project setup
  */
 
@@ -218,7 +218,7 @@ function createLock(projectName, modules) {
     installedAt: new Date().toISOString(),
     version: '2.1.0-alpha',
     modules,
-    protocol: 'ASANMOD v2.1.0-alpha Wizard',
+    protocol: 'ASANMOD v3.0.0-alpha Wizard',
   };
 
   fs.writeFileSync(path.join(lockDir, 'installed.lock'), JSON.stringify(lock, null, 2));
@@ -274,7 +274,7 @@ async function runWizard() {
 
   const rl = createPrompt();
 
-  header('🧙 ASANMOD v2.1.0-alpha WIZARD');
+  header('🧙 ASANMOD v3.0.0-alpha WIZARD');
   log('\nWelcome! This wizard will set up your project.\n');
 
   // Pre-flight
@@ -347,7 +347,7 @@ async function runWizard() {
      Email: admin@example.com
      Password: admin123
 
-  🛡️ ASANMOD v2.1.0-alpha - Iron Curtain Active
+  🛡️ ASANMOD v3.0.0-alpha - Iron Curtain Active
   `, COLORS.green);
 
   // Update manifest to mark wizard as complete

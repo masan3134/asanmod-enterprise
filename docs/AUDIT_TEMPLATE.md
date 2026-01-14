@@ -15,7 +15,7 @@ last_audited: "2026-01-14"
 ## 1. Environment Baseline
 - **Node.js:** [vXX.X.X]
 - **OS:** [Linux | Mac | Windows]
-- **Project Version:** v2.2.0
+- **Project Version:** v3.0.0
 
 ## 2. Quality Gate Metrics
 | Gate | Task | Status | Note |

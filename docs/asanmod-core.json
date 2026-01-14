@@ -53,7 +53,9 @@
   },
   "rules": {
     "zeroTolerance": true,
-    "language": "ENGLISH"
+    "language": "ENGLISH",
+    "lockedVersion": "3.0.0",
+    "unauthorizedVersionBump": "STRICTLY_FORBIDDEN"
   },
   "paths": {
     "project": ".",

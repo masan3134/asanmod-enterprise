@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v2.0.1: One-Command Installer
+# ASANMOD v3.0.0: One-Command Installer
 # Usage: curl -fsSL https://raw.githubusercontent.com/masan3134/asanmod-enterprise/main/install.sh | bash
 
 set -e
@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}🚀 ASANMOD v2.0.1: Enterprise Template Installer${NC}"
+echo -e "${BLUE}🚀 ASANMOD v3.0.0: Enterprise Template Installer${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -85,5 +85,5 @@ echo ""
 echo "📚 Documentation: README.md & docs/GETTING_STARTED.md"
 echo "🤖 Agent Protocol: GEMINI.md (or CURSOR.md / CLAUDE.md)"
 echo ""
-echo "🎯 ASANMOD v2.0.1 - Production Ready"
+echo "🎯 ASANMOD v3.0.0 - Production Ready"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

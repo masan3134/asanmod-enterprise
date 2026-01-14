@@ -92,4 +92,4 @@ docs(readme): update installation
 
 ---
 
-*ASANMOD v2.2.0*
+*ASANMOD v3.0.0*

@@ -37,6 +37,7 @@ ASANMOD v1.1.1 - GEMINI PROTOCOL
 - Commit format: `type(scope): message`
 - Read `docs/asanmod-core.json` first
 - Never hardcode ports/paths (use config)
+- **VERSION LOCK**: Current project version is **3.0.0**. You are **STRICTLY FORBIDDEN** from changing this version string without explicit user command "CONFIRM_VERSION_BUMP".
 
 ## 🌐 PORTS
 
