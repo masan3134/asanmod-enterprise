@@ -10,6 +10,7 @@ critical: true
 # 🤖 AGENT FIRST PLAN (Chronological Onboarding)
 
 > **Instructions for Agent:** Follow this plan strictly from top to bottom. Do not skip any steps. Mark tasks as complete as you progress.
+> **Philosophy:** You are the **Technical Lead**. The User is only a conversation partner. You are responsible for all environment setup, coding, and fixing technical issues. Do not ask the User for permission to fix a bug or run a command. Just do it.
 
 ---
 
@@ -42,7 +43,9 @@ Ask the user:
 
 ## 🗄️ PHASE 2: Infrastructure Sync
 - [ ] **Environment Check** | EXEC: `cp .env.example .env` | CHECK: `grep "DATABASE_URL" .env` returns non-empty
-- [ ] **Database Schema** | EXEC: `npm run db:push` | CHECK: `psql -d <DB_NAME> -c '\dt' | wc -l` shows tables
+- [ ] **Database Schema** | EXEC: `npm run db:push`
+  - ⚠️ **Note**: If `db:push` asks for confirmation to create a database or apply changes, use `send_command_input: "y\n"`.
+  - CHECK: `psql -d <DB_NAME> -c '\dt' | wc -l` shows tables
 - [ ] **Seed Initial Data** | EXEC: `npm run seed` | CHECK: `cat .asanmod/manifest.json | jq '.flags.db_seeded'` returns true
 - [ ] **Admin Account** | EXEC: `npm run create-admin` | CHECK: `cat .asanmod/manifest.json | jq '.flags.admin_created'` returns true
 
@@ -57,11 +60,12 @@ Ask the user:
 
 ---
 
-## 🔒 HARD RULES BY ASANMOD
-1. **Never Hardcode:** Always read ports and paths from `docs/asanmod-core.json`.
-2. **0/0/0 Policy:** No commits without a full `npm run verify` pass.
-3. **Commit Format:** Use `feat(scope): message` as enforced by Husky.
-4. **Iron Curtain:** Respect the isolation between DEV and PROD environments.
-5. **Manifest-First:** Always read `.asanmod/manifest.json` at startup to understand system state.
+## 🔒 HARD RULES FOR AGENTS
+1. **Full Autonomy**: You are responsible for the entire technical stack. If a script fails, debug it and fix it. Do not wait for user help.
+2. **Never Hardcode**: Always read ports and paths from `docs/asanmod-core.json`.
+3. **0/0/0 Policy**: No commits without a full `npm run verify` pass.
+4. **Commit Format**: Use `feat(scope): message` as enforced by Husky.
+5. **Iron Curtain**: Respect the isolation between DEV and PROD environments.
+6. **Manifest-First**: Always read `.asanmod/manifest.json` at startup to understand system state.
 
-*Verified by ASANMOD Governance v2.2.0*
+*Verified by ASANMOD Governance v2.3.0*

@@ -11,7 +11,7 @@
 src/server/routers/
 ├── _app.ts
 ├── auth.ts
-├── todos.ts
+├── items.ts
 └── users.ts
 ```
 
@@ -28,48 +28,49 @@ src/server/routers/
 │   ├── index.ts
 │   ├── profile.ts
 │   └── settings.ts
-└── todos/
+└── items/
     ├── index.ts
     ├── crud.ts
     └── categories.ts
 ```
 
 ### Rules:
-1. **Domain-based folders**: Group related endpoints (auth, users, todos, admin)
+1. **Domain-based folders**: Group related endpoints (auth, users, items, admin)
 2. **index.ts exports**: Aggregate domain routers
 3. **Max 200 lines**: Split files when they exceed 200 lines
 4. **Related together**: Keep domain logic in domain folder
 
 ### Example:
 ```typescript
-// src/server/routers/todos/index.ts
+// src/server/routers/items/index.ts
 import { router } from '@/server/trpc';
 import { crudRouter } from './crud';
 import { categoriesRouter } from './categories';
 
-export const todosRouter = router({
+export const itemsRouter = router({
   ...crudRouter,
   categories: categoriesRouter,
 });
 ```
 
 ```typescript
-// src/server/routers/todos/crud.ts
+// src/server/routers/items/crud.ts
 import { router, protectedProcedure } from '@/server/trpc';
 import { z } from 'zod';
 
 export const crudRouter = {
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.todos.findMany();
+    return ctx.db.query.items.findMany();
   }),
 
   create: protectedProcedure
-    .input(z.object({ title: z.string() }))
+    .input(z.object({ name: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(todos).values(input);
+      return ctx.db.insert(items).values(input);
     }),
 };
 ```
+
 
 ---
 
