@@ -175,9 +175,10 @@ See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for complete deployment guide.
 
 **First time in this project?**
 
-1. Read `docs/asanmod-core.json` (single source of truth)
-2. Read `docs/AGENT_QUICK_REF.md` (all commands)
-3. Check your protocol file (`GEMINI.md`, `CURSOR.md`, or `CLAUDE.md`)
+1.  **MANDATORY:** Read [AGENT_FIRST_PLAN.md](./AGENT_FIRST_PLAN.md) and follow it step-by-step.
+2.  Read `docs/asanmod-core.json` (single source of truth).
+3.  Read `docs/AGENT_QUICK_REF.md` (all commands).
+4.  Check your protocol file (`GEMINI.md`, `CURSOR.md`, or `CLAUDE.md`).
 
 **All ports, paths, and rules are in `asanmod-core.json`. Never hardcode.**
 
