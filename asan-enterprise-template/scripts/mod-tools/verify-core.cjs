@@ -2,9 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// ASANMOD v10.0 - VERIFICATION ENGINE
+// ASANMOD v1.1.1 - VERIFICATION ENGINE
 // Usage: node verify-core.cjs --target=<file> --depth=<surgical|full>
-// v10 PHYSICAL BARRIER: Stale state blocks verification
+// ASANMOD Hard Constraint: Stale state blocks verification
 
 const args = process.argv.slice(2);
 const targetArg = args.find((a) => a.startsWith("--target="));
@@ -24,12 +24,12 @@ const results = {
   errors: [],
 };
 
-console.log(`🔍 VERIFY-CORE v10: Target=${target || "ALL"} Depth=${depth}`);
+console.log(`🔍 VERIFY-CORE Protocol: Target=${target || "ALL"} Depth=${depth}`);
 
-// v10 PHYSICAL BARRIER: State TTL Check
-if (!skipStateCheck && fs.existsSync(path.join(__dirname, "state-manager-v10.cjs"))) {
+// ASANMOD Hard Constraint: State TTL Check
+if (!skipStateCheck && fs.existsSync(path.join(__dirname, "state-manager-Protocol.cjs"))) {
   try {
-    const StateManager = require("./state-manager-v10.cjs");
+    const StateManager = require("./state-manager-Protocol.cjs");
     const stateManager = new StateManager();
     const { blocked, reason } = stateManager.checkBlock();
 

@@ -1,0 +1,22 @@
+{
+  "version": "2.1.0-alpha",
+  "template_version": "2.0.2",
+  "state": "initialized",
+  "health": {
+    "db_connection": "configured",
+    "dev_server": "running",
+    "prod_server": "stopped",
+    "last_check": "2026-01-14T13:20:52.760Z"
+  },
+  "flags": {
+    "wizard_completed": false,
+    "placeholders_purged": false,
+    "db_seeded": false,
+    "admin_created": false
+  },
+  "verification": {
+    "last_run": null,
+    "gates_passed": [],
+    "gates_failed": []
+  }
+}

@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v5.0: SURGICAL FORMAT
+# ASANMOD v1.1.1: SURGICAL FORMAT
 # Formats ONLY the files that are currently staged in git.
 # Prevents full-codebase scanning and resolves "Format Wars".
 

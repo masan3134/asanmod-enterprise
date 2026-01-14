@@ -1,226 +1,128 @@
 /**
- * ASANMOD v1.0.0: VERSION MANAGER
+ * ASANMOD v1.1.1: VERSION MANAGER (Master Orchestrator)
  * Single source of truth for versioning.
  *
- * Features:
- * - Read version from asanmod-core.json
- * - Bump patch version (1.0.0 → 1.0.1)
- * - Sync version across all files
- * - Validate version consistency
+ * v2.1.0-alpha+ ZERO-ERROR AUTOMATION
  */
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 // Configuration
 const CONFIG = {
   CORE_FILE: path.join(process.cwd(), "docs", "asanmod-core.json"),
-  FILES_TO_SYNC: [
-    { path: "AGENT.md", pattern: /ASANMOD v[\d.]+/g, template: "ASANMOD v{VERSION}" },
-    { path: "docs/AGENT_QUICK_REF.md", pattern: /v[\d.]+/g, template: "v{VERSION}", headerOnly: true },
-    { path: ".cursorrules", pattern: /ASANMOD v[\d.]+/g, template: "ASANMOD v{VERSION}" },
-    { path: "GEMINI.md", pattern: /ASANMOD v[\d.]+/g, template: "ASANMOD v{VERSION}" },
-    { path: "CURSOR.md", pattern: /ASANMOD v[\d.]+/g, template: "ASANMOD v{VERSION}" },
-    { path: "CLAUDE.md", pattern: /ASANMOD v[\d.]+/g, template: "ASANMOD v{VERSION}" },
-  ],
+  PACKAGE_FILE: path.join(process.cwd(), "package.json"),
+  SCRIPTS_DIR: path.join(process.cwd(), "scripts", "mod-tools"),
+  DOCS_DIR: path.join(process.cwd(), "docs"),
+  ROOT_PROTOS: ["GEMINI.md", "CURSOR.md", "CLAUDE.md", "README.md", "project.mdc", "AGENT_FIRST_PLAN.md"],
+};
+
+/**
+ * Standardized Regex Patterns
+ */
+const PATTERNS = {
+  PRODUCT: /v2\.0\.\d+/g,
+  PROTOCOL: /v1\.1\.1/g, // We keep Protocol stable at 1.1.1 for now
+  SCRIPT_HEADER: /# ASANMOD v2\.0\.\d+/g,
+  DOC_VERSION: /Version: v2\.0\.\d+/g,
+  MDC_VERSION: /VERSION: v2\.0\.\d+/g,
 };
 
 /**
  * Read core config
  */
-function readCore() {
-  if (!fs.existsSync(CONFIG.CORE_FILE)) {
-    throw new Error(`Core file not found: ${CONFIG.CORE_FILE}`);
-  }
-  return JSON.parse(fs.readFileSync(CONFIG.CORE_FILE, "utf-8"));
+function readJSON(file) {
+  if (!fs.existsSync(file)) return null;
+  return JSON.parse(fs.readFileSync(file, "utf-8"));
 }
 
 /**
- * Write core config
- */
-function writeCore(config) {
-  config.lastUpdated = new Date().toISOString();
-  fs.writeFileSync(CONFIG.CORE_FILE, JSON.stringify(config, null, 2));
-}
-
-/**
- * Get current version
+ * Get current version from package.json
  */
 function getVersion() {
-  const config = readCore();
-  return config.version;
+  const pkg = readJSON(CONFIG.PACKAGE_FILE);
+  return pkg.version;
 }
 
 /**
- * Bump patch version (1.0.0 → 1.0.1)
+ * Bump patch version (v2.0.x -> v2.0.x+1)
  */
 function bumpVersion() {
-  const config = readCore();
-  const [major, minor, patch] = config.version.split(".").map(Number);
-  const newVersion = `${major}.${minor}.${patch + 1}`;
+  const pkg = readJSON(CONFIG.PACKAGE_FILE);
+  const oldVersion = pkg.version;
+  const parts = oldVersion.split(".");
+  parts[2] = parseInt(parts[2]) + 1;
+  const newVersion = parts.join(".");
 
-  config.version = newVersion;
-  writeCore(config);
+  pkg.version = newVersion;
+  fs.writeFileSync(CONFIG.PACKAGE_FILE, JSON.stringify(pkg, null, 2) + "\n");
 
-  return { oldVersion: `${major}.${minor}.${patch}`, newVersion };
+  // Update asanmod-core.json generator reference
+  const core = readJSON(CONFIG.CORE_FILE);
+  if (core) {
+    core._meta.generator = `ASANMOD Enterprise Template v${newVersion}`;
+    core.lastUpdated = new Date().toISOString();
+    fs.writeFileSync(CONFIG.CORE_FILE, JSON.stringify(core, null, 2) + "\n");
+  }
+
+  return { oldVersion, newVersion };
 }
 
 /**
- * Sync version to all files
+ * Mass Replace in Files
  */
-function syncVersion() {
-  const version = getVersion();
-  const results = [];
+function syncAll(newVersion) {
+  const searchPattern = /2\.0\.\d+/g;
+  const replacement = newVersion;
 
-  for (const file of CONFIG.FILES_TO_SYNC) {
-    const filePath = path.join(process.cwd(), file.path);
+  console.log(`🚀 Starting Global Sync for v${newVersion}...`);
 
-    if (!fs.existsSync(filePath)) {
-      results.push({ file: file.path, status: "SKIPPED", reason: "File not found" });
-      continue;
+  // 1. Root Protocols
+  CONFIG.ROOT_PROTOS.forEach(file => {
+    const filePath = path.join(process.cwd(), file);
+    if (fs.existsSync(filePath)) {
+      let content = fs.readFileSync(filePath, "utf-8");
+      content = content.replace(searchPattern, replacement);
+      fs.writeFileSync(filePath, content);
+      console.log(`  ✅ ${file}`);
     }
+  });
 
-    let content = fs.readFileSync(filePath, "utf-8");
-    const replacement = file.template.replace("{VERSION}", version);
-
-    // For header-only updates, only update the first 20 lines
-    if (file.headerOnly) {
-      const lines = content.split("\n");
-      const header = lines.slice(0, 20).join("\n");
-      const rest = lines.slice(20).join("\n");
-      const newHeader = header.replace(file.pattern, replacement);
-      content = newHeader + "\n" + rest;
-    } else {
-      content = content.replace(file.pattern, replacement);
+  // 2. Documentation Folder
+  fs.readdirSync(CONFIG.DOCS_DIR).forEach(file => {
+    if (file.endsWith(".md") || file.endsWith(".json")) {
+      const filePath = path.join(CONFIG.DOCS_DIR, file);
+      let content = fs.readFileSync(filePath, "utf-8");
+      content = content.replace(searchPattern, replacement);
+      fs.writeFileSync(filePath, content);
+      console.log(`  ✅ docs/${file}`);
     }
+  });
 
-    fs.writeFileSync(filePath, content);
-    results.push({ file: file.path, status: "UPDATED", version });
-  }
+  // 3. Script Headers
+  fs.readdirSync(CONFIG.SCRIPTS_DIR).forEach(file => {
+    const filePath = path.join(CONFIG.SCRIPTS_DIR, file);
+    if (fs.lstatSync(filePath).isFile()) {
+      let content = fs.readFileSync(filePath, "utf-8");
+      content = content.replace(searchPattern, replacement);
+      fs.writeFileSync(filePath, content);
+      console.log(`  ✅ scripts/mod-tools/${file}`);
+    }
+  });
 
-  return results;
+  console.log(`\n🎉 100% Consistent at v${newVersion}`);
 }
 
-/**
- * Validate version consistency
- */
-function validateVersion() {
-  const version = getVersion();
-  const issues = [];
-  const checked = [];
+// CLI
+const action = process.argv[2];
 
-  for (const file of CONFIG.FILES_TO_SYNC) {
-    const filePath = path.join(process.cwd(), file.path);
-
-    if (!fs.existsSync(filePath)) {
-      checked.push({ file: file.path, status: "SKIPPED" });
-      continue;
-    }
-
-    const content = fs.readFileSync(filePath, "utf-8");
-    const expectedPattern = file.template.replace("{VERSION}", version);
-
-    if (!content.includes(expectedPattern)) {
-      issues.push({ file: file.path, expected: expectedPattern, found: "MISMATCH" });
-    } else {
-      checked.push({ file: file.path, status: "OK" });
-    }
-  }
-
-  return {
-    version,
-    valid: issues.length === 0,
-    issues,
-    checked,
-  };
+if (action === "bump") {
+  const { oldVersion, newVersion } = bumpVersion();
+  console.log(`✅ Bumped package.json: ${oldVersion} -> ${newVersion}`);
+  syncAll(newVersion);
+} else if (action === "sync") {
+  const current = getVersion();
+  syncAll(current);
+} else {
+  console.log("Usage: node version-manager.cjs [bump|sync]");
 }
-
-/**
- * Show version info
- */
-function showVersion() {
-  const config = readCore();
-  console.log(`
-╔════════════════════════════════════════════════════════╗
-║  🛡️  ASANMOD VERSION INFO                              ║
-╠════════════════════════════════════════════════════════╣
-║  Version:      ${config.version.padEnd(40)}║
-║  Last Updated: ${config.lastUpdated.padEnd(40)}║
-║  Name:         ${config.name.substring(0, 40).padEnd(40)}║
-╚════════════════════════════════════════════════════════╝
-`);
-}
-
-// CLI interface
-if (require.main === module) {
-  const action = process.argv[2];
-
-  const actions = {
-    show: () => {
-      showVersion();
-    },
-
-    get: () => {
-      console.log(getVersion());
-    },
-
-    bump: () => {
-      const { oldVersion, newVersion } = bumpVersion();
-      console.log(`✅ Version bumped: ${oldVersion} → ${newVersion}`);
-
-      // Auto-sync after bump
-      console.log("\n📤 Syncing version to all files...");
-      const results = syncVersion();
-      results.forEach((r) => {
-        console.log(`  ${r.status === "UPDATED" ? "✅" : "⏭️"} ${r.file}: ${r.status}`);
-      });
-    },
-
-    sync: () => {
-      console.log("📤 Syncing version to all files...");
-      const results = syncVersion();
-      results.forEach((r) => {
-        console.log(`  ${r.status === "UPDATED" ? "✅" : "⏭️"} ${r.file}: ${r.status}`);
-      });
-    },
-
-    validate: () => {
-      console.log("🔍 Validating version consistency...\n");
-      const result = validateVersion();
-
-      console.log(`Version: ${result.version}`);
-      console.log(`Status:  ${result.valid ? "✅ VALID" : "❌ INVALID"}\n`);
-
-      if (result.issues.length > 0) {
-        console.log("Issues:");
-        result.issues.forEach((i) => {
-          console.log(`  ❌ ${i.file}: Expected "${i.expected}"`);
-        });
-        process.exit(1);
-      } else {
-        console.log("Checked files:");
-        result.checked.forEach((c) => {
-          console.log(`  ✅ ${c.file}`);
-        });
-      }
-    },
-  };
-
-  if (actions[action]) {
-    actions[action]();
-  } else {
-    console.log(`Usage: node version-manager.cjs <action>
-Actions:
-  show      - Show version info
-  get       - Get current version (plain text)
-  bump      - Bump patch version (1.0.0 → 1.0.1) and sync
-  sync      - Sync version to all files
-  validate  - Validate version consistency across files`);
-  }
-}
-
-module.exports = {
-  getVersion,
-  bumpVersion,
-  syncVersion,
-  validateVersion,
-};

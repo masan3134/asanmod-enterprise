@@ -1,5 +1,5 @@
 /**
- * ASANMOD v5.0: STATE MANAGER
+ * ASANMOD v1.1.1: STATE MANAGER
  * Captures system snapshots and manages agent handover state.
  */
 import { exec } from "child_process";

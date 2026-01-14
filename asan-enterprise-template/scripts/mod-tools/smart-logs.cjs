@@ -1,6 +1,6 @@
 const { execSync } = require("child_process");
 
-// ASANMOD v8.1 - SMART LOGS (NOISE FILTER)
+// ASANMOD v1.1.1 - SMART LOGS (NOISE FILTER)
 // Usage: node smart-logs.js --process=<name|all> --lines=<n>
 
 const args = process.argv.slice(2);

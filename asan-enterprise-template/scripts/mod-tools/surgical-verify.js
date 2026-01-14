@@ -1,5 +1,5 @@
 /**
- * ASANMOD v7.0: SURGICAL-VERIFY (The Speed Demon)
+ * ASANMOD v1.1.1: SURGICAL-VERIFY (The Speed Demon)
  *
  * Usage: node surgical-verify.js [target_file]
  *

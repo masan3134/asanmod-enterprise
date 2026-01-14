@@ -1,8 +1,8 @@
 /**
- * ASANMOD v10.0: DECISION LOGGER
+ * ASANMOD v1.1.1: DECISION LOGGER
  * Archives agent decisions with reasoning and context.
  *
- * v10 PHYSICAL BARRIER: Critical commits without decision log are REJECTED
+ * ASANMOD Hard Constraint: Critical commits without decision log are REJECTED
  *
  * Decision Schema:
  * - id: DEC-XXXX (auto-generated)
@@ -82,7 +82,7 @@ function logDecision(decision) {
     outcome: decision.outcome || "PENDING",
     agent: decision.agent || "Unknown",
     _meta: {
-      version: "10.0",
+      version: "1.1.1",
       commitHash: getCommitHash(),
     },
   };
@@ -160,7 +160,7 @@ function generateSummary(n = 10) {
     return "No decisions logged yet.";
   }
 
-  let summary = `📋 ASANMOD v10 Decision Log (Last ${decisions.length})\n`;
+  let summary = `📋 ASANMOD v1.1.1 Decision Log (Last ${decisions.length})\n`;
   summary += "═".repeat(50) + "\n\n";
 
   decisions.forEach((d, i) => {

@@ -1,8 +1,8 @@
 /**
- * ASANMOD v10.0: INTERACTION GUARD
+ * ASANMOD v1.1.1: INTERACTION GUARD
  * Forces agent to present options before large changes.
  *
- * v10 PHYSICAL BARRIER: Large commits without option selection are REJECTED
+ * ASANMOD Hard Constraint: Large commits without option selection are REJECTED
  *
  * Options Matrix:
  * [1] Minimal     - Quick patch, minimal changes
@@ -152,7 +152,7 @@ function checkInteraction(commitMessage) {
 function printOptionsMenu() {
   console.log(`
 ╔══════════════════════════════════════════════════════════════╗
-║  🎯 ASANMOD v10: INTERACTION REQUIRED                        ║
+║  🎯 ASANMOD v1.1.1: INTERACTION REQUIRED                        ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Bu değişiklik büyük veya kritik dosya içeriyor.             ║
 ║  Lütfen commit mesajına seçenek ekleyin:                     ║

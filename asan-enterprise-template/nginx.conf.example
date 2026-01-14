@@ -1,5 +1,5 @@
 # Nginx Server Block Template
-# ASANMOD Enterprise Template v1.1.0
+# ASANMOD Enterprise Template v2.0.2
 #
 # Usage:
 # 1. Copy to /etc/nginx/sites-available/your-domain

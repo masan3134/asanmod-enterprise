@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v5.0 - ENV SYNC PROTOCOL
+# ASANMOD v1.1.1 - ENV SYNC PROTOCOL
 # ID: OPS-003
 # Syncs .env.example keys to .env files safely.
 

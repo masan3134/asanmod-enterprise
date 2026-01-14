@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ASANMOD v5.0: VERSION CHECK
+ * ASANMOD v1.1.1: VERSION CHECK
  * Compares DEV (Git HEAD) vs PROD (version.json) deployment status.
  */
 const { execSync } = require("child_process");

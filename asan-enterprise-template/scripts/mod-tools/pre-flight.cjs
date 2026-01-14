@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ASANMOD v7.0: PRE-FLIGHT CHECK
+ * ASANMOD v1.1.1: PRE-FLIGHT CHECK
  * Validates system state before production deployments.
  */
 const config = require("./deploy.config.cjs");

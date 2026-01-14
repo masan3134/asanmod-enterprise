@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: architect
+context_depth: 4
+required_knowledge: ["asanmod_core", "trpc_patterns"]
+last_audited: "2026-01-14"
+---
+
 # 🏗️ ASANMOD ARCHITECTURE & AGENT ROLES
 
 ## 📜 The Agent Social Contract
@@ -35,4 +43,4 @@ This project is designed for **Autonomous AI Orchestration**. As an Agent, you a
 - `scripts/`: Manual & Autonomous tools
 - `logs/`: Evidence trails for all audits
 
-*Verified by ASANMOD Enterprise v2.0.2*
+*Verified by ASANMOD Enterprise v2.1.0-alpha*

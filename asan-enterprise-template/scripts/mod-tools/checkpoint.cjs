@@ -1,8 +1,8 @@
 /**
- * ASANMOD v10.0: CHECKPOINT MANAGER
+ * ASANMOD v1.1.1: CHECKPOINT MANAGER
  * Creates restore points before risky operations.
  *
- * v10 SAFETY NET: Auto-rollback on verification failure
+ * ASANMOD Safety Net: Auto-rollback on verification failure
  *
  * Checkpoint Types:
  * - FILE: Backup specific files
@@ -283,7 +283,7 @@ if (require.main === module) {
         return;
       }
 
-      console.log(`📦 ASANMOD v10 Checkpoints (${checkpoints.length})\n`);
+      console.log(`📦 ASANMOD v1.1.1 Checkpoints (${checkpoints.length})\n`);
       checkpoints.forEach((cp, i) => {
         const date = new Date(cp.timestamp).toLocaleString("tr-TR");
         const files = cp.files.length;

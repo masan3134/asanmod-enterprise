@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v5.0: DOCS SYNC
+ * ASANMOD v1.1.1: DOCS SYNC
  *
  * Purpose: Automatically syncs MCP Tool definitions from source code (index.ts)
  * to the documentation source of truth (MCP-INVENTORY.json and markdown tables).

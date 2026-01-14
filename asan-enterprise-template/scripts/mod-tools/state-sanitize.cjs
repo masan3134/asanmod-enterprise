@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v9.1 - State Sanitizer
+ * ASANMOD v1.1.1 - State Sanitizer
  *
  * Cleans up stale tasks and manages state file hygiene.
  * - Marks tasks older than 24h as stale
@@ -45,7 +45,7 @@ function isStale(timestamp) {
 
 function sanitize() {
   console.log("╔════════════════════════════════════════════════════════╗");
-  console.log("║  🧹 ASANMOD v9.1 STATE SANITIZER                       ║");
+  console.log("║  🧹 ASANMOD v1.1.1 STATE SANITIZER                       ║");
   console.log("╚════════════════════════════════════════════════════════╝");
   console.log("");
 

@@ -1,5 +1,5 @@
 /**
- * ASANMOD v7.0: NEURO-MAP (Dependency Graph Engine)
+ * ASANMOD v1.1.1: NEURO-MAP (Dependency Graph Engine)
  *
  * Usage: node dependency-graph.js [target_file]
  *

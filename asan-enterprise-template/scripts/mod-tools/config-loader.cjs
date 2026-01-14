@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * ASANMOD v10: UNIVERSAL CONFIG LOADER
+ * ASANMOD v1.1.1: UNIVERSAL CONFIG LOADER
  * ═══════════════════════════════════════════════════════════════════
  *
  * The new standard for loading configuration.
  * Strategies:
- * 1. v10 (Preferred): asanmod.config.json + .env
+ * 1. Protocol (Preferred): asanmod.config.json + .env
  * 2. v9 (Legacy): docs/asanmod-core.json
  *
  * USAGE:
@@ -20,7 +20,7 @@ const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 const V10_CONFIG_PATH = path.join(PROJECT_ROOT, "asanmod.config.json");
-const V10_ENV_PATH = path.join(PROJECT_ROOT, ".env.v10_generated");
+const V10_ENV_PATH = path.join(PROJECT_ROOT, ".env.Protocol_generated");
 const LEGACY_CONFIG_PATH = path.join(PROJECT_ROOT, "docs/asanmod-core.json");
 
 // Helper: Simple .env parser to avoid 'dotenv' dev-dependency in prod scripts
@@ -52,7 +52,7 @@ function loadV10() {
       : {};
 
     return {
-      source: 'v10',
+      source: 'Protocol',
       config: rawConfig,
       env: envVars,
       // Helper to simulate the old structure for compatibility
@@ -82,7 +82,7 @@ function loadV10() {
       }
     };
   } catch (e) {
-    console.error("❌ Failed to load v10 config:", e.message);
+    console.error("❌ Failed to load Protocol config:", e.message);
     return null;
   }
 }
@@ -103,8 +103,8 @@ module.exports = {
   loadV10,
   loadLegacy,
   paths: {
-    v10: V10_CONFIG_PATH,
-    v10Env: V10_ENV_PATH,
+    Protocol: V10_CONFIG_PATH,
+    ProtocolEnv: V10_ENV_PATH,
     legacy: LEGACY_CONFIG_PATH
   }
 };

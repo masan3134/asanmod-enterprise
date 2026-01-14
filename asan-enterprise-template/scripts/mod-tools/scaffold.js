@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ASANMOD v6.0: SCAFFOLD ENGINE (The Golden Mold)
+ * ASANMOD v1.1.1: SCAFFOLD ENGINE (The Golden Mold)
  * Generates files from God Templates to ensure standardization.
  *
  * Usage: node scaffold.js <type> <name> <module> [output_dir]

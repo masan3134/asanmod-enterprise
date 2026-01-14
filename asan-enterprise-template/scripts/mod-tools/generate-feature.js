@@ -1,5 +1,5 @@
 /**
- * ASANMOD v5.0: FEATURE SCAFFOLDER
+ * ASANMOD v1.1.1: FEATURE SCAFFOLDER
  * Usage: node scripts/mod-tools/generate-feature.js [FeatureName]
  *
  * Automates the creation of strict, pattern-compliant feature structures.
@@ -29,7 +29,7 @@ const TEMPLATES = {
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// ASANMOD v4 Pattern: Validation Layer First
+// ASANMOD v1.1.1 Pattern: Validation Layer First
 // NOTE: Add Joi or Zod validation schema here (template placeholder)
 
 /**
@@ -141,7 +141,7 @@ async function main() {
     `${COLORS.blue}╔════════════════════════════════════════════════════════╗${COLORS.reset}`
   );
   console.log(
-    `${COLORS.blue}║  🏗️  ASANMOD v4: Feature Scaffolder                    ║${COLORS.reset}`
+    `${COLORS.blue}║  🏗️  ASANMOD v1.1.1: Feature Scaffolder                    ║${COLORS.reset}`
   );
   console.log(
     `${COLORS.blue}╚════════════════════════════════════════════════════════╝${COLORS.reset}`

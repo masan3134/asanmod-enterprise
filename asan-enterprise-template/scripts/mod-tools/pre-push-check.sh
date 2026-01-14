@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v5.0: PRE-PUSH GUARD
+# ASANMOD v1.1.1: PRE-PUSH GUARD
 # Limits direct pushes to PROD and enforces last-minute verification.
 
 RED='\033[0;31m'

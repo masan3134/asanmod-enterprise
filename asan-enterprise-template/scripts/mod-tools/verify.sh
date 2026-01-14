@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v2.0.1: Code Quality Verification with Evidence Logging
+# ASANMOD v2.1.0-alpha: Code Quality Verification with Evidence Logging
 # Runs: ESLint + TypeScript + Tests + Env Check + Build
 # Creates: logs/verify-YYYYMMDD-HHMMSS.json
 
@@ -144,11 +144,65 @@ if [ "$OVERALL_STATUS" = "success" ]; then
     echo -e "${GREEN}✅ All checks passed!${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo "Evidence: $VERIFY_LOG"
+
+    # Update manifest with verification results
+    if [ -f ".asanmod/manifest.json" ]; then
+        PASSED_GATES=""
+        [ "$ENV_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}1,"
+        [ "$LINT_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}2,"
+        [ "$TSC_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}3,"
+        [ "$TEST_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}4,"
+        [ "$AUDIT_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}5,"
+        [ "$BUILD_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}6"
+
+        node -e "
+const fs = require('fs');
+const manifest = JSON.parse(fs.readFileSync('.asanmod/manifest.json'));
+manifest.verification.last_run = new Date().toISOString();
+manifest.verification.gates_passed = [${PASSED_GATES}];
+manifest.verification.gates_failed = [];
+fs.writeFileSync('.asanmod/manifest.json', JSON.stringify(manifest, null, 2) + '\\n');
+        " > /dev/null
+
+        echo -e "${GREEN}✅ Manifest updated: 6/6 gates passed${NC}"
+    fi
+
     exit 0
 else
     echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${RED}❌ Verification failed${NC}"
     echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo "Evidence: $VERIFY_LOG"
+
+    # Update manifest with failed gates
+    if [ -f ".asanmod/manifest.json" ]; then
+        FAILED_GATES=""
+        [ "$ENV_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}1,"
+        [ "$LINT_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}2,"
+        [ "$TSC_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}3,"
+        [ "$TEST_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}4,"
+        [ "$AUDIT_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}5,"
+        [ "$BUILD_STATUS" = "failed" ] && FAILED_GATES="${FAILED_GATES}6"
+
+        PASSED_GATES=""
+        [ "$ENV_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}1,"
+        [ "$LINT_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}2,"
+        [ "$TSC_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}3,"
+        [ "$TEST_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}4,"
+        [ "$AUDIT_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}5,"
+        [ "$BUILD_STATUS" = "success" ] && PASSED_GATES="${PASSED_GATES}6"
+
+        node -e "
+const fs = require('fs');
+const manifest = JSON.parse(fs.readFileSync('.asanmod/manifest.json'));
+manifest.verification.last_run = new Date().toISOString();
+manifest.verification.gates_passed = [${PASSED_GATES}];
+manifest.verification.gates_failed = [${FAILED_GATES}];
+fs.writeFileSync('.asanmod/manifest.json', JSON.stringify(manifest, null, 2) + '\\n');
+        " > /dev/null
+
+        echo -e "${YELLOW}⚠️  Manifest updated with failures${NC}"
+    fi
+
     exit 1
 fi

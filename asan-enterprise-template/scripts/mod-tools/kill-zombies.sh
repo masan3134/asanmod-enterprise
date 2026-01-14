@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v5.0: ZOMBIE SLAYER
+# ASANMOD v1.1.1: ZOMBIE SLAYER
 # Kills all Node processes that are NOT managed by PM2 AND NOT part of the IDE/Agent infrastructure.
 
 echo "🧟 Scanning for Zombie Processes..."

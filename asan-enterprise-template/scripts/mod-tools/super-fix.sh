@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v5.0 "Auto-Fixer" Script
+# ASANMOD v1.1.1 "Auto-Fixer" Script
 # Usage: npm run fix:all
 
 echo "🛠️  Running Auto-Fixer..."

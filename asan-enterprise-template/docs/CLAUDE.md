@@ -41,7 +41,7 @@ VERSION: v1.1.1
 npm run deploy-prod
 
 # V10 Dashboard
-npm run v10:status
+npm run verify
 
 # Quick commands
 npm run verify    # Quality check

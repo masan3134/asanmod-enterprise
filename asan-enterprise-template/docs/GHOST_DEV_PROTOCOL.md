@@ -1,4 +1,4 @@
-# 🧙‍♂️ ASANMOD v1.0.0: Ghost-Dev Protokolü
+# 🧙‍♂️ ASANMOD v1.1.1: Ghost-Dev Protokolü
 
 > **DİKKAT AGENT:** Bu döküman senin anayasandır. Okuduktan sonra otonom moda geçeceksin.
 
@@ -54,4 +54,4 @@ Kurulum bittikten sonra:
 
 ---
 
-_ASANMOD v1.0.0 | Era of Vibe Coding_
+_ASANMOD v1.1.1 | Era of Vibe Coding_

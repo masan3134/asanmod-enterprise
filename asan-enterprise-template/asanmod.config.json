@@ -1,10 +1,10 @@
 {
   "$schema": "https://asanmod.com/schemas/v10/config.json",
   "name": "asan-enterprise-template",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "mode": "strict",
   "protocol": {
-    "version": "v1.0.0",
+    "version": "v1.1.1",
     "language": "tr",
     "timezone": "UTC+3",
     "enforcementLevel": "hard"

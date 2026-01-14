@@ -1,6 +1,6 @@
 {
   "name": "asan-enterprise-template",
-  "version": "2.0.2",
+  "version": "2.1.0-alpha",
   "private": true,
   "scripts": {
     "prepare": "husky install || true",
@@ -25,7 +25,9 @@
     "reset-dev": "bash scripts/reset-dev.sh",
     "health": "bash scripts/mod-tools/health-check.sh",
     "verify": "bash scripts/mod-tools/verify.sh",
-    "doctor": "node scripts/mod-tools/doctor.js"
+    "doctor": "node scripts/mod-tools/doctor.js",
+    "bump": "node scripts/mod-tools/version-manager.cjs bump",
+    "version:sync": "node scripts/mod-tools/version-manager.cjs sync"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

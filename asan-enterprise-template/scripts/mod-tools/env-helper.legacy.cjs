@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * ASANMOD v9: ENVIRONMENT HELPER
+ * ASANMOD v1.1.1: ENVIRONMENT HELPER
  * ═══════════════════════════════════════════════════════════════════
  *
  * Single source of truth for ports, paths, and environment config.

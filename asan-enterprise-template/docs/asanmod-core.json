@@ -1,9 +1,8 @@
 {
   "version": "1.1.1",
   "name": "ASANMOD - Autonomous Governance System",
-  "lastUpdated": "2026-01-14T05:35:00Z",
+  "lastUpdated": "2026-01-14T13:20:25.225Z",
   "description": "AI-Native Software Factory Protocol for Enterprise Applications",
-
   "network": {
     "dev": {
       "frontend": 3000,
@@ -16,7 +15,6 @@
       "binding": "127.0.0.1"
     }
   },
-
   "database": {
     "dev": {
       "name": "[PROJECT]_dev_db",
@@ -31,13 +29,14 @@
       "user": "[DB_USER]"
     }
   },
-
   "credentials": {
     "dev": {
-      "admin": { "email": "admin@example.com", "password": "See .env file" }
+      "admin": {
+        "email": "admin@example.com",
+        "password": "See .env file"
+      }
     }
   },
-
   "scripts": {
     "core": {
       "pm2Wrapper": "scripts/mod-tools/pm",
@@ -45,7 +44,6 @@
       "preFlight": "scripts/mod-tools/pre-flight.cjs"
     }
   },
-
   "constraints": {
     "commitFormat": {
       "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
@@ -53,27 +51,60 @@
       "enforcer": ".husky/commit-msg"
     }
   },
-
   "rules": {
     "zeroTolerance": true,
     "language": "ENGLISH"
   },
-
   "paths": {
     "project": ".",
     "scripts": "scripts/mod-tools/",
     "docs": "docs/"
   },
-
   "files": {
     "agentProtocol": "GEMINI.md",
     "quickRef": "docs/AGENT_QUICK_REF.md",
     "readme": "README.md"
   },
-
+  "agent_config": {
+    "protocol_version": "1.1.1",
+    "strict_mode": true,
+    "auto_fix_lint": false,
+    "observability_file": ".asanmod/manifest.json"
+  },
+  "dependency_map": {
+    "auth": {
+      "files": [
+        "src/server/auth.ts",
+        "src/db/schema.ts"
+      ],
+      "requires": [
+        "db_users_table",
+        "JWT_SECRET"
+      ]
+    },
+    "trpc": {
+      "files": [
+        "src/server/index.ts",
+        "src/trpc/**"
+      ],
+      "requires": [
+        "express_backend",
+        "NEXT_PUBLIC_API_URL"
+      ]
+    },
+    "dashboard": {
+      "files": [
+        "src/app/**"
+      ],
+      "requires": [
+        "auth",
+        "trpc"
+      ]
+    }
+  },
   "_meta": {
     "schema": "1.1.1",
-    "generator": "ASANMOD Enterprise Template v2.0",
+    "generator": "ASANMOD Enterprise Template v2.1.0-alpha",
     "note": "This file is the single source of truth. Configure for your project."
   }
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v10.0 - Documentation Generator
+ * ASANMOD v1.1.1 - Documentation Generator
  *
  * Generates human-readable MD files from JSON configs.
  * This ensures MD files are always in sync with the source of truth.
@@ -36,7 +36,7 @@ function generateQuickRef() {
   if (!config || !protocol) return;
 
   let md = `<!--
-ASANMOD v${config.version} - AUTO-GENERATED
+ASANMOD v1.1.1${config.version} - AUTO-GENERATED
 DO NOT EDIT MANUALLY - Edit docs/config/*.json instead
 Generated: ${new Date().toISOString()}
 -->
@@ -141,7 +141,7 @@ function generateContextPacksRef() {
   if (!packs) return;
 
   let md = `<!--
-ASANMOD v${packs.version} - AUTO-GENERATED
+ASANMOD v1.1.1${packs.version} - AUTO-GENERATED
 DO NOT EDIT MANUALLY - Edit docs/config/context-packs.json instead
 Generated: ${new Date().toISOString()}
 -->
@@ -182,7 +182,7 @@ ${pack.criticalPaths.map((p) => `- \`${p}\``).join("\n")}
 
 function main() {
   console.log("╔════════════════════════════════════════════════════════╗");
-  console.log("║  📄 ASANMOD v10 DOCUMENTATION GENERATOR                ║");
+  console.log("║  📄 ASANMOD v1.1.1 DOCUMENTATION GENERATOR                ║");
   console.log("╚════════════════════════════════════════════════════════╝");
   console.log("");
 

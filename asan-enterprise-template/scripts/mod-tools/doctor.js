@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v2.0.2: Self-Healing System Doctor
+ * ASANMOD v2.1.0-alpha: Self-Healing System Doctor
  * Diagnoses environment issues and provides actionable fixes.
  */
 
@@ -38,7 +38,7 @@ const check = (name, fn) => {
 };
 
 async function runDoctor() {
-  log("\n🩺 ASANMOD SYSTEM DOCTOR (v2.0.2)", COLORS.cyan);
+  log("\n🩺 ASANMOD SYSTEM DOCTOR (v2.1.0-alpha)", COLORS.cyan);
   log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n", COLORS.cyan);
 
   // 1. Hardware Audit

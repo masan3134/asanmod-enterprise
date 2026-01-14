@@ -1,8 +1,8 @@
 /**
- * ASANMOD v10.0: STATE MANAGER
+ * ASANMOD v1.1.1: STATE MANAGER
  * Captures system snapshots, manages agent state with TTL enforcement.
  *
- * v10 PHYSICAL BARRIER: Stale state (>30min) blocks operations
+ * ASANMOD Hard Constraint: Stale state (>30min) blocks operations
  */
 const { exec } = require("child_process");
 const { promisify } = require("util");
@@ -11,7 +11,7 @@ const path = require("path");
 
 const execAsync = promisify(exec);
 
-// v10 Configuration
+// Protocol Configuration
 const CONFIG = {
   STATE_DIR: path.join(process.cwd(), ".asanmod", "state"),
   STATE_FILE: path.join(process.cwd(), ".asanmod", "state", "active-task.json"),
@@ -20,7 +20,7 @@ const CONFIG = {
 };
 
 /**
- * v10 State Schema
+ * Protocol State Schema
  */
 const DEFAULT_STATE = {
   taskId: null,
@@ -42,7 +42,7 @@ const DEFAULT_STATE = {
   },
   history: [],
   _meta: {
-    version: "10.0",
+    version: "1.1.1",
     lastUpdated: null,
     ttlMinutes: CONFIG.TTL_MINUTES,
   },
@@ -66,7 +66,7 @@ class StateManager {
   getState() {
     let state = { ...DEFAULT_STATE };
 
-    // Try v10 location first, then legacy
+    // Try Protocol location first, then legacy
     const stateFile = fs.existsSync(CONFIG.STATE_FILE)
       ? CONFIG.STATE_FILE
       : fs.existsSync(CONFIG.LEGACY_STATE_FILE)
@@ -109,7 +109,7 @@ class StateManager {
   saveState(state) {
     state._meta = state._meta || {};
     state._meta.lastUpdated = new Date().toISOString();
-    state._meta.version = "10.0";
+    state._meta.version = "1.1.1";
     state._meta.ttlMinutes = CONFIG.TTL_MINUTES;
 
     fs.writeFileSync(CONFIG.STATE_FILE, JSON.stringify(state, null, 2));
@@ -315,7 +315,7 @@ if (require.main === module) {
   if (actions[action]) {
     Promise.resolve(actions[action]()).catch(console.error);
   } else {
-    console.log(`Usage: node state-manager-v10.cjs <action> [arg]
+    console.log(`Usage: node state-manager-Protocol.cjs <action> [arg]
 Actions:
   status    - Show current state with staleness info
   check     - Check if operations are blocked (exit 1 if blocked)

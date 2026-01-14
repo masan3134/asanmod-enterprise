@@ -1,3 +1,12 @@
+---
+type: reference
+agent_role: all
+context_depth: 3
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-14"
+critical: true
+---
+
 # 🚀 AGENT QUICK REFERENCE
 
 > **Single page, all information. Read asanmod-core.json first.**
@@ -83,4 +92,4 @@ docs(readme): update installation
 
 ---
 
-*ASANMOD v2.0.1*
+*ASANMOD v2.1.0-alpha*

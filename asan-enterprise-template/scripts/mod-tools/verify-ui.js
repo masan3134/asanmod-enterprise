@@ -1,4 +1,4 @@
-// ASANMOD v5.0: AGENTIC-OS HEADLESS UI SMOKE TESTER
+// ASANMOD v1.1.1: AGENTIC-OS HEADLESS UI SMOKE TESTER
 // [INDUSTRIAL-GRADE] Ensures zero white-screens in Prod.
 import fs from "fs";
 import puppeteer from "puppeteer";

@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v2.0.1: System Health Check
+# ASANMOD v2.1.0-alpha: System Health Check
 # Checks dev and prod servers
 
 # Colors
@@ -69,3 +69,20 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Health check complete"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Update manifest.json with results
+if [ -f ".asanmod/manifest.json" ]; then
+    DEV_STATUS="stopped"
+    PROD_STATUS="stopped"
+    DB_STATUS="unknown"
+
+    curl -f http://localhost:3000 > /dev/null 2>&1 && DEV_STATUS="running"
+    curl -f http://localhost:3002 > /dev/null 2>&1 && PROD_STATUS="running"
+    grep -q "DATABASE_URL" .env 2>/dev/null && DB_STATUS="configured"
+
+    node scripts/mod-tools/manifest-update.cjs health dev_server "$DEV_STATUS" > /dev/null
+    node scripts/mod-tools/manifest-update.cjs health prod_server "$PROD_STATUS" > /dev/null
+    node scripts/mod-tools/manifest-update.cjs health db_connection "$DB_STATUS" > /dev/null
+
+    echo -e "${GREEN}✅ Manifest updated${NC}"
+fi

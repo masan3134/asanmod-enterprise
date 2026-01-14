@@ -7,7 +7,7 @@
 ## 1. Environment Baseline
 - **Node.js:** [vXX.X.X]
 - **OS:** [Linux | Mac | Windows]
-- **Project Version:** v2.0.2
+- **Project Version:** v2.1.0-alpha
 
 ## 2. Quality Gate Metrics
 | Gate | Task | Status | Note |

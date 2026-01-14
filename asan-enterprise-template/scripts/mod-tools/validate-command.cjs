@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v9.2 - Command Validator (Immutable Guardrail)
+ * ASANMOD v1.1.1 - Command Validator (Immutable Guardrail)
  *
  * Validates agent commands before execution.
  * Rejects direct PM2 calls and suggests correct wrapper usage.
@@ -15,7 +15,7 @@
 
 const FORBIDDEN_PATTERNS = [
   // ═══════════════════════════════════════════════════════════════════════════
-  // ASANMOD v9.2 CRITICAL: BYPASS PREVENTION
+  // ASANMOD v1.1.1 CRITICAL: BYPASS PREVENTION
   // ═══════════════════════════════════════════════════════════════════════════
   {
     pattern: /--no-verify/i,
@@ -138,7 +138,7 @@ function main() {
   const result = validateCommand(command);
 
   console.log("╔════════════════════════════════════════════════════════╗");
-  console.log("║  🛡️  ASANMOD v9.2 COMMAND VALIDATOR                    ║");
+  console.log("║  🛡️  ASANMOD v1.1.1 COMMAND VALIDATOR                    ║");
   console.log("╚════════════════════════════════════════════════════════╝");
   console.log("");
   console.log(`📝 Command: "${command}"`);

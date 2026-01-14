@@ -34,4 +34,4 @@
 3. **Commit Format:** Use `feat(scope): message` as enforced by Husky.
 4. **Iron Curtain:** Respect the isolation between DEV and PROD environments.
 
-*Verified by ASANMOD Governance v2.0.1*
+*Verified by ASANMOD Governance v2.1.0-alpha*

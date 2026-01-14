@@ -14,7 +14,7 @@ export const appRouter = router({
   // System Health
   health: publicProcedure.query(() => {
     return {
-      status: "ASANMOD v1.0.0 OPERATIONAL",
+      status: "ASANMOD v1.1.1 OPERATIONAL",
       timestamp: new Date(),
       engine: "Ghost-Dev Modular Architecture",
       modules: ["users", "posts"], // Auto-updated by wizard

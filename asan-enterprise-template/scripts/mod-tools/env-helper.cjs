@@ -1,17 +1,17 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * ASANMOD v1.0.0: ENVIRONMENT HELPER (Universal Bridge)
+ * ASANMOD v1.1.1: ENVIRONMENT HELPER (Universal Bridge)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Single source of truth for ports, paths, and environment config.
- * NOW POWERED BY: config-loader.cjs (v1.0.0 Config + .env)
+ * NOW POWERED BY: config-loader.cjs (v1.1.1 Config + .env)
  * Matches the 'SaaS Template' abstraction.
  */
 
 const path = require("path");
 const loader = require("./config-loader.cjs");
 
-// Load Configuration (Auto-detect v1.0.0 or Legacy)
+// Load Configuration (Auto-detect v1.1.1 or Legacy)
 const loaded = loader.loadV10() || loader.loadLegacy();
 
 if (!loaded) {
@@ -21,7 +21,7 @@ if (!loaded) {
 }
 
 const config = loaded.config;
-const source = loaded.source; // 'v10' or 'legacy'
+const source = loaded.source; // 'Protocol' or 'legacy'
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,10 +29,10 @@ const PROJECT_ROOT = path.resolve(__dirname, "../..");
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getPort(service, env = "dev") {
-  if (source === 'v10') {
-    // v10 Structure: infrastructure.frontend.port / prodPort
+  if (source === 'Protocol') {
+    // Protocol Structure: infrastructure.frontend.port / prodPort
     const infra = config.infrastructure;
-    if (!infra) throw new Error("Invalid v10 config: missing infrastructure");
+    if (!infra) throw new Error("Invalid Protocol config: missing infrastructure");
 
     // Map service names
     const serviceKey = service === 'brain' ? 'brain' : service;
@@ -54,8 +54,8 @@ function getPort(service, env = "dev") {
 }
 
 function getDbUrl(env = "dev") {
-  // Use ENV variables if available (v10), fallback to config
-  if (source === 'v10') {
+  // Use ENV variables if available (Protocol), fallback to config
+  if (source === 'Protocol') {
     if (env === 'prod') return process.env.DB_CONNECTION_PROD || loaded.env.DB_CONNECTION_PROD;
     return process.env.DB_CONNECTION_DEV || loaded.env.DB_CONNECTION_DEV;
   }
@@ -85,14 +85,14 @@ module.exports = {
     docs: path.join(PROJECT_ROOT, "docs"),
     backend: path.join(PROJECT_ROOT, "backend"),
     frontend: path.join(PROJECT_ROOT, "frontend"),
-    state: path.join(PROJECT_ROOT, ".asanmod/state"), // v10 standard
-    logs: path.join(PROJECT_ROOT, ".asanmod/logs"),   // v10 standard
-    coreConfig: loader.paths[source === 'v10' ? 'v10' : 'legacy'],
+    state: path.join(PROJECT_ROOT, ".asanmod/state"), // Protocol standard
+    logs: path.join(PROJECT_ROOT, ".asanmod/logs"),   // Protocol standard
+    coreConfig: loader.paths[source === 'Protocol' ? 'Protocol' : 'legacy'],
   },
 
   // Network
   port: getPort,
-  binding: source === 'v10'
+  binding: source === 'Protocol'
     ? (config.infrastructure.frontend.prodBinding || "127.0.0.1")
     : (config.network.prod.binding || "127.0.0.1"),
 

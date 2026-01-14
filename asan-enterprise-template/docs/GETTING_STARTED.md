@@ -442,4 +442,4 @@ curl http://localhost:3002  # Verify
 ---
 
 *Last Updated: 2026-01-14*
-*Template Version: 2.0.1*
+*Template Version: 2.1.0-alpha*

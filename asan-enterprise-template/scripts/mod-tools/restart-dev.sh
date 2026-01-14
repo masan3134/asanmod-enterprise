@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v5.0: SAFE DEV RESTART
+# ASANMOD v1.1.1: SAFE DEV RESTART
 # Usage: ./scripts/mod-tools/restart-dev.sh
 
 echo "🛑 Stopping Dev Processes..."

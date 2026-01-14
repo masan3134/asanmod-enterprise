@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v5.0 "Express Lane" Commit Script
+# ASANMOD v1.1.1 "Express Lane" Commit Script
 # Usage: npm run commit:fast "feat: message"
 
 MSG="$1"
