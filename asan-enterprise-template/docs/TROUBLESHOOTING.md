@@ -191,7 +191,7 @@ ls drizzle/
 ## Getting Help
 
 1. Check this guide first
-2. Search [GitHub Issues](https://github.com/your-org/repo/issues)
+2. Search [GitHub Issues](https://github.com/masan3134/asanmod-enterprise/issues)
 3. Check logs: `.asanmod/logs/`
 4. Ask in team chat with:
    - Error message
