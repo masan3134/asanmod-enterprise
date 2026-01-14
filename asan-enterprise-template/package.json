@@ -21,6 +21,8 @@
     "init": "node scripts/mod-tools/asan-init.js",
     "deploy-prod": "bash scripts/mod-tools/deploy-prod.sh",
     "seed": "tsx --env-file=.env scripts/seed.ts",
+    "db:seed:dev": "tsx --env-file=.env scripts/seed-dev.ts",
+    "db:reset": "npm run db:push && npm run db:seed:dev",
     "create-admin": "tsx --env-file=.env scripts/create-admin.ts",
     "backup": "bash scripts/backup-db.sh",
     "restore": "bash scripts/restore-db.sh",
