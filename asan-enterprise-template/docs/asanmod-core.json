@@ -102,6 +102,17 @@
       ]
     }
   },
+  "protection_rules": {
+    "read_only_files": [
+      "docs/asanmod-core.json",
+      "package-lock.json",
+      ".asanmod/manifest.json"
+    ],
+    "protected_branches": [
+      "main",
+      "prod"
+    ]
+  },
   "_meta": {
     "schema": "1.1.1",
     "generator": "ASANMOD Enterprise Template v2.1.0-alpha",
