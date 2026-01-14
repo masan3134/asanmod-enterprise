@@ -1,62 +1,71 @@
 #!/bin/bash
-
-# ASANMOD v5.0 - HEALTH CHECK PROTOCOL
-# ID: OPS-002
-# Checks if ASANMOD System (Prod/Dev) is Alive & Healthy.
+# ASANMOD v2.0.1: System Health Check
+# Checks dev and prod servers
 
 # Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-NC='\033[0m' # No Color
+YELLOW='\033[1;33m'
+NC='\033[0m'
 
-echo "---------------------------------------------------"
-echo "🏥 ASANMOD SYSTEM HEALTH CHECK"
-echo "---------------------------------------------------"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🏥 ASANMOD System Health Check"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Timestamp: $(date)"
 echo ""
 
-# 1. PM2 CHECK
-echo "🔍 Checking PM2 Process Manager..."
-if pm2 list | grep -q "online"; then
-    echo -e "${GREEN}✅ PM2 is managing processes.${NC}"
-    pm2 list
+# Check PM2
+echo "🔍 Checking PM2..."
+if command -v pm2 &> /dev/null; then
+    if pm2 list | grep -q "online"; then
+        echo -e "${GREEN}✅ PM2 is running${NC}"
+        pm2 list
+    else
+        echo -e "${YELLOW}⚠️  PM2 running but no processes online${NC}"
+    fi
 else
-    echo -e "${RED}❌ PM2 is ERROR or EMPTY!${NC}"
+    echo -e "${YELLOW}⚠️  PM2 not installed${NC}"
 fi
 
 echo ""
 
-# 2. PORT CHECK (Curl Ritual)
-check_port() {
-    local NAME=$1
-    local URL=$2
+# Check ports
+echo "🔍 Checking application ports..."
 
-    # Rule 0-CURL: -I -f -s
-    if curl -I -f -s -o /dev/null "$URL"; then
-        echo -e "${GREEN}✅ [OK] $NAME is listening at $URL${NC}"
+check_port() {
+    local port=$1
+    local name=$2
+
+    if curl -f http://localhost:$port > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ $name (port $port) - OK${NC}"
+        return 0
     else
-        echo -e "${RED}❌ [FAIL] $NAME is NOT responding at $URL${NC}"
+        echo -e "${RED}❌ $name (port $port) - FAILED${NC}"
+        return 1
     fi
 }
 
-# Check PROD (8205/8204)
-echo "🔍 Checking PRODUCTION..."
-check_port "PROD Frontend" "https://ikai.com.tr"
-check_port "PROD Backend (Internal)" "http://localhost:8204/health"
+# Development
+check_port 3000 "Dev Frontend"
+
+# Production
+check_port 3002 "Prod Frontend"
 
 echo ""
 
-# Check DEV (3000/3001)
-echo "🔍 Checking DEVELOPMENT..."
-check_port "DEV Frontend" "http://localhost:3000"
-check_port "DEV Backend" "http://localhost:3001/health"
+# Check database
+echo "🔍 Checking database connection..."
+if [ -f ".env" ]; then
+    if grep -q "DATABASE_URL" .env; then
+        echo -e "${GREEN}✅ DATABASE_URL configured${NC}"
+    else
+        echo -e "${RED}❌ DATABASE_URL not found in .env${NC}"
+    fi
+else
+    echo -e "${RED}❌ .env file not found${NC}"
+fi
 
 echo ""
-
-# 3. BRAIN CHECK (8250)
-echo "🔍 Checking BRAIN..."
-check_port "IKAI Brain" "http://localhost:8250/brain/health"
-
-echo ""
-echo "---------------------------------------------------"
-echo "✅ Health Check Complete."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Health check complete"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

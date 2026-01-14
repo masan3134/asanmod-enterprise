@@ -23,7 +23,8 @@
     "backup": "bash scripts/backup-db.sh",
     "restore": "bash scripts/restore-db.sh",
     "reset-dev": "bash scripts/reset-dev.sh",
-    "health": "bash scripts/mod-tools/health-check.sh"
+    "health": "bash scripts/mod-tools/health-check.sh",
+    "verify": "bash scripts/mod-tools/verify.sh"
   },
   "dependencies": {
     "next": "15.0.0",
