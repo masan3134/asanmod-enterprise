@@ -29,6 +29,7 @@
 npm run dev            # Start development server
 npm run build          # Build for production
 npm run lint           # Run ESLint
+npm run fix            # Auto-fix lint issues
 ```
 
 ### Database
@@ -38,17 +39,24 @@ npm run db:migrate     # Run migrations
 npm run db:push        # Push schema (dev only)
 npm run seed           # Seed database
 npm run create-admin   # Create admin user
+npm run backup         # Backup database
+npm run restore        # Restore database
+```
+
+### Production & Deployment
+```bash
+npm run verify         # Full quality check (lint+typecheck+build)
+npm run deploy-prod    # Safe production deployment
+npm run health         # System health check
 ```
 
 ### PM2
 ```bash
-./scripts/mod-tools/pm dev status
-./scripts/mod-tools/pm prod status
-```
-
-### Deployment
-```bash
-npm run deploy         # Deploy to production
+./scripts/mod-tools/pm dev status      # Check dev status
+./scripts/mod-tools/pm dev restart     # Restart dev
+./scripts/mod-tools/pm prod status     # Check prod status
+./scripts/mod-tools/pm prod restart    # Restart prod
+./scripts/mod-tools/pm prod logs       # View prod logs
 ```
 
 ---
@@ -61,15 +69,18 @@ fix(api): resolve CORS issue
 docs(readme): update installation
 ```
 
+**Valid types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
 ---
 
 ## 📚 DOCUMENTATION
 
 - `asanmod-core.json` - Core config (READ FIRST)
+- `GETTING_STARTED.md` - Complete setup guide
 - `GEMINI.md` - Gemini protocol
 - `CURSOR.md` - Cursor protocol
 - `CLAUDE.md` - Claude protocol
 
 ---
 
-*ASANMOD v1.1.1*
+*ASANMOD v2.0.1*
