@@ -173,7 +173,14 @@ function purgePlaceholders(projectName, projectDesc, modules) {
       content = content.replace(/\[WIZARD_WILL_FILL_MODULES\]/g, moduleList);
       content = content.replace(/\[WIZARD_WILL_FILL_DB_NAME\]/g, projectName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_db');
 
-      // COMPREHENSIVE: Catch ALL variants including [WIZARD_WILL_FILL: description]
+
+      // CONTEXT-AWARE: Match description and replace with appropriate value
+      // Pattern: [WIZARD_WILL_FILL: some description] - BEFORE generic fallback
+      content = content.replace(/\[WIZARD_WILL_FILL:\s*List of enabled modules\]/gi, moduleList);
+      content = content.replace(/\[WIZARD_WILL_FILL:\s*Database name\]/gi, projectName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_db');
+      content = content.replace(/\[WIZARD_WILL_FILL:\s*Project name\]/gi, projectName);
+
+      // FALLBACK: Any remaining [WIZARD_WILL_FILL: ...] gets current date
       content = content.replace(/\[WIZARD_WILL_FILL:[^\]]*\]/g, currentDate);
       content = content.replace(/\[WIZARD_WILL_FILL\]/g, currentDate);
 
