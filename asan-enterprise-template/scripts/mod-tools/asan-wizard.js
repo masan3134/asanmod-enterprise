@@ -147,25 +147,36 @@ function updateConfig(projectName, projectDesc, modules) {
   }
 }
 
-// Global purge for UI files
-function purgePlaceholders(projectName, projectDesc) {
+// Global purge for UI files (COMPREHENSIVE - catches ALL placeholder variants)
+function purgePlaceholders(projectName, projectDesc, modules) {
   const targets = [
     'src/app/layout.tsx',
     'src/app/page.tsx',
     'CHANGELOG.md',
     'README.md',
-    'project.mdc'
+    'project.mdc',
+    'CREDENTIALS.md'
   ];
+
+  const moduleList = modules.join(', ');
+  const currentDate = new Date().toISOString().split('T')[0];
 
   targets.forEach(target => {
     const filePath = path.join(PROJECT_ROOT, target);
     if (fs.existsSync(filePath)) {
       let content = fs.readFileSync(filePath, 'utf8');
+
+      // Standard placeholders
       content = content.replace(/\[PROJECT_NAME\]/g, projectName);
       content = content.replace(/\[PROJECT_DESCRIPTION\]/g, projectDesc);
-      content = content.replace(/\[WIZARD_WILL_FILL_DATE\]/g, new Date().toISOString().split('T')[0]);
-      content = content.replace(/\[WIZARD_WILL_FILL_MODULES\]/g, 'Enabled core modules');
-      content = content.replace(/\[WIZARD_WILL_FILL\]/g, new Date().toISOString().split('T')[0]);
+      content = content.replace(/\[WIZARD_WILL_FILL_DATE\]/g, currentDate);
+      content = content.replace(/\[WIZARD_WILL_FILL_MODULES\]/g, moduleList);
+      content = content.replace(/\[WIZARD_WILL_FILL_DB_NAME\]/g, projectName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_db');
+
+      // COMPREHENSIVE: Catch ALL variants including [WIZARD_WILL_FILL: description]
+      content = content.replace(/\[WIZARD_WILL_FILL:[^\]]*\]/g, currentDate);
+      content = content.replace(/\[WIZARD_WILL_FILL\]/g, currentDate);
+
       fs.writeFileSync(filePath, content);
       log(`  ✅ ${target} placeholders purged`, COLORS.green);
     }
@@ -306,7 +317,7 @@ async function runWizard() {
   header('⚙️ APPLYING CONFIGURATION');
 
   updateConfig(projectName, projectDesc, modules);
-  purgePlaceholders(projectName, projectDesc);
+  purgePlaceholders(projectName, projectDesc, modules);
   createEnvFile(dbName);
   updateCredentials('admin@example.com', 'admin123');
   createLock(projectName, modules);
