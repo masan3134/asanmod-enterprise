@@ -1,113 +1,193 @@
 # ASANMOD Enterprise Template
 
->This is a production-ready enterprise template with tRPC, Next.js 15, Drizzle ORM, and complete testing infrastructure.
+> **Production-ready Next.js 15 + tRPC + PostgreSQL template with ASANMOD v1.1.1**
 
-## Prerequisites
+🚀 **Quick Start**: Clone, install, configure, run in 5 minutes.
 
-Before you begin, ensure you have installed:
+---
 
-- **Node.js 20+** (verify with `node -v`)
-- **PostgreSQL** (local or remote instance)
-- **Git** for version control
-
-### Install Node.js
+## ⚡ Quick Start
 
 ```bash
-# Using nvm (recommended)
-nvm install 20
-nvm use 20
-```
-
-### Install PostgreSQL
-
-```bash
-# macOS
-brew install postgresql@15
-brew services start postgresql@15
-
-# Ubuntu/Debian
-sudo apt install postgresql postgresql-contrib
-sudo systemctl start postgresql
-```
-
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](./CHANGELOG.md)
-[![ASANMOD](https://img.shields.io/badge/ASANMOD-v2.0-green.svg)](./docs/AGENT_QUICK_REF.md)
-
-## 🚀 Quick Start
-
-```bash
-# 1. Clone or use this template
-git clone https://github.com/your-org/your-project.git
-cd your-project
+# 1. Clone template
+git clone <repo-url> my-app
+cd my-app
 
 # 2. Install dependencies
 npm install
 
-# 3. Run the setup wizard
-npm run wizard
+# 3. Setup environment
+cp .env.example .env
+# Edit .env with your DATABASE_URL
 
-# 4. Start development
+# 4. Setup database
+npm run db:push
+
+# 5. Seed data (optional)
+npm run seed
+
+# 6. Start development
 npm run dev
+# Open http://localhost:3000
 ```
 
-## 📦 What's Included
+**First time?** Read [GETTING_STARTED.md](./docs/GETTING_STARTED.md) for detailed setup.
 
-### Tech Stack
+---
 
-- **Framework:** Next.js 15 (App Router)
-- **API:** tRPC (End-to-end type safety)
-- **Database:** Drizzle ORM + PostgreSQL
-- **Styling:** Tailwind CSS + Shadcn/UI
-- **Validation:** Zod
+## 🎯 What's Included
 
-### ASANMOD Governance
+- ✅ **Next.js 15** - App Router, Server Components
+- ✅ **tRPC** - End-to-end type safety
+- ✅ **PostgreSQL** - Drizzle ORM
+- ✅ **Authentication** - Login/Register ready
+- ✅ **PM2** - Dev/Prod isolation
+- ✅ **ASANMOD v1.1.1** - AI-native governance
+- ✅ **Agent Protocols** - GEMINI/CURSOR/CLAUDE ready
 
-- **Physical Barriers:** Git hooks enforce quality (0/0/0 policy)
-- **Single Source of Truth:** `docs/asanmod-core.json`
-- **Agent Protocols:** CLAUDE.md, GEMINI.md, CURSOR.md
-- **Automation:** 50+ scripts in `scripts/mod-tools/`
+---
 
-## 📁 Project Structure
+## 📚 Documentation
+
+**Start Here:**
+- 📖 [GETTING_STARTED.md](./docs/GETTING_STARTED.md) - Complete setup guide
+- ⚡ [AGENT_QUICK_REF.md](./docs/AGENT_QUICK_REF.md) - Agent commands reference
+- 🔧 [asanmod-core.json](./docs/asanmod-core.json) - Core configuration
+
+**Agent Protocols:**
+- 🤖 [GEMINI.md](./GEMINI.md) - For Gemini agents
+- 💬 [CURSOR.md](./CURSOR.md) - For Cursor agents
+- 🧠 [CLAUDE.md](./CLAUDE.md) - For Claude agents
+
+**Additional:**
+- 🏗️ [ARCHITECTURE.md](./docs/ARCHITECTURE.md) - System architecture
+- 🚀 [DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Production deployment
+- 🔌 [MCP_SETUP.md](./docs/MCP_SETUP.md) - MCP server setup
+
+---
+
+## 🗂️ Project Structure
 
 ```
+/
 ├── src/
-│   ├── app/          # Next.js pages
-│   ├── components/   # UI components
-│   ├── server/       # tRPC routers
-│   └── db/           # Drizzle schema
+│   ├── app/              # Next.js pages (App Router)
+│   ├── components/       # React components
+│   ├── server/          # tRPC routers
+│   ├── db/              # Database schemas
+│   └── lib/             # Utilities
 ├── scripts/
-│   └── mod-tools/    # ASANMOD automation
-├── docs/             # Documentation
-└── .asanmod/         # Agent state
+│   └── mod-tools/       # ASANMOD automation
+├── docs/                # Documentation
+│   ├── asanmod-core.json    # ⚠️ READ FIRST
+│   ├── AGENT_QUICK_REF.md   # Commands reference
+│   └── GETTING_STARTED.md   # Setup guide
+├── GEMINI.md           # Gemini protocol
+├── CURSOR.md           # Cursor protocol
+├── CLAUDE.md           # Claude protocol
+└── ecosystem.config.cjs # PM2 configuration
 ```
 
-## 🛠️ Commands
+---
 
-| Command               | Description                  |
-| --------------------- | ---------------------------- |
-| `npm run dev`         | Start development server     |
-| `npm run build`       | Build for production         |
-| `npm run verify`      | Quality check (lint + types) |
-| `npm run fix`         | Auto-fix linting issues      |
-| `npm run status`      | Show ASANMOD dashboard       |
-| `npm run wizard`      | Run setup wizard             |
-| `npm run deploy-prod` | Deploy to production         |
+## 🔑 Essential Commands
 
-## 📖 Documentation
+### Development
+```bash
+npm run dev              # Start dev server (port 3000)
+npm run build            # Build for production
+npm run lint             # Run ESLint
+npm test                 # Run tests
+```
 
-- **Quick Reference:** [docs/AGENT_QUICK_REF.md](./docs/AGENT_QUICK_REF.md)
-- **Patterns:** [docs/PATTERNS.md](./docs/PATTERNS.md)
-- **Configuration:** [docs/asanmod-core.json](./docs/asanmod-core.json)
+### Database
+```bash
+npm run db:generate      # Generate migrations
+npm run db:migrate       # Run migrations
+npm run db:push          # Push schema to database (dev)
+npm run seed             # Seed database with test data
+npm run create-admin     # Create admin user
+```
 
-## 🛡️ Quality Gates
+### PM2 (Production)
+```bash
+./scripts/mod-tools/pm dev status       # Check dev status
+./scripts/mod-tools/pm dev restart      # Restart dev
+./scripts/mod-tools/pm prod status      # Check prod status
+./scripts/mod-tools/pm prod restart     # Restart prod
+```
 
-All commits must pass:
+---
 
-1. **Lint Check:** Zero ESLint errors
-2. **Type Check:** Zero TypeScript errors
-3. **Console Ban:** No `console.log` in production code
-4. **Commit Format:** `ID: TASK-001 | Description`
+## 🌐 Port Configuration
 
-## 📄 License
+| Environment | Frontend | Backend |
+| ----------- | -------- | ------- |
+| Development | 3000     | 3001    |
+| Production  | 3002     | 3003    |
 
-Private - See [LICENSE](./LICENSE)
+*Configured in `docs/asanmod-core.json`*
+
+---
+
+## 🔧 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```bash
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/database_name"
+
+# Authentication
+JWT_SECRET="your-secret-key"
+
+# Admin credentials (for create-admin script)
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="secure-password"
+```
+
+---
+
+## 🚀 Deployment
+
+### Using PM2
+```bash
+# Build and start production
+npm run build
+./scripts/mod-tools/pm prod start
+
+# Verify
+curl http://localhost:3002
+```
+
+See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for complete deployment guide.
+
+---
+
+## 🤖 For AI Agents
+
+**First time in this project?**
+
+1. Read `docs/asanmod-core.json` (single source of truth)
+2. Read `docs/AGENT_QUICK_REF.md` (all commands)
+3. Check your protocol file (`GEMINI.md`, `CURSOR.md`, or `CLAUDE.md`)
+
+**All ports, paths, and rules are in `asanmod-core.json`. Never hardcode.**
+
+---
+
+## 📝 License
+
+MIT
+
+---
+
+## 🆘 Support
+
+- 📖 Read [GETTING_STARTED.md](./docs/GETTING_STARTED.md) for detailed setup
+- 🔍 Check [docs/](./docs/) for additional guides
+- ⚡ See [AGENT_QUICK_REF.md](./docs/AGENT_QUICK_REF.md) for quick reference
+
+---
+
+*Generated by ASANMOD Enterprise Template v2.0*
