@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: all
+context_depth: 2
+required_knowledge: []
+last_audited: "2026-01-14"
+---
+
 # Coding Conventions
 
 > **Naming and style rules for consistency.**

@@ -1,3 +1,11 @@
+---
+type: task_list
+agent_role: qa_engineer
+context_depth: 3
+required_knowledge: []
+last_audited: "2026-01-14"
+---
+
 # 🩺 [AGENT_NAME] SYSTEM AUDIT REPORT
 **Date:** YYYY-MM-DD
 **Status:** [PROVISIONAL | CERTIFIED]

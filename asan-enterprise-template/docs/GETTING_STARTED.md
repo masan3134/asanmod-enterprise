@@ -1,3 +1,11 @@
+---
+type: documentation
+agent_role: all
+context_depth: 5
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-14"
+---
+
 # Getting Started with ASANMOD Enterprise Template
 
 > **Complete setup guide for first-time users AND agents**

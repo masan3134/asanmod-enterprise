@@ -15,7 +15,7 @@
     "admin_created": false
   },
   "verification": {
-    "last_run": null,
+    "last_run": "2026-01-14T13:26:38.749Z",
     "gates_passed": [],
     "gates_failed": []
   }

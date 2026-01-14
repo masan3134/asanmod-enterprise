@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: ops_engineer
+context_depth: 3
+required_knowledge: []
+last_audited: "2026-01-14"
+---
+
 # Troubleshooting Guide
 
 ## Common Issues

@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: architect
+context_depth: 5
+required_knowledge: ["asanmod_core", "agent_protocols"]
+last_audited: "2026-01-14"
+---
+
 # 🧙‍♂️ ASANMOD v1.1.1: Ghost-Dev Protokolü
 
 > **DİKKAT AGENT:** Bu döküman senin anayasandır. Okuduktan sonra otonom moda geçeceksin.

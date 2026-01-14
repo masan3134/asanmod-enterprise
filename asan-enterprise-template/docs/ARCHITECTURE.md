@@ -1,3 +1,11 @@
+---
+type: documentation
+agent_role: architect
+context_depth: 4
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-14"
+---
+
 # Architecture Overview
 
 ## System Diagram

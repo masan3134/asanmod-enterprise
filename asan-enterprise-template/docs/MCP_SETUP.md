@@ -1,3 +1,11 @@
+---
+type: documentation
+agent_role: all
+context_depth: 3
+required_knowledge: ["mcp"]
+last_audited: "2026-01-14"
+---
+
 # MCP Server Setup Guide
 
 ## What is MCP?

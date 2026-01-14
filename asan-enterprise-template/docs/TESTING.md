@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: qa_engineer
+context_depth: 3
+required_knowledge: ["jest"]
+last_audited: "2026-01-14"
+---
+
 # Testing Guide
 
 ## Running Tests

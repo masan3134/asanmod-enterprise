@@ -1,3 +1,11 @@
+---
+type: task_list
+agent_role: ops_engineer
+context_depth: 4
+required_knowledge: ["deployment"]
+last_audited: "2026-01-14"
+---
+
 # Deployment Checklist
 
 > **Before deploying to production, verify all items below.**

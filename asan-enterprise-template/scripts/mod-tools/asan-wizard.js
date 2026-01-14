@@ -331,6 +331,17 @@ async function runWizard() {
 
   🛡️ ASANMOD v2.1.0-alpha - Iron Curtain Active
   `, COLORS.green);
+
+  // Update manifest to mark wizard as complete
+  const manifestPath = path.join(PROJECT_ROOT, '.asanmod/manifest.json');
+  if (fs.existsSync(manifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.flags.wizard_completed = true;
+    manifest.flags.placeholders_purged = true;
+    manifest.state = 'configured';
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+    log('\n  ✅ Manifest updated: wizard_completed = true', COLORS.green);
+  }
 }
 
 if (require.main === module) {

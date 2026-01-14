@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: backend_engineer
+context_depth: 3
+required_knowledge: ["trpc_patterns"]
+last_audited: "2026-01-14"
+---
+
 # API Reference
 
 > **Auto-generated API documentation**

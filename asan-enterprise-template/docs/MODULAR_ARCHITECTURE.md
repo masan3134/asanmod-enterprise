@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: architect
+context_depth: 4
+required_knowledge: ["architecture"]
+last_audited: "2026-01-14"
+---
+
 # 🏗️ Modular Architecture - Implementation Guide
 
 ## ✅ Structure Implemented

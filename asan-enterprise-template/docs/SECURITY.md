@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: security_specialist
+context_depth: 4
+required_knowledge: ["jwt", "auth"]
+last_audited: "2026-01-14"
+---
+
 # Security Guidelines
 
 ## Authentication

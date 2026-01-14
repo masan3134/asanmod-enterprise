@@ -1,3 +1,11 @@
+---
+type: reference
+agent_role: all
+context_depth: 3
+required_knowledge: ["conventions"]
+last_audited: "2026-01-14"
+---
+
 # Coding Patterns
 
 > **Standard patterns for implementing features in this project.**

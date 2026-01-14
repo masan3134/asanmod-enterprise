@@ -101,3 +101,49 @@ src/
 ## 🔐 CREDENTIALS
 
 See `CREDENTIALS.md` for test accounts.
+
+---
+
+## 🛡️ AGENT DISCIPLINE (Hard Constraints)
+
+### ZERO-TRUST VERIFICATION
+**Never trust previous step output.** Always verify file existence with `ls` or `cat`.
+
+**Example**:
+```bash
+# ❌ Bad: Assume file exists
+cat manifest.json
+
+# ✅ Good: Verify first
+if [ -f "manifest.json" ]; then cat manifest.json; fi
+```
+
+### CONTEXT PRESERVATION
+Every significant change MUST be logged in `CHANGELOG.md` using standard commit format:
+- `feat(scope): description`
+- `fix(scope): description`
+- `docs(scope): description`
+
+### GHOST-DEV RULE
+If a command fails **3 consecutive times**, stop and request "Host Hardware Intervention".
+
+**Rationale**: After 3 failures, the issue is likely environmental (Postgres binary missing, port occupied, etc.), not fixable by agent alone.
+
+### MANIFEST-FIRST STARTUP
+On project start, **always read `.asanmod/manifest.json`** as the very first action to understand system state.
+
+**Query examples**:
+```bash
+# Check if wizard was completed
+cat .asanmod/manifest.json | jq '.flags.wizard_completed'
+
+# Check verification status
+cat .asanmod/manifest.json | jq '.verification.gates_passed'
+
+# Check health
+cat .asanmod/manifest.json | jq '.health'
+```
+
+---
+
+*ASANMOD v2.1.0-alpha - Agent Discipline Enabled*

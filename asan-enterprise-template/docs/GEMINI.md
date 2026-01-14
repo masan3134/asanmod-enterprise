@@ -1,3 +1,11 @@
+---
+type: documentation
+agent_role: gemini_agent
+context_depth: 4
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-14"
+---
+
 <!--
 ASANMOD v1.1.1 - DOCUMENTATION HEADER
 ID: CONST-003
