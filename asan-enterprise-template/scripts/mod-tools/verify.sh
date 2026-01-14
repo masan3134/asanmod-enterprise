@@ -1,6 +1,7 @@
 #!/bin/bash
-# ASANMOD v2.0.1: Code Quality Verification
+# ASANMOD v2.0.1: Code Quality Verification with Evidence Logging
 # Runs: ESLint + TypeScript + Tests + Env Check + Build
+# Creates: logs/verify-YYYYMMDD-HHMMSS.json
 
 set -e
 
@@ -11,78 +12,143 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# Create logs directory
+mkdir -p logs
+
+# Generate timestamp
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+TIMESTAMP_FILE=$(date -u +"%Y%m%d-%H%M%S")
+VERIFY_LOG="logs/verify-${TIMESTAMP_FILE}.json"
+
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BLUE}🔍 ASANMOD Code Quality Verification${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "Evidence: $VERIFY_LOG"
 echo ""
+
+# Initialize results
+LINT_STATUS="pending"
+TSC_STATUS="pending"
+TEST_STATUS="pending"
+ENV_STATUS="pending"
+AUDIT_STATUS="pending"
+BUILD_STATUS="pending"
+OVERALL_STATUS="success"
 
 # 1. Environment Check
 echo -e "${YELLOW}[1/6]${NC} Checking environment..."
 if [ ! -f ".env" ]; then
     echo -e "${RED}❌ .env file not found${NC}"
-    exit 1
-fi
+    ENV_STATUS="failed"
+    OVERALL_STATUS="failed"
+else
+    # Check required env vars
+    REQUIRED_VARS=("DATABASE_URL" "JWT_SECRET")
+    ENV_MISSING=""
+    for var in "${REQUIRED_VARS[@]}"; do
+        if ! grep -q "^${var}=" .env; then
+            ENV_MISSING="${ENV_MISSING}${var} "
+        fi
+    done
 
-# Check required env vars
-REQUIRED_VARS=("DATABASE_URL" "JWT_SECRET")
-for var in "${REQUIRED_VARS[@]}"; do
-    if ! grep -q "^${var}=" .env; then
-        echo -e "${RED}❌ Required variable missing: $var${NC}"
-        exit 1
+    if [ -n "$ENV_MISSING" ]; then
+        echo -e "${RED}❌ Required variables missing: $ENV_MISSING${NC}"
+        ENV_STATUS="failed"
+        OVERALL_STATUS="failed"
+    else
+        echo -e "${GREEN}✅ Environment validated${NC}"
+        ENV_STATUS="passed"
     fi
-done
-echo -e "${GREEN}✅ Environment validated${NC}"
+fi
 echo ""
 
 # 2. ESLint
 echo -e "${YELLOW}[2/6]${NC} Running ESLint..."
-if npm run lint; then
+if npm run lint > /dev/null 2>&1; then
     echo -e "${GREEN}✅ ESLint passed${NC}"
+    LINT_STATUS="passed"
 else
     echo -e "${RED}❌ ESLint failed${NC}"
-    exit 1
+    LINT_STATUS="failed"
+    OVERALL_STATUS="failed"
 fi
 echo ""
 
 # 3. TypeScript
 echo -e "${YELLOW}[3/6]${NC} Running TypeScript check..."
-if npx tsc --noEmit; then
+if npx tsc --noEmit > /dev/null 2>&1; then
     echo -e "${GREEN}✅ TypeScript check passed${NC}"
+    TSC_STATUS="passed"
 else
     echo -e "${RED}❌ TypeScript errors found${NC}"
-    exit 1
+    TSC_STATUS="failed"
+    OVERALL_STATUS="failed"
 fi
 echo ""
 
 # 4. Tests
 echo -e "${YELLOW}[4/6]${NC} Running tests..."
-if npm test -- --passWithNoTests; then
+if npm test -- --passWithNoTests > /dev/null 2>&1; then
     echo -e "${GREEN}✅ Tests passed${NC}"
+    TEST_STATUS="passed"
 else
     echo -e "${RED}❌ Tests failed${NC}"
-    exit 1
+    TEST_STATUS="failed"
+    OVERALL_STATUS="failed"
 fi
 echo ""
 
 # 5. Security Audit
 echo -e "${YELLOW}[5/6]${NC} Running security audit..."
-if npm audit --omit=dev --audit-level=high; then
+if npm audit --omit=dev --audit-level=high > /dev/null 2>&1; then
     echo -e "${GREEN}✅ No high/critical vulnerabilities${NC}"
+    AUDIT_STATUS="passed"
 else
     echo -e "${YELLOW}⚠️  Vulnerabilities found (review recommended)${NC}"
+    AUDIT_STATUS="warning"
 fi
 echo ""
 
 # 6. Build Test
 echo -e "${YELLOW}[6/6]${NC} Testing production build..."
-if npm run build; then
+if npm run build > /dev/null 2>&1; then
     echo -e "${GREEN}✅ Build successful${NC}"
+    BUILD_STATUS="passed"
 else
     echo -e "${RED}❌ Build failed${NC}"
-    exit 1
+    BUILD_STATUS="failed"
+    OVERALL_STATUS="failed"
 fi
 
+# Write evidence log
+cat > "$VERIFY_LOG" <<EOF
+{
+  "timestamp": "$TIMESTAMP",
+  "node_version": "$(node -v)",
+  "npm_version": "$(npm -v)",
+  "checks": {
+    "environment": "$ENV_STATUS",
+    "lint": "$LINT_STATUS",
+    "typescript": "$TSC_STATUS",
+    "tests": "$TEST_STATUS",
+    "security_audit": "$AUDIT_STATUS",
+    "build": "$BUILD_STATUS"
+  },
+  "overall_status": "$OVERALL_STATUS"
+}
+EOF
+
 echo ""
-echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}✅ All checks passed!${NC}"
-echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+if [ "$OVERALL_STATUS" = "success" ]; then
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GREEN}✅ All checks passed!${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo "Evidence: $VERIFY_LOG"
+    exit 0
+else
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${RED}❌ Verification failed${NC}"
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo "Evidence: $VERIFY_LOG"
+    exit 1
+fi
