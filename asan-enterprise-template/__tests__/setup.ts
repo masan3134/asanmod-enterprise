@@ -4,8 +4,9 @@
  */
 
 // Set test environment variables
-process.env.NODE_ENV = "test";
-process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test_db";
+// Use Object.defineProperty to avoid READ-ONLY error
+Object.defineProperty(process.env, 'NODE_ENV', { value: 'test', writable: true });
+Object.defineProperty(process.env, 'DATABASE_URL', { value: 'postgresql://test:test@localhost:5432/test_db', writable: true });
 
 // Global test utilities
 global.console = {

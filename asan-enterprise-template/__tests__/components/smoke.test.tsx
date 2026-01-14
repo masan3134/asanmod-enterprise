@@ -27,7 +27,7 @@ describe("Component Smoke Tests", () => {
       <EmptyState
         title="Empty"
         description="Test"
-        action={{ label: "Click me", onClick: () => {} }}
+        action={<button>Click me</button>}
       />
     );
     expect(getByText("Click me")).toBeTruthy();
