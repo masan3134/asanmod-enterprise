@@ -1,66 +1,26 @@
 <!--
-ASANMOD v1.1.1 - DOCUMENTATION HEADER
-ID: CONST-003
-STATUS: ACTIVE
-TYPE: PROTOCOL
-LAST_UPDATED: 2026-01-13 (UTC)
-VERSION: v1.1.1
+ASANMOD v1.1.1 - GEMINI PROTOCOL
 -->
 
-# ASANMOD v1.1.1: GEMINI HARD CONSTRAINT PROTOCOL
+# ASANMOD v1.1.1: GEMINI PROTOCOL
 
-> **EXECUTABLE RULES. ZERO DOCUMENTATION BURDEN.**
+> **Read asanmod-core.json first.**
 
-### 🚨 HARD CONSTRAINTS (PHYSICALLY ENFORCED)
+## 🔒 CONSTRAINTS
 
-| Constraint                               | Enforcement                 |
-| ---------------------------------------- | --------------------------- |
-| Commit format: `ID: <TASK> \| <Message>` | `.husky/commit-msg` REJECTS |
-| No `console.log` in backend              | `.husky/pre-commit` REJECTS |
-| State TTL (30dk)                         | `verify-core.cjs` BLOCKS    |
-| >50 satır option yok                     | `interaction-guard` REJECTS |
-| **READ asanmod-core.json FIRST**         | **AGENT CONTRACT**          |
+- Commit format: `type(scope): message`
+- Read `docs/asanmod-core.json` first
+- Read `docs/AGENT_QUICK_REF.md` for all info
 
-### 🛡️ IRON CURTAIN ISOLATION
+## 🌐 PORTS
 
-| Environment | Access      | Port     | Rule               |
-| ----------- | ----------- | -------- | ------------------ |
-| **DEV**     | IP Only     | **3000** | Hot Reload ✅      |
-| **PROD**    | Domain Only | **3002** | Touch Forbidden ❌ |
+- DEV: 3000 (frontend), 3001 (backend)
+- PROD: 3002 (frontend), 3003 (backend)
 
-**Verification Ritual:** `curl http://localhost:3000` (Dev) / `curl http://localhost:3002` (Prod) MUST return 200 OK.
+## 📖 REFERENCE
 
-### ⚡ v1.1.1 AUTOMATION
+All info in `docs/AGENT_QUICK_REF.md`
 
-```bash
-# PM2 (NEVER write full names!)
-./scripts/mod-tools/pm prod status
-./scripts/mod-tools/pm prod restart backend
+---
 
-# Production Deploy (Atomic)
-npm run deploy-prod
-
-# V10 Dashboard
-npm run v10:status
-
-# Verify & Fix
-npm run verify    # Quality check
-npm run fix       # Auto-fix lint
-npm run status    # System status
-```
-
-### 📖 SINGLE REFERENCE
-
-**Read ONLY this:** `docs/AGENT_QUICK_REF.md`
-(Ports, commands, paths, rules - all in one page)
-
-### 🧠 JIT CONTEXT
-
-1. **On Error:** `node scripts/mod-tools/context-loader.cjs "<error>"`
-2. **On Noise:** `node scripts/mod-tools/smart-logs.cjs`
-
-### 🟢 START SEQUENCE
-
-1. `read_file("docs/AGENT_QUICK_REF.md")`
-2. Check `npm run state:status`
-3. Report: "**ASANMOD v1.1.1 ONLINE. Iron Curtain Active.**"
+*ASANMOD v1.1.1*

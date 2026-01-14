@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
-  "name": "ASANMOD Enterprise Template",
-  "lastUpdated": "2026-01-13T00:00:00Z",
-  "description": "Production-ready SaaS template configuration",
+  "version": "1.1.1",
+  "name": "ASANMOD - Autonomous Governance System",
+  "lastUpdated": "2026-01-14T03:06:00Z",
+  "description": "AI-Native Software Factory Protocol for Enterprise Applications",
 
   "network": {
     "dev": {
@@ -19,85 +19,61 @@
 
   "database": {
     "dev": {
-      "name": "app_dev_db",
+      "name": "[PROJECT]_dev_db",
       "host": "localhost",
       "port": 5432,
-      "user": "postgres",
-      "connectionString": "postgresql://postgres:password@localhost:5432/app_dev_db"
+      "user": "[DB_USER]"
     },
     "prod": {
-      "name": "app_prod_db",
+      "name": "[PROJECT]_prod_db",
       "host": "localhost",
       "port": 5432,
-      "user": "postgres",
-      "connectionString": "postgresql://postgres:password@localhost:5432/app_prod_db"
+      "user": "[DB_USER]"
+    }
+  },
+
+  "credentials": {
+    "dev": {
+      "admin": { "email": "admin@example.com", "password": "See .env file" }
     }
   },
 
   "scripts": {
-    "v10": {
-      "stateManager": "scripts/mod-tools/state-manager-v10.cjs",
-      "interactionGuard": "scripts/mod-tools/interaction-guard.cjs",
-      "decisionLogger": "scripts/mod-tools/decision-logger.cjs",
-      "checkpoint": "scripts/mod-tools/checkpoint.cjs",
-      "dashboard": "scripts/mod-tools/v10-dashboard.cjs"
-    },
     "core": {
       "pm2Wrapper": "scripts/mod-tools/pm",
-      "envHelper": "scripts/mod-tools/env-helper.cjs",
-      "verifyCore": "scripts/mod-tools/verify-core.cjs",
       "deployProd": "scripts/mod-tools/deploy-prod.sh",
-      "fastVerify": "scripts/mod-tools/fast-verify.sh"
+      "preFlight": "scripts/mod-tools/pre-flight.cjs"
     }
   },
 
   "constraints": {
     "commitFormat": {
-      "pattern": "^ID: [A-Z0-9-]+ \\| .+",
-      "example": "ID: FEAT-001 | Added login page",
+      "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+",
+      "example": "feat(auth): add login validation",
       "enforcer": ".husky/commit-msg"
-    },
-    "consoleLogBan": {
-      "scope": "src/**/*.ts",
-      "enforcer": ".husky/pre-commit"
-    },
-    "stateTTL": {
-      "minutes": 30,
-      "enforcer": "verify-core.cjs"
-    },
-    "interactionThreshold": {
-      "lines": 50,
-      "criticalFiles": ["package.json", ".env.prod", "ecosystem.config.js"]
     }
   },
 
   "rules": {
     "zeroTolerance": true,
-    "nativePm2": true,
-    "noDockerHostnamesInProd": true,
-    "surgicalVerify": true
+    "language": "ENGLISH"
   },
 
   "paths": {
     "project": ".",
-    "backend": "src/",
-    "frontend": "src/",
     "scripts": "scripts/mod-tools/",
-    "state": ".asanmod/state/",
-    "logs": ".asanmod/logs/",
-    "checkpoints": ".asanmod/checkpoints/"
+    "docs": "docs/"
   },
 
   "files": {
-    "agentProtocol": "docs/GHOST_DEV_PROTOCOL.md",
+    "agentProtocol": "GEMINI.md",
     "quickRef": "docs/AGENT_QUICK_REF.md",
-    "cursorRules": ".cursorrules",
     "readme": "README.md"
   },
 
   "_meta": {
-    "schema": "1.0.0",
-    "generator": "ASANMOD Template v1.1.1",
-    "note": "This file is the Single Source of Truth for ASANMOD automation."
+    "schema": "1.1.1",
+    "generator": "ASANMOD Enterprise Template v2.0",
+    "note": "This file is the single source of truth. Configure for your project."
   }
 }
