@@ -3,7 +3,7 @@ type: task_list
 agent_role: all
 context_depth: 5
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-15"
 critical: true
 ---
 
@@ -14,10 +14,30 @@ critical: true
 ---
 
 ## 🛠️ PHASE 1: System Baseline
+
 - [ ] **Read Governance** | EXEC: `cat docs/asanmod-core.json docs/AGENT_QUICK_REF.md` | CHECK: Confirm ports and constraints are understood
 - [ ] **Install Dependencies** | EXEC: `npm install` | CHECK: `ls node_modules | wc -l` returns >100
-- [ ] **Run AI Wizard** | EXEC: `npm run wizard` | CHECK: `grep -r "\[PROJECT_NAME\]" . --exclude-dir=node_modules | wc -l` returns 0
-  - *Note: Wizard will perform a system audit. Provide your consensus to proceed if prompted.*
+
+### ⚠️ WIZARD IS INTERACTIVE - READ THIS FIRST!
+
+The wizard requires user input. You MUST:
+1. **Ask the USER** for project details BEFORE running wizard
+2. **Use send_command_input** to provide answers when wizard prompts
+
+#### Step 1: Collect Info from USER
+Ask the user:
+- "What is your project name?" (e.g., "My SaaS App")
+- "Brief description?" (e.g., "A task management app")
+- "Which modules? 1=auth, 2=users, 3=admin, 4=payments, 5=files" (e.g., "1,2,3")
+
+#### Step 2: Run Wizard with Inputs
+- [ ] **Run AI Wizard** | EXEC: `npm run wizard`
+- When `Project name:` prompt appears → send_command_input: `{project_name}\n`
+- When `Description:` prompt appears → send_command_input: `{description}\n`
+- When `Enter numbers (e.g., 1,2,3):` appears → send_command_input: `{modules}\n`
+- When `Deploy to production? (y/N):` appears → send_command_input: `n\n`
+- CHECK: `grep -r "\[PROJECT_NAME\]" . --exclude-dir=node_modules | wc -l` returns 0
+
 - [ ] **Verify Placeholders** | EXEC: N/A | CHECK: `grep -r "WIZARD_WILL_FILL" . --exclude-dir=node_modules | wc -l` returns 0
 
 ## 🗄️ PHASE 2: Infrastructure Sync
