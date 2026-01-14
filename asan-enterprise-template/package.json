@@ -1,6 +1,6 @@
 {
   "name": "asan-enterprise-template",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "scripts": {
     "prepare": "husky install || true",
@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "fix": "next lint --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "test:coverage": "jest --coverage",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -24,7 +24,8 @@
     "restore": "bash scripts/restore-db.sh",
     "reset-dev": "bash scripts/reset-dev.sh",
     "health": "bash scripts/mod-tools/health-check.sh",
-    "verify": "bash scripts/mod-tools/verify.sh"
+    "verify": "bash scripts/mod-tools/verify.sh",
+    "doctor": "node scripts/mod-tools/doctor.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -39,12 +40,13 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.344.0",
     "next": "^14.2.0",
-    "pg": "^8.11.3",
+    "pg": "^8.16.3",
+    "pg-mem": "^3.0.5",
     "postgres": "^3.4.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.49.3",
-    "superjson": "^2.2.1",
+    "superjson": "1.13.3",
     "tailwind-merge": "^2.2.1",
     "zod": "^3.22.4"
   },

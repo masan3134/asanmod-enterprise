@@ -198,9 +198,9 @@ function createLock(projectName, modules) {
   const lock = {
     projectName,
     installedAt: new Date().toISOString(),
-    version: '2.0.0',
+    version: '2.0.2',
     modules,
-    protocol: 'ASANMOD v2.0.1 Wizard',
+    protocol: 'ASANMOD v2.0.2 Wizard',
   };
 
   fs.writeFileSync(path.join(lockDir, 'installed.lock'), JSON.stringify(lock, null, 2));
@@ -220,6 +220,31 @@ function updateCredentials(adminEmail, adminPassword) {
 }
 
 // Main wizard
+async function checkAndCreateDbUser(dbUser, rl) {
+  try {
+    console.log(`\n🔍 Checking DB user: ${dbUser}...`);
+    execSync(`psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='${dbUser}'"`, { stdio: 'pipe' });
+    console.log(`✅ DB user '${dbUser}' already exists.`);
+  } catch (err) {
+    console.log(`⚠️  DB user '${dbUser}' not found.`);
+    const answer = await new Promise((resolve) => {
+      rl.question(`❓ Do you want to try creating the role '${dbUser}'? (y/n): `, resolve);
+    });
+
+    if (answer.toLowerCase() === 'y') {
+      try {
+        console.log(`🚀 Creating role '${dbUser}'...`);
+        // We use -s for superuser to make dev setup easier
+        execSync(`sudo -u postgres psql -c "CREATE ROLE ${dbUser} WITH LOGIN SUPERUSER PASSWORD '${dbUser}';"`, { stdio: 'pipe' });
+        console.log(`✅ Role '${dbUser}' created successfully.`);
+      } catch (createErr) {
+        console.log(`❌ Failed to create role: ${createErr.message}`);
+        console.log(`💡 Manual fix: sudo -u postgres psql -c "CREATE ROLE ${dbUser} WITH LOGIN SUPERUSER PASSWORD '${dbUser}';"`);
+      }
+    }
+  }
+}
+
 async function runWizard() {
   // Check if already installed
   if (isInstalled()) {
@@ -231,7 +256,7 @@ async function runWizard() {
 
   const rl = createPrompt();
 
-  header('🧙 ASANMOD v2.0.1 WIZARD');
+  header('🧙 ASANMOD v2.0.2 WIZARD');
   log('\nWelcome! This wizard will set up your project.\n');
 
   // Pre-flight
@@ -251,6 +276,9 @@ async function runWizard() {
     .replace(/[^a-z0-9]/g, '_')
     .replace(/_+/g, '_') + '_db';
   log(`  Database name will be: ${dbName}`, COLORS.cyan);
+
+  const dbUser = 'postgres'; // Default for dev, wizard can be hardened later for custom users
+  await checkAndCreateDbUser(dbUser, rl);
 
   // Module selection
   header('📦 MODULE SELECTION');
@@ -301,7 +329,7 @@ async function runWizard() {
      Email: admin@example.com
      Password: admin123
 
-  🛡️ ASANMOD v2.0.1 - Iron Curtain Active
+  🛡️ ASANMOD v2.0.2 - Iron Curtain Active
   `, COLORS.green);
 }
 

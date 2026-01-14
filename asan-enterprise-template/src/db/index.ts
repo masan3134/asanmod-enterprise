@@ -1,14 +1,24 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { newDb } from "pg-mem";
 import * as schema from "./schema";
 
-// Create pool - will be initialized when DATABASE_URL is available
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+// Create database connection based on environment
+const getDb = () => {
+  if (process.env.NODE_ENV === "test") {
+    const mem = newDb();
+    // Setup the memory database if needed (e.g. extensions)
+    const pool = mem.adapters.createPg().Pool;
+    return drizzle(new pool() as any, { schema });
+  }
 
-// Create drizzle instance
-export const db = drizzle(pool, { schema });
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
+  return drizzle(pool, { schema });
+};
+
+export const db = getDb();
 
 // Export types
 export type DbClient = typeof db;
