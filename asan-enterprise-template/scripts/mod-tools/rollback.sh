@@ -23,6 +23,7 @@ error() {
 # Parse arguments
 TARGET_SHA=""
 RESTORE_DB=1
+DRY_RUN=0
 
 for arg in "$@"; do
     case $arg in
@@ -31,6 +32,9 @@ for arg in "$@"; do
             ;;
         --no-restore-db)
             RESTORE_DB=0
+            ;;
+        --dry-run)
+            DRY_RUN=1
             ;;
         *)
             ;;
@@ -57,6 +61,28 @@ fi
 
 log "Target SHA: $TARGET_SHA"
 echo ""
+
+# DRY RUN mode - show plan without executing
+if [ "$DRY_RUN" = "1" ]; then
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}🔍 DRY RUN - Rollback Plan${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    log "Would perform the following operations:"
+    log "1. Create safety backup branch: rollback-backup-$(date +%Y%m%d-%H%M%S)"
+    if [ "$RESTORE_DB" = "1" ]; then
+        log "2. Restore database from backup"
+    else
+        log "2. Skip database restore (--no-restore-db)"
+    fi
+    log "3. Git reset --hard to: $TARGET_SHA"
+    log "4. npm install (dependency sync)"
+    log "5. Re-deploy with SKIP_MIGRATE=1 NO_BACKUP=1"
+    log "6. Health check validation"
+    echo ""
+    log "DRY RUN complete - no changes made"
+    exit 0
+fi
 
 # Confirmation
 echo -e "${RED}⚠️  WARNING: This will roll back code and optionally database${NC}"
