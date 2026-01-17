@@ -31,7 +31,11 @@
     "verify": "bash scripts/mod-tools/verify.sh",
     "doctor": "node scripts/mod-tools/doctor.js",
     "bump": "node scripts/mod-tools/version-manager.cjs bump",
-    "version:sync": "node scripts/mod-tools/version-manager.cjs sync"
+    "version:sync": "node scripts/mod-tools/version-manager.cjs sync",
+    "db:health": "node scripts/mod-tools/db-health-check.cjs",
+    "db:health:dev": "node scripts/mod-tools/db-health-check.cjs dev",
+    "db:health:prod": "node scripts/mod-tools/db-health-check.cjs prod",
+    "db:sync-check": "node scripts/mod-tools/db-sync-check.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

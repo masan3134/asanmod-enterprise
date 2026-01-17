@@ -3,15 +3,15 @@ type: documentation
 agent_role: gemini_agent
 context_depth: 5
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-17"
 critical: true
 ---
 
 <!--
-ASANMOD v1.1.1 - GEMINI PROTOCOL
+ASANMOD v1.2.0 - GEMINI PROTOCOL
 -->
 
-# ASANMOD v1.1.1: GEMINI PROTOCOL
+# ASANMOD v1.2.0: GEMINI PROTOCOL
 
 > **Read asanmod-core.json first.**
 
@@ -44,10 +44,21 @@ ASANMOD v1.1.1 - GEMINI PROTOCOL
 - DEV: 3000 (frontend), 3001 (backend)
 - PROD: 3002 (frontend), 3003 (backend)
 
+## 🏥 DB PROTECTION (v1.2.0)
+
+```bash
+npm run db:health          # DEV DB orphan kontrolü
+npm run db:health:prod     # PROD DB orphan kontrolü
+npm run db:sync-check      # DEV vs PROD karşılaştırma
+```
+
+**Güvenlik:** Bu scriptler SALT-OKUNUR - hiçbir veri değiştirmez.
+
 ## 📖 REFERENCE
 
 All info in `docs/AGENT_QUICK_REF.md`
 
 ---
 
-*ASANMOD v1.1.1*
+*ASANMOD v1.2.0 - DB Protection*
+
