@@ -54,7 +54,7 @@
   "rules": {
     "zeroTolerance": true,
     "language": "ENGLISH",
-    "lockedVersion": "3.0.0",
+    "lockedVersion": "3.2.0",
     "unauthorizedVersionBump": "STRICTLY_FORBIDDEN"
   },
   "paths": {
