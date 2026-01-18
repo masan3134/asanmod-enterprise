@@ -3,15 +3,15 @@ type: documentation
 agent_role: cursor_agent
 context_depth: 5
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-17"
+last_audited: "2026-01-18"
 critical: true
 ---
 
 <!--
-ASANMOD v1.2.0 - CURSOR PROTOCOL
+ASANMOD v1.3.0 - CURSOR PROTOCOL
 -->
 
-# ASANMOD v1.2.0: CURSOR PROTOCOL
+# ASANMOD v1.3.0: CURSOR PROTOCOL
 
 > **Read asanmod-core.json first.**
 
@@ -41,8 +41,23 @@ ASANMOD v1.2.0 - CURSOR PROTOCOL
 
 ## 🌐 PORTS
 
-- DEV: 3000 (frontend), 3001 (backend)
-- PROD: 3002 (frontend), 3003 (backend)
+- DEV: 3000 (app-dev)
+- PROD: 3002 (app-prod)
+
+## ⚡ PM2 COMMANDS (v10.0)
+
+```bash
+# Standard Commands
+./scripts/mod-tools/pm dev status
+./scripts/mod-tools/pm prod restart
+./scripts/mod-tools/pm dev logs
+
+# 🤖 AI-RESPONSIVE (v10.0)
+./scripts/mod-tools/pm dev errors     # Hata taraması (UTC+3)
+./scripts/mod-tools/pm prod diag      # Diagnostic rapor
+./scripts/mod-tools/pm dev health     # Servis sağlığı
+./scripts/mod-tools/pm dev memory     # Memory kullanımı
+```
 
 ## 🏥 DB PROTECTION (v1.2.0)
 
@@ -60,5 +75,4 @@ All info in `docs/AGENT_QUICK_REF.md`
 
 ---
 
-*ASANMOD v1.2.0 - DB Protection*
-
+*ASANMOD v1.3.0 - AI-Responsive PM2*

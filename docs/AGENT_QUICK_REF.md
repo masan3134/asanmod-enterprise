@@ -3,11 +3,11 @@ type: reference
 agent_role: all
 context_depth: 3
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-18"
 critical: true
 ---
 
-# 🚀 AGENT QUICK REFERENCE
+# 🚀 AGENT QUICK REFERENCE (v10.0)
 
 > **Single page, all information. Read asanmod-core.json first.**
 
@@ -24,10 +24,10 @@ critical: true
 
 ## 🌐 NETWORK (from asanmod-core.json)
 
-| Environment | Frontend | Backend |
-| ----------- | -------- | ------- |
-| **DEV**     | 3000     | 3001    |
-| **PROD**    | 3002     | 3003    |
+| Environment | App Name   | Port |
+| ----------- | ---------- | ---- |
+| **DEV**     | app-dev    | 3000 |
+| **PROD**    | app-prod   | 3002 |
 
 ---
 
@@ -59,14 +59,31 @@ npm run deploy-prod    # Safe production deployment
 npm run health         # System health check
 ```
 
-### PM2
+---
+
+## ⚡ PM2 COMMANDS (v10.0 - AI-Responsive)
+
+### Standard Commands
 ```bash
 ./scripts/mod-tools/pm dev status      # Check dev status
 ./scripts/mod-tools/pm dev restart     # Restart dev
 ./scripts/mod-tools/pm prod status     # Check prod status
 ./scripts/mod-tools/pm prod restart    # Restart prod
-./scripts/mod-tools/pm prod logs       # View prod logs
+./scripts/mod-tools/pm prod logs       # View prod logs (last 100)
+./scripts/mod-tools/pm prod logs-live  # Live streaming logs
 ```
+
+### 🤖 AI-Responsive Commands (v10.0)
+```bash
+./scripts/mod-tools/pm dev errors      # Hata taraması (UTC+3)
+./scripts/mod-tools/pm prod errors     # Prod hata taraması
+./scripts/mod-tools/pm dev diag        # Tam diagnostic rapor
+./scripts/mod-tools/pm prod diag       # Prod diagnostic
+./scripts/mod-tools/pm dev health      # Servis sağlığı
+./scripts/mod-tools/pm dev memory      # Memory kullanımı
+```
+
+> **🤖 Agent İpucu:** Hata mı var? Önce `./scripts/mod-tools/pm dev errors` çalıştır!
 
 ---
 
@@ -92,4 +109,4 @@ docs(readme): update installation
 
 ---
 
-*ASANMOD v3.0.0*
+*ASANMOD v10.0 - AI-Responsive PM2*

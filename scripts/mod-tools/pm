@@ -1,16 +1,16 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-# ASANMOD v10: PM2 ALIAS WRAPPER - Enhanced Edition
+# ASANMOD v10: PM2 ALIAS WRAPPER - Universal Edition
 # ═══════════════════════════════════════════════════════════════════
-# Usage: ./scripts/mod-tools/pm <env> <action> [service]
+# Usage: ./scripts/mod-tools/pm <env> <action>
 #
 # Examples:
 #   ./scripts/mod-tools/pm prod status           # All prod services status
-#   ./scripts/mod-tools/pm prod restart backend  # Restart prod backend
-#   ./scripts/mod-tools/pm dev logs frontend     # Show dev frontend logs
-#   ./scripts/mod-tools/pm prod restart all      # Restart all prod services
+#   ./scripts/mod-tools/pm prod restart          # Restart prod
+#   ./scripts/mod-tools/pm dev logs              # Show dev logs
 #   ./scripts/mod-tools/pm prod health           # Quick health check
-#   ./scripts/mod-tools/pm prod memory           # Memory usage summary
+#   ./scripts/mod-tools/pm dev errors            # 🤖 AI: Error scan (UTC+3)
+#   ./scripts/mod-tools/pm prod diag             # 🤖 AI: Full diagnostic
 #
 # ═══════════════════════════════════════════════════════════════════
 
@@ -19,7 +19,6 @@
 
 ENV="${1:-}"
 ACTION="${2:-}"
-SERVICE="${3:-}"
 
 # Color codes
 RED='\033[0;31m'
@@ -34,22 +33,37 @@ NC='\033[0m' # No Color
 # Timing
 START_TIME=$(date +%s%N)
 
+# Get project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# Get app name from ecosystem.config.cjs or default
+get_app_name() {
+    local env=$1
+    echo "app-$env"
+}
+
+# Get log path
+get_log_path() {
+    echo "$PROJECT_ROOT/logs"
+}
+
 print_usage() {
     echo ""
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${GREEN}${BOLD}ASANMOD v10: PM2 ALIAS WRAPPER${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
-    echo "Usage: ./scripts/mod-tools/pm <env> <action> [service]"
+    echo "Usage: ./scripts/mod-tools/pm <env> <action>"
     echo ""
     echo -e "${YELLOW}Environments:${NC}"
-    echo "  dev     Development environment (ports 3000/3001)"
-    echo "  prod    Production environment (ports 8204/8205)"
+    echo "  dev     Development environment"
+    echo "  prod    Production environment"
     echo ""
     echo -e "${YELLOW}Actions:${NC}"
-    echo "  start       Start service(s)"
-    echo "  stop        Stop service(s)"
-    echo "  restart     Restart service(s)"
+    echo "  start       Start service"
+    echo "  stop        Stop service"
+    echo "  restart     Restart service"
     echo "  reload      Graceful reload (cluster mode only)"
     echo "  status      Show status"
     echo "  logs        Show logs (last 100 lines)"
@@ -63,18 +77,12 @@ print_usage() {
     echo "  diag        🤖 AI: Full diagnostic report"
     echo "  save        Save PM2 process list for startup"
     echo ""
-    echo -e "${YELLOW}Services:${NC}"
-    echo "  frontend  Frontend service"
-    echo "  backend   Backend service"
-    echo "  brain     IKAI Brain (prod only)"
-    echo "  all       All services for the environment"
-    echo ""
     echo -e "${YELLOW}Examples:${NC}"
     echo "  ./scripts/mod-tools/pm prod status"
-    echo "  ./scripts/mod-tools/pm prod restart backend"
-    echo "  ./scripts/mod-tools/pm dev logs frontend"
-    echo "  ./scripts/mod-tools/pm prod restart all"
+    echo "  ./scripts/mod-tools/pm prod restart"
+    echo "  ./scripts/mod-tools/pm dev logs"
     echo "  ./scripts/mod-tools/pm prod health"
+    echo "  ./scripts/mod-tools/pm dev errors"
     echo ""
     exit 1
 }
@@ -101,53 +109,14 @@ log_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
-# Validate inputs
-if [[ -z "$ENV" || -z "$ACTION" ]]; then
-    print_usage
-fi
-
-if [[ "$ENV" != "dev" && "$ENV" != "prod" ]]; then
-    log_error "Invalid environment: $ENV"
-    echo "   Valid options: dev, prod"
-    exit 1
-fi
-
-# Map service names to PM2 process names
-get_pm2_name() {
-    local env=$1
-    local service=$2
-
-    case "$env-$service" in
-        "dev-frontend")  echo "ikai-dev-frontend" ;;
-        "dev-backend")   echo "ikai-dev-backend" ;;
-        "prod-frontend") echo "ikai-prod-frontend" ;;
-        "prod-backend")  echo "ikai-prod-backend" ;;
-        "prod-brain")    echo "ikai-brain" ;;
-        *)
-            echo ""
-            return 1
-            ;;
-    esac
-}
-
-# Get all services for an environment
-get_all_services() {
-    local env=$1
-    if [[ "$env" == "prod" ]]; then
-        echo "ikai-prod-frontend ikai-prod-backend ikai-brain"
-    else
-        echo "ikai-dev-frontend ikai-dev-backend"
-    fi
-}
-
 # Check if service is running
 is_service_running() {
     local name=$1
     pm2 jlist 2>/dev/null | grep -q "\"name\":\"$name\"" && \
-    pm2 jlist 2>/dev/null | grep -A5 "\"name\":\"$name\"" | grep -q '"status":"online"'
+    pm2 jlist 2>/dev/null | grep -A5 "\"name\":\"$name\"" | grep -q "\"status\":\"online\""
 }
 
-# Get service memory usage
+# Get memory usage
 get_memory_usage() {
     local name=$1
     pm2 jlist 2>/dev/null | python3 -c "
@@ -159,126 +128,84 @@ try:
             mem = proc.get('monit', {}).get('memory', 0)
             print(f'{mem / 1024 / 1024:.1f}MB')
             break
+    else:
+        print('N/A')
 except:
     print('N/A')
-" 2>/dev/null || echo "N/A"
-}
-
-# Execute PM2 command with error handling
-execute_pm2() {
-    local action=$1
-    local target=$2
-    local show_output=${3:-true}
-
-    if [[ "$show_output" == "true" ]]; then
-        echo -e "${BLUE}▶ pm2 $action $target${NC}"
-    fi
-
-    if pm2 $action $target 2>&1; then
-        return 0
-    else
-        local exit_code=$?
-        log_error "Command failed with exit code: $exit_code"
-        return $exit_code
-    fi
+" 2>/dev/null
 }
 
 # Quick health check
 health_check() {
-    echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}🏥 PM2 Health Check: $ENV${NC}"
-    echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${NC}"
+    local app_name=$(get_app_name "$ENV")
+
+    echo "═══════════════════════════════════════════════════════════════"
+    echo "🏥 PM2 Health Check: $ENV"
+    echo "═══════════════════════════════════════════════════════════════"
     echo ""
 
-    local all_healthy=true
-    local services=$(get_all_services "$ENV")
-
-    for service in $services; do
-        local status_icon
-        local status_text
-        local memory
-
-        if is_service_running "$service"; then
-            status_icon="${GREEN}●${NC}"
-            status_text="${GREEN}online${NC}"
-            memory=$(get_memory_usage "$service")
-        else
-            status_icon="${RED}○${NC}"
-            status_text="${RED}offline${NC}"
-            memory="-"
-            all_healthy=false
-        fi
-
-        printf "  %b %-25s %b  %s\n" "$status_icon" "$service" "$status_text" "$memory"
-    done
+    if is_service_running "$app_name"; then
+        local mem=$(get_memory_usage "$app_name")
+        echo -e "  ${GREEN}●${NC} ${app_name}         ${GREEN}online${NC}  ${mem}"
+    else
+        echo -e "  ${RED}●${NC} ${app_name}         ${RED}offline${NC}"
+    fi
 
     echo ""
-    if [[ "$all_healthy" == "true" ]]; then
+
+    if is_service_running "$app_name"; then
         log_success "All $ENV services are healthy"
     else
-        log_warn "Some services are not running"
+        log_error "Some $ENV services are offline"
     fi
 }
 
 # Memory summary
 memory_summary() {
-    echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}💾 Memory Usage: $ENV${NC}"
-    echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${NC}"
+    local app_name=$(get_app_name "$ENV")
+
+    echo "═══════════════════════════════════════════════════════════════"
+    echo "💾 Memory Usage: $ENV"
+    echo "═══════════════════════════════════════════════════════════════"
     echo ""
 
-    local total_mem=0
-    local services=$(get_all_services "$ENV")
-
-    for service in $services; do
-        if is_service_running "$service"; then
-            local mem_str=$(get_memory_usage "$service")
-            local mem_val=${mem_str%MB}
-            if [[ "$mem_val" != "N/A" ]]; then
-                total_mem=$(echo "$total_mem + $mem_val" | bc 2>/dev/null || echo "$total_mem")
-            fi
-            printf "  %-25s %s\n" "$service" "$mem_str"
-        else
-            printf "  %-25s ${RED}offline${NC}\n" "$service"
-        fi
-    done
+    if is_service_running "$app_name"; then
+        local mem=$(get_memory_usage "$app_name")
+        printf "  %-25s %s\n" "$app_name" "$mem"
+    else
+        printf "  %-25s ${RED}offline${NC}\n" "$app_name"
+    fi
 
     echo ""
-    echo -e "  ${BOLD}Total:${NC} ${total_mem}MB"
 }
 
 # AI-Responsive Error Scanner
-# Scans logs for errors in the last N minutes with UTC+3 timestamps
+# Scans logs for errors with UTC+3 timestamps
 errors_scan() {
-    local minutes=${SERVICE:-5}  # Default 5 minutes
     local current_time=$(TZ='Europe/Istanbul' date '+%Y-%m-%d %H:%M:%S')
-    local cutoff_time=$(TZ='Europe/Istanbul' date -d "$minutes minutes ago" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date '+%Y-%m-%d %H:%M:%S')
+    local log_path=$(get_log_path)
+    local app_name=$(get_app_name "$ENV")
 
     echo "═══════════════════════════════════════════════════════════════"
     echo "🔍 ERROR SCAN - $ENV Environment"
     echo "═══════════════════════════════════════════════════════════════"
     echo "Current Time (UTC+3): $current_time"
-    echo "Scanning errors from last $minutes minutes"
     echo "───────────────────────────────────────────────────────────────"
     echo ""
 
-    local services=$(get_all_services "$ENV")
+    local log_file="$log_path/$ENV-error.log"
+    local out_file="$log_path/$ENV-out.log"
+
+    echo "[$app_name]"
+
     local total_errors=0
     local has_critical=false
 
-    for service in $services; do
-        local log_file="/root/.pm2/logs/${service}-error.log"
-        local out_file="/root/.pm2/logs/${service}-out.log"
-
-        echo "[$service]"
-
-        if [[ ! -f "$log_file" ]]; then
-            echo "  No error log file found"
-            echo ""
-            continue
-        fi
-
-        # Get recent errors with timestamps
+    if [[ ! -f "$log_file" ]]; then
+        echo "  No error log file found at $log_file"
+        echo ""
+    else
+        # Get recent errors
         local recent_errors=$(tail -200 "$log_file" 2>/dev/null | grep -E "Error|error|ERROR|FATAL|fatal|Exception|exception|Cannot|cannot|Failed|failed|ENOENT|ECONNREFUSED|MODULE_NOT_FOUND|SyntaxError|TypeError|ReferenceError" | tail -20)
 
         if [[ -z "$recent_errors" ]]; then
@@ -289,13 +216,14 @@ errors_scan() {
             echo "  ⚠️  Found $error_count error(s):"
             echo ""
             echo "$recent_errors" | while read -r line; do
-                # Extract timestamp if present and convert to readable format
                 echo "    $line" | head -c 500
                 echo ""
             done
         fi
+    fi
 
-        # Check for build errors in out log
+    # Check for build errors in out log
+    if [[ -f "$out_file" ]]; then
         local build_errors=$(tail -100 "$out_file" 2>/dev/null | grep -E "Build failed|Compilation failed|Module not found|Cannot find module|SyntaxError|Unexpected token" | tail -5)
 
         if [[ -n "$build_errors" ]]; then
@@ -307,10 +235,9 @@ errors_scan() {
                 echo ""
             done
         fi
+    fi
 
-        echo ""
-    done
-
+    echo ""
     echo "───────────────────────────────────────────────────────────────"
     echo "SUMMARY"
     echo "───────────────────────────────────────────────────────────────"
@@ -320,7 +247,7 @@ errors_scan() {
 
     if [[ "$has_critical" == "true" ]]; then
         echo ""
-        echo "⛔ ACTION REQUIRED: Build errors detected. Services may not be running correctly."
+        echo "⛔ ACTION REQUIRED: Build errors detected."
     elif [[ $total_errors -gt 0 ]]; then
         echo ""
         echo "⚠️  Review errors above. Some may be transient."
@@ -331,9 +258,10 @@ errors_scan() {
 }
 
 # AI-Responsive Diagnostic Report
-# Comprehensive status for AI agents
 diagnostic_report() {
     local current_time=$(TZ='Europe/Istanbul' date '+%Y-%m-%d %H:%M:%S')
+    local app_name=$(get_app_name "$ENV")
+    local log_path=$(get_log_path)
 
     echo "═══════════════════════════════════════════════════════════════"
     echo "📋 DIAGNOSTIC REPORT - $ENV Environment"
@@ -344,26 +272,22 @@ diagnostic_report() {
     echo "## SERVICE STATUS"
     echo ""
 
-    local services=$(get_all_services "$ENV")
-    local all_healthy=true
+    local status="offline"
+    local memory="N/A"
+    local uptime="N/A"
+    local restarts="N/A"
 
-    for service in $services; do
-        local status="offline"
-        local memory="N/A"
-        local uptime="N/A"
-        local restarts="N/A"
+    if is_service_running "$app_name"; then
+        status="online"
+        memory=$(get_memory_usage "$app_name")
 
-        if is_service_running "$service"; then
-            status="online"
-            memory=$(get_memory_usage "$service")
-
-            # Get uptime and restarts from PM2
-            local pm2_info=$(pm2 jlist 2>/dev/null | python3 -c "
+        # Get uptime and restarts from PM2
+        local pm2_info=$(pm2 jlist 2>/dev/null | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
     for proc in data:
-        if proc.get('name') == '$service':
+        if proc.get('name') == '$app_name':
             pm2_env = proc.get('pm2_env', {})
             uptime = pm2_env.get('pm_uptime', 0)
             restarts = pm2_env.get('restart_time', 0)
@@ -381,70 +305,126 @@ except:
     print('N/A|N/A')
 " 2>/dev/null)
 
-            uptime=$(echo "$pm2_info" | cut -d'|' -f1)
-            restarts=$(echo "$pm2_info" | cut -d'|' -f2)
+        uptime=$(echo "$pm2_info" | cut -d'|' -f1)
+        restarts=$(echo "$pm2_info" | cut -d'|' -f2)
+    fi
+
+    echo "- $app_name: $status (Memory: $memory, Uptime: $uptime, Restarts: $restarts)"
+
+    echo ""
+    echo "## RECENT ERRORS"
+    echo ""
+
+    local log_file="$log_path/$ENV-error.log"
+
+    if [[ -f "$log_file" ]]; then
+        local error_count
+        error_count=$(tail -100 "$log_file" 2>/dev/null | grep -cE "Error|error|ERROR|FATAL" 2>/dev/null | awk '{print $1+0}')
+        error_count=${error_count:-0}
+
+        if [[ "$error_count" -gt 0 ]]; then
+            echo "- $app_name: $error_count error(s) in recent logs"
+            tail -3 "$log_file" 2>/dev/null | while read -r line; do
+                echo "  > $(echo "$line" | head -c 200)"
+            done
         else
-            all_healthy=false
+            echo "- $app_name: No recent errors"
         fi
-
-        echo "- $service: $status (Memory: $memory, Uptime: $uptime, Restarts: $restarts)"
-    done
-
-    echo ""
-    echo "## RECENT ERRORS (Last 5 minutes)"
-    echo ""
-
-    for service in $services; do
-        local log_file="/root/.pm2/logs/${service}-error.log"
-
-        if [[ -f "$log_file" ]]; then
-            local error_count
-            error_count=$(tail -100 "$log_file" 2>/dev/null | grep -cE "Error|error|ERROR|FATAL" 2>/dev/null | awk '{print $1+0}')
-            error_count=${error_count:-0}
-
-            if [[ "$error_count" -gt 0 ]]; then
-                echo "- $service: $error_count error(s) in recent logs"
-                tail -3 "$log_file" 2>/dev/null | while read -r line; do
-                    echo "  > $(echo "$line" | head -c 200)"
-                done
-            else
-                echo "- $service: No recent errors"
-            fi
-        fi
-    done
+    else
+        echo "- $app_name: No error log file"
+    fi
 
     echo ""
     echo "## CONCLUSION"
     echo ""
 
-    if [[ "$all_healthy" == "true" ]]; then
-        echo "✅ All services are running normally."
+    if [[ "$status" == "online" ]]; then
+        echo "✅ Service is running normally."
     else
-        echo "⚠️ Some services are not running. Restart may be required."
+        echo "⚠️ Service is not running. Restart may be required."
     fi
 
     echo ""
     echo "Report generated at: $current_time (UTC+3)"
 }
 
-# Handle actions that don't need a service
+# Validate environment
+if [[ -z "$ENV" ]]; then
+    print_usage
+fi
+
+if [[ "$ENV" != "dev" && "$ENV" != "prod" ]]; then
+    log_error "Invalid environment: $ENV (must be 'dev' or 'prod')"
+    print_usage
+fi
+
+if [[ -z "$ACTION" ]]; then
+    print_usage
+fi
+
+# Get app name
+APP_NAME=$(get_app_name "$ENV")
+
+# Handle actions
 case "$ACTION" in
     "status")
-        if [[ -z "$SERVICE" ]]; then
-            echo -e "${GREEN}📊 PM2 Status (All Services)${NC}"
-            pm2 status
-            print_duration
-            exit 0
-        fi
+        echo -e "${GREEN}📊 PM2 Status${NC}"
+        pm2 status "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "start")
+        echo -e "${GREEN}▶ Starting $APP_NAME...${NC}"
+        pm2 start ecosystem.config.cjs --only "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "stop")
+        echo -e "${YELLOW}⏹ Stopping $APP_NAME...${NC}"
+        pm2 stop "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "restart")
+        echo -e "${BLUE}� Restarting $APP_NAME...${NC}"
+        pm2 restart "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "reload")
+        echo -e "${BLUE}� Reloading $APP_NAME...${NC}"
+        pm2 reload "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "logs")
+        echo -e "${CYAN}📋 Logs for $APP_NAME (last 100 lines)${NC}"
+        pm2 logs "$APP_NAME" --lines 100 --nostream
+        print_duration
+        exit 0
+        ;;
+    "logs-live")
+        echo -e "${CYAN}📋 Live logs for $APP_NAME (Ctrl+C to exit)${NC}"
+        pm2 logs "$APP_NAME"
+        exit 0
         ;;
     "flush")
-        if [[ -z "$SERVICE" || "$SERVICE" == "all" ]]; then
-            echo -e "${YELLOW}🧹 Flushing all PM2 logs...${NC}"
-            pm2 flush
-            log_success "Logs flushed"
-            print_duration
-            exit 0
-        fi
+        echo -e "${YELLOW}🧹 Flushing logs...${NC}"
+        pm2 flush "$APP_NAME"
+        log_success "Logs flushed"
+        print_duration
+        exit 0
+        ;;
+    "describe")
+        echo -e "${BLUE}📝 Describe $APP_NAME${NC}"
+        pm2 describe "$APP_NAME"
+        print_duration
+        exit 0
+        ;;
+    "monit")
+        echo -e "${BLUE}📺 Opening PM2 monitor...${NC}"
+        pm2 monit
+        exit 0
         ;;
     "health")
         health_check
@@ -454,18 +434,6 @@ case "$ACTION" in
     "memory")
         memory_summary
         print_duration
-        exit 0
-        ;;
-    "save")
-        echo -e "${BLUE}💾 Saving PM2 process list...${NC}"
-        pm2 save
-        log_success "PM2 process list saved"
-        print_duration
-        exit 0
-        ;;
-    "monit")
-        echo -e "${BLUE}📺 Opening PM2 monitor...${NC}"
-        pm2 monit
         exit 0
         ;;
     "errors")
@@ -478,109 +446,15 @@ case "$ACTION" in
         print_duration
         exit 0
         ;;
-esac
-
-# For other actions, service is required
-if [[ -z "$SERVICE" ]]; then
-    log_error "Service not specified"
-    print_usage
-fi
-
-# Handle "all" services
-if [[ "$SERVICE" == "all" ]]; then
-    TARGETS=$(get_all_services "$ENV")
-    echo -e "${GREEN}🎯 Target: $ENV all services${NC}"
-
-    local success_count=0
-    local fail_count=0
-
-    for target in $TARGETS; do
-        if execute_pm2 "$ACTION" "$target"; then
-            ((success_count++))
-        else
-            ((fail_count++))
-        fi
-    done
-
-    echo ""
-    if [[ $fail_count -eq 0 ]]; then
-        log_success "All $success_count services processed successfully"
-    else
-        log_warn "$success_count succeeded, $fail_count failed"
-    fi
-    print_duration
-    exit 0
-fi
-
-# Get the PM2 process name
-PM2_NAME=$(get_pm2_name "$ENV" "$SERVICE")
-
-if [[ -z "$PM2_NAME" ]]; then
-    log_error "Invalid service: $SERVICE for environment: $ENV"
-    echo ""
-    echo "Valid services:"
-    echo "  dev:  frontend, backend"
-    echo "  prod: frontend, backend, brain"
-    exit 1
-fi
-
-echo -e "${GREEN}🎯 Target: $PM2_NAME${NC}"
-
-# Pre-action checks
-case "$ACTION" in
-    "reload")
-        # Check if service is in cluster mode
-        local exec_mode=$(pm2 jlist 2>/dev/null | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    for proc in data:
-        if proc.get('name') == '$PM2_NAME':
-            print(proc.get('exec_mode', 'unknown'))
-            break
-except:
-    print('unknown')
-" 2>/dev/null || echo "unknown")
-
-        if [[ "$exec_mode" == "fork_mode" ]]; then
-            log_warn "$PM2_NAME is in fork mode. Reload acts like restart."
-            log_info "Use 'restart' for fork mode services."
-        fi
-        ;;
-esac
-
-# Execute the command
-case "$ACTION" in
-    "start"|"stop"|"restart"|"reload"|"delete")
-        if execute_pm2 "$ACTION" "$PM2_NAME"; then
-            log_success "$ACTION completed for $PM2_NAME"
-        else
-            log_error "$ACTION failed for $PM2_NAME"
-            exit 1
-        fi
-        ;;
-    "logs")
-        # Non-streaming logs - safe for agents
-        echo -e "${BLUE}📜 Last 100 lines for $PM2_NAME${NC}"
-        pm2 logs "$PM2_NAME" --lines 100 --nostream
-        ;;
-    "logs-live")
-        # Live streaming logs - interactive only
-        if [ -t 1 ]; then
-            echo -e "${BLUE}📜 Streaming logs for $PM2_NAME (Ctrl+C to exit)${NC}"
-            pm2 logs "$PM2_NAME" --lines 50
-        else
-            log_warn "logs-live requires interactive terminal. Using logs instead."
-            pm2 logs "$PM2_NAME" --lines 100 --nostream
-        fi
-        ;;
-    "status"|"describe")
-        pm2 describe "$PM2_NAME"
+    "save")
+        echo -e "${BLUE}� Saving PM2 process list...${NC}"
+        pm2 save
+        log_success "PM2 process list saved"
+        print_duration
+        exit 0
         ;;
     *)
-        log_error "Invalid action: $ACTION"
+        log_error "Unknown action: $ACTION"
         print_usage
         ;;
 esac
-
-print_duration
