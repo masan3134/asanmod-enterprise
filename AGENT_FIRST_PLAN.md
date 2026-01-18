@@ -3,7 +3,7 @@ type: task_list
 agent_role: all
 context_depth: 5
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-15"
+last_audited: "2026-01-18"
 critical: true
 ---
 
@@ -73,4 +73,4 @@ Ask the user:
    - **Project Plans**: Save ONLY to `docs/plans/`
    - **NEVER** write reports or internal logs to the root directory.
 
-*Verified by ASANMOD Governance v3.0.0*
+*Verified by ASANMOD Governance v3.2.0*
