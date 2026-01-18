@@ -1,150 +1,70 @@
 ---
 type: reference
 agent_role: all
-context_depth: 2
-required_knowledge: []
-last_audited: "2026-01-14"
+context_depth: 3
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-18"
 ---
 
-# Known Gotchas
+# ASANMOD v3.2.0: Technical Gotchas
 
-> **Common pitfalls and their solutions.**
+> **Pre-emptive resolution for common architectural friction points.**
 
-## 🔴 tRPC
+---
 
-### "Cannot find procedure"
+## 🏗️ 1. Hydration & Server Components
 
-**Cause:** Router not registered in `_app.ts`
-**Solution:**
+### Client Hooks in RSC
+**Symtom:** `TypeError: (0 , react__WEBPACK_IMPORTED_MODULE_0__.useState) is not a function`
+**Cause:** Attempting to use `useState`, `useEffect`, or `useContext` in a Server Component.
+**Resolution:** Add `'use client'` at the top of the file or extract stateful logic to a separate component.
 
+---
+
+## 🔌 2. tRPC Procedural Discovery
+
+### Router Recognition
+**Symptom:** `Property 'newService' does not exist on type 'AppRouter'`
+**Cause:** New router file created but not registered in `src/server/routers/_app.ts`.
+**Resolution:**
 ```typescript
-// src/server/routers/_app.ts
-import { newRouter } from "./new-router";
 export const appRouter = router({
-  new: newRouter, // <- Add this
+  old: oldRouter,
+  new: newRouter, // <-- Ensure registration here
 });
 ```
 
-### "Input validation failed"
+---
 
-**Cause:** Zod schema doesn't match input
-**Solution:** Check your `z.object()` matches the data being sent
+## 🛡️ 3. Iron Curtain Access Leaks
+
+### Port Binding Conflict
+**Symptom:** `EADDRINUSE: address already in use :::3000`
+**Cause:** Development and Production attempting to bind to the same port, or a legacy process ghosting.
+**Resolution:** Run `./scripts/mod-tools/pm diag`. Use `pm2 delete all` if state is corrupted.
 
 ---
 
-## 🔴 Drizzle ORM
+## 🗃️ 4. Drizzle & DB Integrity
 
-### "Relation already exists"
+### Migration Drift
+**Symptom:** `column "X" does not exist` despite `npm run db:migrate` success.
+**Cause:** Physical schema drifted from Meta-schema (common during force-pushes).
+**Resolution:** Run `npm run verify`. If drift persists, use `db-sync-check.cjs` to identify missing physical indices/columns.
 
-**Cause:** Migration naming conflict
-**Solution:**
-
-1. Delete migration file in `drizzle/`
-2. Run `npm run db:generate` again
-
-### "Column does not exist"
-
-**Cause:** Schema changed but migration not run
-**Solution:**
-
-```bash
-npm run db:generate
-npm run db:migrate
-```
+### UTC Timestamp Enforcement
+**Gotcha:** Postgres `timestamp` without timezone defaults to local server time.
+**Enforcement:** Always use `timestamp("created_at", { withTimezone: true }).defaultNow()`.
 
 ---
 
-## 🔴 Next.js
+## 🔒 5. Agent Constraints
 
-### "Hydration mismatch"
-
-**Cause:** Server and client render differently
-**Solution:** Wrap client-only code:
-
-```tsx
-"use client";
-import { useEffect, useState } from "react";
-
-function ClientOnly({ children }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-  return children;
-}
-```
-
-### "Window is not defined"
-
-**Cause:** Using browser APIs in server component
-**Solution:** Add `"use client"` directive or use dynamic import:
-
-```tsx
-const Component = dynamic(() => import("./Component"), { ssr: false });
-```
+### Git Hook Rejection
+**Symptom:** `husky - commit-msg hook failed (add --no-verify to bypass)`
+**Cause:** Commit message fails `type(scope): message` regex.
+**Resolution:** Strictly follow `CONVENTIONS.md` Git section. NEVER use `--no-verify`.
 
 ---
 
-## 🔴 TypeScript
-
-### "Type 'X' is not assignable to type 'Y'"
-
-**Cause:** Type mismatch
-**Solution:** Check your types match. Use explicit typing:
-
-```typescript
-const data: ExpectedType = await fetch();
-```
-
-### "Cannot find module '@/...'"
-
-**Cause:** Path alias not configured
-**Solution:** Check `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
-```
-
----
-
-## 🔴 Git Hooks
-
-### "Commit rejected: format invalid"
-
-**Cause:** Commit message doesn't match pattern
-**Solution:** Use format: `ID: TASK-001 | Description`
-
-### "Pre-commit failed: console.log found"
-
-**Cause:** `console.log` in source code
-**Solution:** Remove console.log or use proper logger
-
----
-
-## 🔴 Development
-
-### "Port already in use"
-
-**Solution:**
-
-```bash
-# Find and kill process
-lsof -i :3000
-kill -9 <PID>
-
-# Or use killall
-npx kill-port 3000
-```
-
-### "ECONNREFUSED ::1:5432"
-
-**Cause:** PostgreSQL not running or IPv6 issue
-**Solution:**
-
-1. Start PostgreSQL: `sudo systemctl start postgresql`
-2. Or change host in `.env` to `127.0.0.1` instead of `localhost`
+*ASANMOD v3.2.0 | High-Signal Reference*

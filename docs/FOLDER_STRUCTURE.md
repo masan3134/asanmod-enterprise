@@ -1,119 +1,69 @@
-# Folder Structure Guidelines
+---
+type: reference
+agent_role: all
+context_depth: 3
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-18"
+---
 
-> **For Agents**: Best practices for organizing ASANMOD project files as it scales
+# ASANMOD v3.2.0: Folder Structure & Scaling Protocols
+
+> **Rules for structural integrity as the project scales from MVP to Enterprise.**
 
 ---
 
-## 📂 Router Organization
+## 📁 1. Baseline Taxonomy (Small-to-Medium)
 
-### Current (Small Projects - OK for <10 routes):
-```
-src/server/routers/
-├── _app.ts
-├── auth.ts
-├── items.ts
-└── users.ts
-```
-
-### Recommended (Growing Projects - 10+ routes):
-```
-src/server/routers/
-├── _app.ts
-├── auth/
-│   ├── index.ts       # Export aggregated router
-│   ├── login.ts
-│   ├── register.ts
-│   └── oauth.ts
-├── users/
-│   ├── index.ts
-│   ├── profile.ts
-│   └── settings.ts
-└── items/
-    ├── index.ts
-    ├── crud.ts
-    └── categories.ts
-```
-
-### Rules:
-1. **Domain-based folders**: Group related endpoints (auth, users, items, admin)
-2. **index.ts exports**: Aggregate domain routers
-3. **Max 200 lines**: Split files when they exceed 200 lines
-4. **Related together**: Keep domain logic in domain folder
-
-### Example:
-```typescript
-// src/server/routers/items/index.ts
-import { router } from '@/server/trpc';
-import { crudRouter } from './crud';
-import { categoriesRouter } from './categories';
-
-export const itemsRouter = router({
-  ...crudRouter,
-  categories: categoriesRouter,
-});
-```
-
-```typescript
-// src/server/routers/items/crud.ts
-import { router, protectedProcedure } from '@/server/trpc';
-import { z } from 'zod';
-
-export const crudRouter = {
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.items.findMany();
-  }),
-
-  create: protectedProcedure
-    .input(z.object({ name: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(items).values(input);
-    }),
-};
-```
-
-
----
-
-## 📚 Lib Organization
-
-### Current (Small Projects):
-```
-src/lib/
-├── auth.ts
-├── utils.ts
-└── validation.ts
-```
-
-### Recommended (30+ utilities):
-```
-src/lib/
-├── auth/
-│   ├── jwt.ts
-│   ├── password.ts
-│   └── session.ts
-├── validation/
-│   ├── schemas.ts
-│   └── custom-validators.ts
-├── formatters/
-│   ├── date.ts
-│   ├── currency.ts
-│   └── phone.ts
-└── integrations/
-    ├── email.ts
-    ├── sms.ts
-    └── payments.ts
+```bash
+src/
+├── app/          # Next.js App Router (Routing Root)
+├── components/   # Atomic UI components
+├── db/           # Persistence Layer (Meta-schema)
+├── lib/          # Infrastructure utilities (JWT, Env, tRPC)
+└── server/       # API Gateway and Middleware
 ```
 
 ---
 
-## 🎯 When to Reorganize
+## 🚀 2. Enterprise Scaling Protocol (30+ Procedures)
 
-**Trigger Points**:
-- 10+ router files → Domain folders
-- 30+ lib utilities → Category folders
-- File >200 lines → Split into smaller files
-- Related code scattered → Group by domain
+When a domain (e.g., `Billing`, `Admin`) exceeds 5 procedures, it MUST be extracted into a subdirectory.
+
+### Scaled Router Pattern
+```bash
+src/server/routers/billing/
+├── index.ts      # Aggregator (appRouter entry)
+├── invoices.ts   # Procedure set A
+└── payments.ts   # Procedure set B
+```
+
+### Scaled DB Schema
+```bash
+src/db/schema/
+├── auth.ts       # Identity tables
+├── transactions.ts # Monetary tables
+└── index.ts      # Global export SSOT
+```
 
 ---
 
-**Link**: See [AGENT_QUICK_REF.md](./AGENT_QUICK_REF.md) for all commands
+## 🎯 3. Reorganization Trigger Points
+
+| Trigger | Action | Enforcement |
+| :--- | :--- | :--- |
+| **File > 200 lines** | Logic extraction to `internal_utils.ts` or sub-module. | `npm run audit` |
+| **Logic Reuse > 2 places** | Move to `src/lib/[category]/`. | Architect Review |
+| **Domain Procedural Load > 10** | Split into domain-indexed folder. | Mandatory |
+| **Prop Drilling > 3 levels** | Implement React Context in `src/app/providers.tsx`. | Mandatory |
+
+---
+
+## 🕵️ 4. Rule of Proximity
+
+1. **Local State:** Keep in the component file.
+2. **Domain State:** Keep in the feature folder.
+3. **Global Infrastructure:** Keep in `src/lib/` or `asanmod-core.json`.
+
+---
+
+*ASANMOD v3.2.0 | Structural Parity Active*

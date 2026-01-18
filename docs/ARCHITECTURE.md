@@ -1,122 +1,71 @@
 ---
-type: documentation
+type: reference
 agent_role: architect
 context_depth: 4
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-18"
+critical: true
 ---
 
-# Architecture Overview
+# ASANMOD v3.2.0: System Architecture
 
-## System Diagram
+> **Deterministic structural Blueprint for AI-Autonomous and Human-Led engineering.**
 
-```mermaid
-graph TB
-    subgraph "Frontend (Next.js 15)"
-        UI[React Components]
-        Pages[App Router Pages]
-        Providers[Query + tRPC Providers]
-    end
+---
 
-    subgraph "API Layer (tRPC)"
-        Router[App Router]
-        Auth[Auth Middleware]
-        Procedures[Procedures]
-    end
+## 🏗️ 1. Technical Topology
 
-    subgraph "Data Layer"
-        Drizzle[Drizzle ORM]
-        DB[(PostgreSQL)]
-    end
+| Layer | Technology | Primary Directory |
+| :--- | :--- | :--- |
+| **Frontend** | Next.js 15 (React 19) | `src/app/` |
+| **UI Components** | Vanilla CSS / Tailwind | `src/components/` |
+| **API Gateway** | tRPC | `src/server/routers/` |
+| **Logic/Middleware** | Node.js TS | `src/server/middleware/` |
+| **Persistence** | Drizzle ORM | `src/db/schema/` |
+| **Database** | PostgreSQL | `Host:5432` |
 
-    UI --> Pages
-    Pages --> Providers
-    Providers --> Router
-    Router --> Auth
-    Auth --> Procedures
-    Procedures --> Drizzle
-    Drizzle --> DB
-```
+---
 
-## Directory Structure
+## 📁 2. Directory Taxonomy
 
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Home page
-│   ├── providers.tsx       # Client providers
-│   ├── globals.css         # Global styles
-│   └── [feature]/          # Feature pages
-│       └── page.tsx
-│
-├── components/
-│   ├── ui/                 # Shadcn/UI components
-│   ├── layout/             # Layout components
-│   │   ├── Header.tsx
-│   │   └── Sidebar.tsx
-│   └── shared/             # Shared components
-│       ├── LoadingSpinner.tsx
-│       ├── EmptyState.tsx
-│       └── ErrorBoundary.tsx
-│
-├── server/
-│   ├── trpc.ts             # tRPC initialization
-│   ├── routers/
-│   │   ├── _app.ts         # Root router
-│   │   └── [module].ts     # Module routers
-│   └── middleware/
-│       └── auth.ts         # Auth middleware
-│
-├── db/
-│   ├── index.ts            # DB client
-│   └── schema/
-│       ├── index.ts        # Schema exports
-│       └── [table].ts      # Table definitions
-│
-└── lib/
-    ├── utils.ts            # Utility functions
-    ├── errors.ts           # Error classes
-    └── validation.ts       # Zod schemas
-```
+### `src/app/` (Runtime Routes)
+Deterministic Next.js App Router structure.
+- `layout.tsx`: SSOT for UI shell and providers.
+- `page.tsx`: Route-specific logic.
+- `api/trpc/`: The unified API bridge.
 
-## Data Flow
+### `src/server/` (Business Logic)
+- `routers/`: Single-purpose domain routers (e.g., `user.ts`, `auth.ts`).
+- `middleware/`: Hardened security and rate-limiting gates.
+- `trpc.ts`: The bridge configuration (context and procedures).
 
-1. **Request**: User interacts with React component
-2. **tRPC Call**: Component calls tRPC procedure
-3. **Middleware**: Auth middleware validates user
-4. **Procedure**: Business logic executes
-5. **Database**: Drizzle queries PostgreSQL
-6. **Response**: Data flows back to component
+### `src/db/` (Storage Layer)
+- `schema/`: Physical table definitions and relations.
+- `index.ts`: The Drizzle-Postgres client instance.
 
-## Key Patterns
+### `src/lib/` (Cross-Cutting Concerns)
+- `env.ts`: Zod-based environment variable enforcement.
+- `utils.ts`: Tailwind class merging (`cn`) and UI utilities.
 
-### Server Components (Default)
-```tsx
-// src/app/users/page.tsx
-export default async function UsersPage() {
-  const users = await db.select().from(users);
-  return <UserList users={users} />;
-}
-```
+---
 
-### Client Components
-```tsx
-// src/components/UserForm.tsx
-"use client";
+## 🔄 3. Data Propagation Flow
 
-export function UserForm() {
-  const mutation = trpc.user.create.useMutation();
-  // ...
-}
-```
+1. **User Interaction:** Client-side event in `src/app/`.
+2. **Procedure Call:** Type-safe tRPC invoke (`trpc.[domain].[procedure].useMutation`).
+3. **Gateway Middleware:** Auth and rate-limiting validation in `src/server/middleware/`.
+4. **Execution:** Procedure logic interacts with `src/db/`.
+5. **Reconciliation:** Result propagates back to the UI with automatic query cache invalidation.
 
-### tRPC Procedures
-```typescript
-// src/server/routers/user.ts
-export const userRouter = router({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.select().from(users);
-  }),
-});
-```
+---
+
+## 🛡️ 4. Architectural Constraints
+
+1. **Server-First:** Prefer React Server Components (RSC) for initial data fetching.
+2. **Schema-Driven:** No database write is permitted without a corresponding Drizzle Schema update.
+3. **Isolation:** The `Iron Curtain` protocol prevents Development code from accessing Production databases.
+4. **Agent-Aware:** All files are structured to enable recursive discovery by autonomous agents via standard filesystem tools.
+
+---
+
+*ASANMOD v3.2.0 | Architecture Kilitlendi*

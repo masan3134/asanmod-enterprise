@@ -2,135 +2,79 @@
 type: reference
 agent_role: all
 context_depth: 2
-required_knowledge: []
-last_audited: "2026-01-14"
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-18"
 ---
 
-# Coding Conventions
+# ASANMOD v3.2.0: Coding Conventions
 
-> **Naming and style rules for consistency.**
+> **Deterministic constraints for naming, structure, and style.**
 
-## 📁 File Naming
+---
 
-| Type       | Convention        | Example                       |
-| ---------- | ----------------- | ----------------------------- |
-| Pages      | `kebab-case`      | `user-profile/page.tsx`       |
-| Components | `PascalCase`      | `UserCard.tsx`                |
-| Utilities  | `camelCase`       | `formatDate.ts`               |
-| Types      | `PascalCase`      | `types.ts` with `UserProfile` |
-| Constants  | `SCREAMING_SNAKE` | `const MAX_RETRIES = 3`       |
+## 📁 1. Physical Structure
 
-## 🏷️ Naming Rules
+| Entity | Convention | Example |
+| :--- | :--- | :--- |
+| **Pages** | `kebab-case` | `src/app/auth/login/page.tsx` |
+| **Components** | `PascalCase` | `src/components/UserCard.tsx` |
+| **Utilities** | `camelCase` | `src/lib/formatDate.ts` |
+| **Types** | `PascalCase` | `src/types/auth.ts` -> `AuthContext` |
+| **Constants** | `SCREAMING_SNAKE` | `const MAX_SESSION_TTL = 3600;` |
 
-### Variables & Functions
+---
 
-```typescript
-// ✅ Good
-const userName = "John";
-function getUserById(id: string) {}
+## 🏷️ 2. Naming Constraints
 
-// ❌ Bad
-const user_name = "John";
-function get_user_by_id(id: string) {}
-```
+### Logic (TS/JS)
+- **Functions:** `camelCase` with descriptive verbs (`getUser`, `validateInput`).
+- **Variables:** `camelCase` nouns. No single-letter variables except in map/filter callbacks.
+- **Interfaces/Types:** `PascalCase`. No `I` prefix for interfaces.
+
+### API (tRPC)
+- **Routers:** `camelCase` (singular). e.g., `trpc.auth.login`.
+- **Procedures:** `camelCase` (verb-noun). e.g., `getProfile`, `updateSettings`.
+
+### Database (PostgreSQL)
+- **Tables:** `snake_case` (plural). e.g., `organizations`, `login_attempts`.
+- **Columns:** `snake_case`. e.g., `created_at`, `is_active`.
+
+---
+
+## 🧬 3. Architecture Patterns
 
 ### Components
+- **Client Dir:** Use `'use client'` ONLY when React hooks (useState, etc.) or browser APIs are required.
+- **Server Dir:** Default. Use for data fetching and heavy logic.
 
-```typescript
-// ✅ Good
-function UserProfileCard() {}
+### State Management
+- **URL First:** Use search params for shareable state.
+- **tRPC:** Use for all client-server communication.
+- **Local:** Use `useState` sparingly; prefer scoped context.
 
-// ❌ Bad
-function userProfileCard() {}
-function User_Profile_Card() {}
-```
+---
 
-### Types & Interfaces
+## 🔒 4. Hard Prohibited Practices
 
-```typescript
-// ✅ Good
-interface UserProfile {}
-type CreateUserInput = {};
+- **Zero console.log:** Enforced by `.husky/pre-commit`. Use a dedicated logger if needed.
+- **Zero any:** Any use of `any` triggers an immediate build failure. Use `unknown` or defined generics.
+- **No Hardcoded IDs:** Read `asanmod-core.json` for ports and project identifiers.
+- **No Inline Styles:** Use Tailwind classes exclusively.
 
-// ❌ Bad
-interface IUserProfile {}
-type createUserInput = {};
-```
+---
 
-## 🌐 API Naming
+## 📋 5. Git Discipline (v3.2.0)
 
-### Endpoints (tRPC Procedures)
+**Format:** `type(scope): message`
 
-- Use **singular** nouns for resources
-- Use **camelCase** for procedure names
+**Valid Types:**
+- `feat`: New feature or capability.
+- `fix`: Technical bug resolution.
+- `docs`: Metadata or documentation updates.
+- `refactor`: Structural change without logic alteration.
+- `test`: Addition/modification of test suites.
+- `chore`: Dependency updates or maintenance.
 
-```typescript
-// ✅ Good
-trpc.user.getById.useQuery();
-trpc.customer.create.useMutation();
+---
 
-// ❌ Bad
-trpc.users.get_by_id.useQuery();
-trpc.Customers.Create.useMutation();
-```
-
-### Database Tables
-
-- Use **snake_case** for table names
-- Use **plural** for table names
-
-```typescript
-// ✅ Good
-pgTable("users", {});
-pgTable("order_items", {});
-
-// ❌ Bad
-pgTable("User", {});
-pgTable("orderItem", {});
-```
-
-## 📝 Code Style
-
-### Imports Order
-
-1. React/Next.js
-2. Third-party libraries
-3. Internal imports (`@/`)
-4. Relative imports (`./`)
-5. Types
-
-```typescript
-// Example
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-import { UserCard } from "./UserCard";
-
-import type { User } from "@/types";
-```
-
-### Comments
-
-```typescript
-// Single line comment for simple notes
-
-/**
- * Multi-line comment for complex explanations
- * or function documentation.
- */
-
-// TODO: Description of pending work
-// FIXME: Description of known issue
-```
-
-## 🚫 Prohibited
-
-| Rule             | Reason                        |
-| ---------------- | ----------------------------- |
-| No `any` type    | Use `unknown` or proper types |
-| No `console.log` | Use logger or remove          |
-| No magic numbers | Use named constants           |
-| No inline styles | Use Tailwind classes          |
+*ASANMOD v3.2.0 | Conventions Enforced*

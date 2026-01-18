@@ -1,22 +1,40 @@
-# MCP Servers - Agent Guide
+---
+type: reference
+agent_role: architect
+context_depth: 4
+required_knowledge: ["asanmod_core"]
+last_audited: "2026-01-18"
+---
 
-> **For AI Agents**: This guide explains how to use MCP (Model Context Protocol) servers in ASANMOD template
+# ASANMOD v3.2.0: MCP Server Integration Specification
+
+> **Technical standard for Model Context Protocol (MCP) servers within ASANMOD.**
 
 ---
 
-## 🎯 Available MCP Servers
+## 🛠️ 1. Core MCP Servers
 
-### 1. ASANMOD MCP (`@asanmod/asanmod-mcp`)
+### 1.1 ASANMOD MCP (`asanmod-mcp`)
+- **Binary:** `mcp-servers/asanmod-mcp/dist/index.js`
+- **Function:** Enforces ASANMOD quality gates and provides unified diagnostic tools (`quality_gate`, `security_audit`, `infrastructure_check`).
 
-**Purpose**: Central validation and audit for ASANMOD operations
+### 1.2 Context MCP (`context-mcp`)
+- **Binary:** `mcp-servers/context-mcp/index.js` (Note: JIT compiled or direct Node execution)
+- **Function:** Stateful conversation tracking and token optimization.
 
-**When to use**:
-- Validating ASANMOD compliance
-- Running quality checks
-- Audit logging
-- Version verification
+### 1.3 Git MCP (`git-mcp`)
+- **Binary:** `mcp-servers/git-mcp/dist/index.js`
+- **Function:** Enforces `type(scope): message` format and zero-tolerance linting on commit.
 
-**Configuration** (`.mcp/config.json`):
+---
+
+## ⚙️ 2. Runtime Configuration
+
+Configuration must reside in the agent-specific config file (e.g., `package.json` or cursor configuration).
+
+### Path Normalization
+Always use absolute paths derived from the current workspace root.
+
 ```json
 {
   "mcpServers": {
@@ -30,184 +48,32 @@
 
 ---
 
-### 2. Context MCP (`@asanmod/context-mcp`) ⭐ **Recommended**
+## 🚀 3. Integration & Buildup
 
-**Purpose**: Manage conversation context and optimize token usage
+Before activating an MCP server, the following build-chain must be verified:
 
-**When to use**:
-- Long conversations (>10 messages)
-- Multi-step tasks spanning sessions
-- Context preservation needed
-- Token optimization important
-
-**Benefits**:
-- 30-50% token reduction
-- Better context tracking across sessions
-- Automatic context summarization
-- Session resumption support
-
-**Configuration**:
-```json
-{
-  "mcpServers": {
-    "context": {
-      "command": "node",
-      "args": ["mcp-servers/context-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-**Usage Example**:
-```typescript
-// Agent automatically uses context-mcp
-// No code changes needed - works via MCP protocol
-```
+1. **Install:** `npm install` in the specific server directory.
+2. **Build:** `npm run build` (Ensures `dist/index.js` exists).
+3. **Bind:** Add entry to the primary agent's MCP config.
 
 ---
 
-### 3. Security Check MCP (`@asanmod/security-check-mcp`)
+## 🕵️ 4. Diagnostic Tree for MCP Failures
 
-**Purpose**: Automated security scanning and validation
-
-**When to use**:
-- Before commits
-- Before deployments
-- Security audits
-- Dependency checking
-
-**Checks Performed**:
-- Hardcoded secrets detection
-- Vulnerable dependencies
-- Security best practices
-- Environment variable leaks
-
-**Configuration**:
-```json
-{
-  "mcpServers": {
-    "security": {
-      "command": "node",
-      "args": ["mcp-servers/security-check-mcp/dist/index.js"]
-    }
-  }
-}
-```
+| Symptom | Probable Cause | Corrective Action |
+| :--- | :--- | :--- |
+| **Server Timeout** | Binary not found at path. | Verify `ls [path]` exists. |
+| **Tool Execution Error** | Missing environment variables. | Sync `.env` to the server context. |
+| **Connection Refused** | Port collision (TCP-based MCPs). | Run `pm diag` to find ghost processes. |
 
 ---
 
-### 4. Git MCP (`git-mcp`)
+## 🔒 5. Security Constraints
 
-**Purpose**: Git operations with ASANMOD format enforcement
-
-**When to use**:
-- Commits (ensures ASANMOD format)
-- Branch management
-- Merge operations
-
-**Features**:
-- Auto-formats commit messages
-- Validates commit format before push
-- Branch naming conventions
+- **No Hardcoded Tokens:** MCP servers must read credentials from environment variables.
+- **Strict I/O:** Servers must only output JSON-RPC compliant messages to standard I/O.
+- **Audit Logging:** Every MCP tool execution must leave a trace in `logs/mcp-[name].log`.
 
 ---
 
-### 5. SSH MCP (`ssh-mcp`)
-
-**Purpose**: Secure server operations
-
-**When to use**:
-- Production deployments
-- Server management
-- Remote command execution
-
----
-
-## 🚀 Quick Setup
-
-### For Agents:
-
-1. **Check if MCPs are available**:
-   ```bash
-   ls mcp-servers/
-   ```
-
-2. **Verify configuration**:
-   ```bash
-   cat .mcp/config.json
-   ```
-
-3. **Start using** - MCPs auto-activate when configured
-
----
-
-## 💡 Best Practices
-
-### When to Use Which MCP:
-
-| Task | MCP to Use |
-|------|------------|
-| Long multi-step implementation | `context-mcp` ⭐ |
-| Committing code | `git-mcp` |
-| Security scan before deploy | `security-check-mcp` |
-| ASANMOD compliance check | `asanmod-mcp` |
-| Production deployment | `ssh-mcp` |
-
-### Recommended Combination:
-
-**For Most Projects**:
-```json
-{
-  "mcpServers": {
-    "context": {...},    // Context management
-    "git": {...},        // Git operations
-    "security": {...}    // Security checks
-  }
-}
-```
-
-**For Production**:
-```json
-{
-  "mcpServers": {
-    "asanmod": {...},    // Compliance
-    "security": {...},   // Security
-    "ssh": {...}         // Deployment
-  }
-}
-```
-
----
-
-## 🔧 Troubleshooting
-
-### MCP Not Working?
-
-1. **Check if built**:
-   ```bash
-   cd mcp-servers/<mcp-name>
-   npm run build
-   ```
-
-2. **Check logs**:
-   ```bash
-   tail -f ~/.mcp/logs/<mcp-name>.log
-   ```
-
-3. **Verify config**:
-   ```bash
-   cat .mcp/config.json
-   # Ensure path is correct
-   ```
-
----
-
-## 📚 Further Reading
-
-- [MCP Setup Guide](./MCP_SETUP.md) - Detailed setup instructions
-- [ASANMOD Quick Ref](./AGENT_QUICK_REF.md) - All commands and tools
-- [Architecture](./ARCH.md) - System design
-
----
-
-**For Agents**: Start with `context-mcp` - it provides the most immediate benefit for conversation quality and token optimization.
+*ASANMOD v3.2.0 | MCP Infrastructure Hardened*

@@ -2,133 +2,69 @@
 type: reference
 agent_role: qa_engineer
 context_depth: 3
-required_knowledge: ["jest"]
-last_audited: "2026-01-14"
+required_knowledge: ["jest", "asanmod_core"]
+last_audited: "2026-01-18"
 ---
 
-# Testing Guide
+# ASANMOD v3.2.0: Technical Validation (Testing)
 
-## Running Tests
+> **Protocols for automated verification of system integrity.**
 
-```bash
-# Run all tests
-npm run test
+---
 
-# Run tests in watch mode
-npm run test:watch
+## 🧪 1. Execution Commands
 
-# Run tests with coverage
-npm run test:coverage
-```
+| Target | Command | Purpose |
+| :--- | :--- | :--- |
+| **Full Suite** | `npm run test` | Validates all `.test.ts` files globally. |
+| **Surgical** | `npm run test -- [path]` | Tests a specific module/file. |
+| **Watch** | `npm run test:watch` | Continuous feedback during refactoring. |
+| **Coverage** | `npm run test:coverage` | Generates HTML/LCOV reports. |
 
-## Writing Tests
+---
 
-### Unit Tests
+## 🏗️ 2. Validation Layers
 
+### 2.1 Unit Validation (Utilities)
+Focus on side-effect-free logic in `src/lib/`.
 ```typescript
-// __tests__/utils.test.ts
-import { formatDate } from "@/lib/utils";
-
-describe("formatDate", () => {
-  it("should format date correctly", () => {
-    const date = new Date("2026-01-15");
-    const result = formatDate(date);
-    expect(result).toContain("2026");
-  });
+it("converts strings to slug format", () => {
+  expect(slugify("Hello World")).toBe("hello-world");
 });
 ```
 
-### Testing tRPC Procedures
-
+### 2.2 Integration Validation (tRPC)
+Testing procedures via direct caller invocation.
 ```typescript
-// __tests__/routers/user.test.ts
-import { createContext } from "@/server/trpc";
-import { appRouter } from "@/server/routers/_app";
-
-describe("User Router", () => {
-  it("should create user", async () => {
-    const ctx = await createContext();
-    const caller = appRouter.createCaller(ctx);
-
-    const user = await caller.user.create({
-      email: "test@example.com",
-      name: "Test User",
-    });
-
-    expect(user.email).toBe("test@example.com");
-  });
-});
+const caller = appRouter.createCaller(ctx);
+const result = await caller.user.getById({ id: "123" });
+expect(result.email).toBeDefined();
 ```
 
-### Testing Components
-
+### 2.3 UI Validation (React Testing Library)
+Testing interactive components in `src/components/`.
 ```tsx
-// __tests__/components/Button.test.tsx
-import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "@/components/ui/button";
-
-describe("Button", () => {
-  it("should render children", () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByText("Click me")).toBeInTheDocument();
-  });
-
-  it("should call onClick when clicked", () => {
-    const onClick = jest.fn();
-    render(<Button onClick={onClick}>Click me</Button>);
-    fireEvent.click(screen.getByText("Click me"));
-    expect(onClick).toHaveBeenCalled();
-  });
-});
+render(<SubmitButton onClick={mockFn} />);
+fireEvent.click(screen.getByRole("button"));
+expect(mockFn).toHaveBeenCalledTimes(1);
 ```
 
-## Test Fixtures
+---
 
-Create reusable test data in `__tests__/fixtures/`:
+## 🛡️ 3. Mocking & Isolation
 
-```typescript
-// __tests__/fixtures/users.ts
-export const testUser = {
-  id: "test-user-id",
-  email: "test@example.com",
-  name: "Test User",
-  role: "user",
-};
+- **DB Mocking:** Isolate procedures from the physical PostgreSQL instance using manual mocks or `pg-mem`.
+- **Global Auth:** Mock the `ctx.user` in `createContext` to simulate different RBAC states without real JWT signing.
 
-export const adminUser = {
-  id: "admin-user-id",
-  email: "admin@example.com",
-  name: "Admin User",
-  role: "admin",
-};
-```
+---
 
-## Mocking
+## 📊 4. Coverage Thresholds (Enforced)
 
-### Mock Database
+The build will WARNING if coverage falls below these levels:
+- **Statements:** 80%
+- **Branches:** 70%
+- **Functions:** 80%
 
-```typescript
-jest.mock("@/db", () => ({
-  db: {
-    select: jest.fn().mockReturnThis(),
-    from: jest.fn().mockReturnThis(),
-    where: jest.fn().mockResolvedValue([testUser]),
-  },
-}));
-```
+---
 
-### Mock External Services
-
-```typescript
-jest.mock("@/lib/email", () => ({
-  sendEmail: jest.fn().mockResolvedValue({ success: true }),
-}));
-```
-
-## Coverage Requirements
-
-Aim for:
-- **Statements**: 80%
-- **Branches**: 70%
-- **Functions**: 80%
-- **Lines**: 80%
+*ASANMOD v3.2.0 | Quality Enforced*

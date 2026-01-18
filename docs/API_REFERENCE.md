@@ -2,117 +2,74 @@
 type: reference
 agent_role: backend_engineer
 context_depth: 3
-required_knowledge: ["trpc_patterns"]
-last_audited: "2026-01-14"
+required_knowledge: ["trpc_patterns", "asanmod_core"]
+last_audited: "2026-01-18"
 ---
 
-# API Reference
+# ASANMOD v3.2.0: API Procedure Reference (tRPC)
 
-> **Auto-generated API documentation**
-
-## Authentication
-
-### POST /api/auth/login
-Login with email and password.
-
-**Request:**
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "jwt-token",
-  "user": {
-    "id": "uuid",
-    "email": "user@example.com",
-    "role": "user"
-  }
-}
-```
-
-### POST /api/auth/register
-Register a new user.
-
-**Request:**
-```json
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "name": "John Doe"
-}
-```
-
-## Users
-
-### GET /api/users
-Get list of users (admin only).
-
-**Query Params:**
-- `page`: number (default: 1)
-- `limit`: number (default: 20)
-
-**Response:**
-```json
-{
-  "data": [...],
-  "total": 100,
-  "page": 1,
-  "pages": 5
-}
-```
-
-### GET /api/users/:id
-Get user by ID.
-
-**Response:**
-```json
-{
-  "id": "uuid",
-  "email": "user@example.com",
-  "name": "John Doe",
-  "role": "user",
-  "createdAt": "2026-01-01T00:00:00Z"
-}
-```
-
-### PUT /api/users/:id
-Update user (own profile or admin).
-
-**Request:**
-```json
-{
-  "name": "Updated Name",
-  "email": "newemail@example.com"
-}
-```
-
-### DELETE /api/users/:id
-Delete user (admin only).
+> **Type-safe procedure definitions. All calls via `@/lib/trpc`.**
 
 ---
 
-## Error Responses
+## 🔑 1. Authentication (`authRouter`)
 
-All errors follow this format:
+### `login` (Mutation)
+Authenticates a user and returns a stateless JWT.
+- **Input:** `z.object({ email: z.string().email(), password: z.string() })`
+- **Return:** `{ token: string, user: UserObject }`
 
-```json
-{
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable message",
-    "details": {}
-  }
-}
+### `register` (Mutation)
+Creates a new user identity.
+- **Input:** `z.object({ email: z.string().email(), password: z.string().min(8) })`
+- **Return:** `{ success: boolean }`
+
+### `getMe` (Query) - Protected
+Retrieves the session identity of the current requester.
+- **Return:** `UserObject | null`
+
+---
+
+## 👥 2. User Management (`userRouter`)
+
+### `list` (Query) - Admin Only
+Paginated retrieval of all system users.
+- **Input:** `z.object({ page: z.number().default(1), limit: z.number().default(20) })`
+- **Return:** `{ users: UserObject[], total: number }`
+
+### `update` (Mutation) - Protected
+Self-updates profile or administrative update of any user.
+- **Input:** `z.object({ id: z.string().cuid(), name: z.string().optional() })`
+- **Return:** `UserObject`
+
+---
+
+## ⚠️ 3. Error Contract
+
+ASANMOD utilizes standard tRPC Error Codes mapped to HTTP statuses:
+
+| tRPC Code | HTTP | Description |
+| :--- | :--- | :--- |
+| `UNAUTHORIZED` | 401 | Missing or invalid JWT. |
+| `FORBIDDEN` | 403 | Insufficient RBAC permission. |
+| `BAD_REQUEST` | 400 | Zod validation failed. |
+| `NOT_FOUND` | 404 | Resource unique ID not found in DB. |
+| `INTERNAL_SERVER_ERROR` | 500 | Unhandled exception (check `logs/dev-error.log`). |
+
+---
+
+## 🛠️ 4. Integration Pattern
+
+### React Component (Client)
+```tsx
+const { data, isLoading } = trpc.auth.getMe.useQuery();
 ```
 
-### Common Error Codes
-- `UNAUTHORIZED` (401): Not authenticated
-- `FORBIDDEN` (403): Not authorized
-- `NOT_FOUND` (404): Resource not found
-- `VALIDATION_ERROR` (400): Invalid input
-- `INTERNAL_ERROR` (500): Server error
+### Server Side (RSC/Server Action)
+```typescript
+const user = await api.auth.getMe.query();
+```
+
+---
+
+*ASANMOD v3.2.0 | API Protocol Hardened*

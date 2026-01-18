@@ -2,86 +2,74 @@
 type: documentation
 agent_role: ops_engineer
 context_depth: 5
-required_knowledge: ["pm2", "postgres"]
-last_audited: "2026-01-14"
+required_knowledge: ["pm2", "iron_curtain"]
+last_audited: "2026-01-18"
 ---
 
-# Deployment Guide
+# ASANMOD v3.2.0: Production Deployment Protocol
 
-## Prerequisites
+> **Deterministic propagation of code to Production runtime.**
 
-- Server with Node.js 20+ installed
-- PostgreSQL database
-- Domain name (optional)
-- SSH access to server
+---
 
-## GitHub Secrets Setup
+## 🔒 1. Deployment Constraints
 
-For automated deployment via GitHub Actions, configure these secrets:
+1. **Verify State:** No code can be deployed if `npm run verify` fails.
+2. **Iron Curtain:** Use `.env.prod` for production bindings.
+3. **SSOT:** PM2 process names must follow `app-prod` as defined in `ecosystem.config.cjs`.
 
-**Navigate to**: Repository → Settings → Secrets and variables → Actions
+---
 
-| Secret | Description | Example Value |
-|--------|-------------|---------------|
-| `DEPLOY_HOST` | Server IP or domain | `123.456.789.0` or `example.com` |
-| `DEPLOY_USER` | SSH username | `ubuntu` or `root` |
-| `DEPLOY_KEY` | SSH private key | `-----BEGIN RSA PRIVATE KEY-----...` |
-| `DATABASE_URL` | Production database URL | `postgresql://user:pass@host:5432/db` |
-| `JWT_SECRET` | Production JWT secret | Generate with `openssl rand -base64 32` |
-| `PRODUCTION_URL` | Your production domain | `https://example.com` |
+## 🚀 2. Propagation Sequence (Manual/Scripted)
 
-## Manual Deployment
-
-### 1. Build for Production
-
+### Stage 1: Local Verification
 ```bash
-npm run build
+npm run verify
 ```
 
-### 2. Deploy to Server
-
+### Stage 2: Target Synchronization
 ```bash
-# Using the deploy script
+# Triggers atomic deployment via SSH or Local script
 npm run deploy-prod
 ```
 
-### 3. Verify Deployment
+### Stage 3: Runtime Activation
+The `deploy-prod` script performs:
+1. `npm ci` (Clean install)
+2. `npm run build` (Next.js Standalone build)
+3. `drizzle-kit migrate` (Schema propagation)
+4. `pm prod restart` (Atomic process swap)
 
+---
+
+## 🩺 3. Post-Deployment Validation
+
+| Action | Command | Success Criterion |
+| :--- | :--- | :--- |
+| **Process Status** | `pm prod status` | `online` with 0 restarts. |
+| **Health Check** | `curl 127.0.0.1:3002` | HTTP 200 OK. |
+| **Diagnostic** | `pm prod diag` | No critical log entries. |
+
+---
+
+## 🏗️ 4. Environment Bindings
+
+| Var | Production Status |
+| :--- | :--- |
+| **NODE_ENV** | `production` |
+| **PORT** | `3002` (Internally bound) |
+| **DATABASE_URL** | Direct connection to Physical Prod DB. |
+
+---
+
+## 🔄 5. Rollback Procedure
+
+In case of `v3.2.0` failure, revert to the previous Git tag and re-run deployment:
 ```bash
-# Check server status
-ssh user@server "pm2 status"
-
-# Check logs
-ssh user@server "pm2 logs app-name"
+git checkout <last_tag>
+npm run deploy-prod
 ```
 
-## Environment Variables
+---
 
-Ensure these are set on the production server in `.env.production`:
-
-```bash
-DATABASE_URL="postgresql://..."
-JWT_SECRET="your-production-secret"
-NEXT_PUBLIC_APP_URL="https://yourdomain.com"
-NODE_ENV="production"
-```
-
-## Rollback
-
-If deployment fails:
-
-```bash
-# SSH into server
-ssh user@server
-
-# Revert to previous version
-pm2 restart app-name
-```
-
-##Monitoring
-
-Check application health:
-
-```bash
-curl https://yourdomain.com/api/health
-```
+*ASANMOD v3.2.0 | Deployment Hardened*
