@@ -1,17 +1,17 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * ASANMOD v1.1.1: ENVIRONMENT HELPER (Universal Bridge)
+ * ASANMOD v3.1.0: ENVIRONMENT HELPER (Universal Bridge)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Single source of truth for ports, paths, and environment config.
- * NOW POWERED BY: config-loader.cjs (v1.1.1 Config + .env)
- * Matches the 'SaaS Template' abstraction.
+ * NOW POWERED BY: config-loader.cjs (v3 Config + .env)
+ * Universal Template - No hardcoded project names.
  */
 
 const path = require("path");
 const loader = require("./config-loader.cjs");
 
-// Load Configuration (Auto-detect v1.1.1 or Legacy)
+// Load Configuration (Auto-detect v3 or Legacy)
 const loaded = loader.loadV10() || loader.loadLegacy();
 
 if (!loaded) {
@@ -59,9 +59,13 @@ function getDbUrl(env = "dev") {
     if (env === 'prod') return process.env.DB_CONNECTION_PROD || loaded.env.DB_CONNECTION_PROD;
     return process.env.DB_CONNECTION_DEV || loaded.env.DB_CONNECTION_DEV;
   }
-  // Legacy
-  const dbName = env === "prod" ? "ikai_prod_db" : "ikai_dev_db";
-  return `postgresql://ikaiuser:ikaipass2025@localhost:5432/${dbName}?timezone=Europe/Istanbul`;
+  // Legacy - use environment variables
+  const dbName = env === "prod"
+    ? (process.env.PROD_DB_NAME || "myapp_prod_db")
+    : (process.env.DEV_DB_NAME || "myapp_dev_db");
+  const dbUser = process.env.DB_USER || "dbuser";
+  const dbPass = process.env.DB_PASSWORD || "dbpassword";
+  return `postgresql://${dbUser}:${dbPass}@localhost:5432/${dbName}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -69,7 +73,7 @@ function getDbUrl(env = "dev") {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function isProduction() {
-  return (process.env.NODE_ENV === "production" || process.env.IKAI_ENV === "prod");
+  return (process.env.NODE_ENV === "production" || process.env.APP_ENV === "prod");
 }
 
 module.exports = {
@@ -83,10 +87,9 @@ module.exports = {
     root: PROJECT_ROOT,
     scripts: path.join(PROJECT_ROOT, "scripts/mod-tools"),
     docs: path.join(PROJECT_ROOT, "docs"),
-    backend: path.join(PROJECT_ROOT, "backend"),
-    frontend: path.join(PROJECT_ROOT, "frontend"),
+    src: path.join(PROJECT_ROOT, "src"),
     state: path.join(PROJECT_ROOT, ".asanmod/state"), // Protocol standard
-    logs: path.join(PROJECT_ROOT, ".asanmod/logs"),   // Protocol standard
+    logs: path.join(PROJECT_ROOT, "logs"),            // Standard logs
     coreConfig: loader.paths[source === 'Protocol' ? 'Protocol' : 'legacy'],
   },
 
@@ -94,25 +97,19 @@ module.exports = {
   port: getPort,
   binding: source === 'Protocol'
     ? (config.infrastructure.frontend.prodBinding || "127.0.0.1")
-    : (config.network.prod.binding || "127.0.0.1"),
+    : (config.network?.prod?.binding || "127.0.0.1"),
 
   pm2Name: (service, env = "dev") => {
-    // Standardized PM2 naming convention
-    const map = {
-      "dev-frontend": "ikai-dev-frontend",
-      "dev-backend": "ikai-dev-backend",
-      "prod-frontend": "ikai-prod-frontend",
-      "prod-backend": "ikai-prod-backend",
-      "prod-brain": "ikai-brain",
-    };
-    return map[`${env}-${service}`];
+    // Universal PM2 naming convention: app-{env}
+    // service parameter is kept for backward compat but ignored in universal mode
+    return `app-${env}`;
   },
 
   // Database
   databaseUrl: getDbUrl,
   redis: {
-    dev: "redis://localhost:6379/0",
-    prod: "redis://localhost:6379/1",
+    dev: process.env.REDIS_URL_DEV || "redis://localhost:6379/0",
+    prod: process.env.REDIS_URL_PROD || "redis://localhost:6379/1",
   },
 
   // Environment

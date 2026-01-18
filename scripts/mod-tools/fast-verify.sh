@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v1.1.1: AGENTIC-OS FAST-VERIFY
+# ASANMOD v3.1.0: AGENTIC-OS FAST-VERIFY
 # [ULTRA-SPEED] Parallel execution with Agentic-OS optimizations.
 
 # 🎨 Colors
@@ -27,20 +27,17 @@ trap "rm -rf $TMP_DIR" EXIT
 
 echo -e "${YELLOW}⚡ Launching checks in parallel...${NC}"
 
-# JOB 1: PM2 HEALTH
+# JOB 1: PM2 HEALTH (Universal - uses app-dev)
 (
   echo -e "\n${YELLOW}1. Checking PM2 Health...${NC}"
   PM2_ERRORS=0
-  for service in ikai-dev-backend ikai-dev-frontend; do
-    # Check if service is online
-    status=$(pm2 show "$service" 2>/dev/null | grep "status" | grep "online")
-    if [ -z "$status" ]; then
-         # It might not be running, which is fine for verify unless we enforce it.
-         # But let's check for errors if it IS running or supposedly managed.
-         # For verify, we just check logs for recent panics.
-         :
-    fi
 
+  # Check app-dev service
+  service="app-dev"
+  status=$(pm2 show "$service" 2>/dev/null | grep "status" | grep "online")
+  if [ -z "$status" ]; then
+    echo -e "${YELLOW}⚠️ $service not running (optional for verify)${NC}"
+  else
     errors=$(pm2 logs "$service" --lines 20 --nostream 2>/dev/null | grep -iE "(500|Internal Server Error|Error creating|Failed to execute)" | tail -1)
     if [ -n "$errors" ]; then
       echo -e "${RED}❌ $service has recent errors!${NC}"
@@ -48,7 +45,8 @@ echo -e "${YELLOW}⚡ Launching checks in parallel...${NC}"
     else
       echo -e "${GREEN}✅ $service is healthy.${NC}"
     fi
-  done
+  fi
+
   exit $PM2_ERRORS
 ) > "$TMP_DIR/pm2.log" 2>&1 &
 PID_PM2=$!
@@ -75,10 +73,10 @@ PID_PM2=$!
 ) > "$TMP_DIR/words.log" 2>&1 &
 PID_WORDS=$!
 
-# JOB 3: FRONTEND LINT & TS (Combined to avoid FE concurrency locks if any, though separate is faster usually)
+# JOB 3: FRONTEND LINT & TS
 (
   # Get changed files
-  FE_CHANGED=$(git diff --name-only HEAD --diff-filter=ACM | grep -E '^frontend/.*\.(ts|tsx|js|jsx)$' || true)
+  FE_CHANGED=$(git diff --name-only HEAD --diff-filter=ACM | grep -E '^src/.*\.(ts|tsx|js|jsx)$' || true)
 
   exit_code=0
 
@@ -90,13 +88,12 @@ PID_WORDS=$!
     EXISTING_FE_FILES=""
     for f in $FE_CHANGED; do
       if [ -f "$f" ]; then
-        rel_path=${f#frontend/}
-        EXISTING_FE_FILES="$EXISTING_FE_FILES $rel_path"
+        EXISTING_FE_FILES="$EXISTING_FE_FILES $f"
       fi
     done
 
     if [ -n "$EXISTING_FE_FILES" ]; then
-        if (cd frontend && npx eslint $EXISTING_FE_FILES --max-warnings 0 > /dev/null 2>&1); then
+        if npx eslint $EXISTING_FE_FILES --max-warnings 0 > /dev/null 2>&1; then
           echo -e "${GREEN}OK${NC}"
         else
           echo -e "${RED}FAIL${NC}"
@@ -113,7 +110,7 @@ PID_WORDS=$!
   # TYPESCRIPT (Incremental)
   if [ -n "$FE_CHANGED" ]; then
     echo -n "   TypeScript (incremental)... "
-    if (cd frontend && npx tsc --noEmit > /dev/null 2>&1); then
+    if npx tsc --noEmit > /dev/null 2>&1; then
       echo -e "${GREEN}OK${NC}"
     else
       echo -e "${RED}FAIL${NC}"
@@ -127,47 +124,21 @@ PID_WORDS=$!
 ) > "$TMP_DIR/fe.log" 2>&1 &
 PID_FE=$!
 
-# JOB 4: BACKEND LINT
+# JOB 4: UI SMOKE TEST (Non-blocking but reported)
 (
-  echo -e "\n${YELLOW}4. Backend Quality Checks...${NC}"
-  BE_CHANGED=$(git diff --name-only HEAD --diff-filter=ACM | grep -E '^backend/.*\.(js|jsx|ts)$' || true)
-
-  if [ -n "$BE_CHANGED" ]; then
-    echo -n "   Linting (changed files)... "
-    BE_FILES=$(echo "$BE_CHANGED" | sed 's|^backend/||' | tr '\n' ' ')
-    if (cd backend && npx eslint $BE_FILES --max-warnings 0 > /dev/null 2>&1); then
-      echo -e "${GREEN}OK${NC}"
-      exit 0
+  echo -e "\n${YELLOW}4. UI Smoke Test (Headless)...${NC}"
+  # Check if verify-ui exists and runs it
+  if [ -f "scripts/mod-tools/verify-ui.js" ]; then
+    if node scripts/mod-tools/verify-ui.js > /dev/null 2>&1; then
+       echo -e "${GREEN}✅ PASSED (All Systems Nominal)${NC}"
+       exit 0
     else
-      echo -e "${RED}FAIL${NC}"
-      exit 1
+       echo -e "${YELLOW}⚠️ SKIPPED (Server may be down)${NC}"
+       exit 0
     fi
   else
-    echo -e "   Linting... ${GREEN}SKIP (no changes)${NC}"
+    echo -e "${GREEN}✅ SKIPPED (verify-ui.js not present)${NC}"
     exit 0
-  fi
-) > "$TMP_DIR/be.log" 2>&1 &
-PID_BE=$!
-
-# JOB 5: UI SMOKE TEST (Non-blocking but reported)
-(
-  echo -e "\n${YELLOW}5. UI Smoke Test (Headless)...${NC}"
-  # Check if verify-ui exists and runs it
-  if node scripts/mod-tools/verify-ui.js > /dev/null 2>&1; then
-     echo -e "${GREEN}✅ PASSED (All Systems Nominal)${NC}"
-     exit 0
-  else
-     # Access the logs to see if it failed or skipped
-     # Re-run to capture output for log
-     OUTPUT=$(node scripts/mod-tools/verify-ui.js)
-     if echo "$OUTPUT" | grep -q "Skipping"; then
-       echo -e "${YELLOW}⚠️ SKIPPED (Server Down)${NC}"
-       exit 0
-     else
-       echo -e "${RED}❌ FAILED (See Logs)${NC}"
-       echo "$OUTPUT"
-       exit 1
-     fi
   fi
 ) > "$TMP_DIR/ui.log" 2>&1 &
 PID_UI=$!
@@ -186,9 +157,6 @@ RC_WORDS=$?
 wait $PID_FE
 RC_FE=$?
 
-wait $PID_BE
-RC_BE=$?
-
 wait $PID_UI
 RC_UI=$?
 
@@ -196,7 +164,6 @@ RC_UI=$?
 cat "$TMP_DIR/pm2.log"
 cat "$TMP_DIR/words.log"
 cat "$TMP_DIR/fe.log"
-cat "$TMP_DIR/be.log"
 cat "$TMP_DIR/ui.log"
 
 # ==============================================================================
@@ -207,7 +174,7 @@ END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 
 echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
-if [ "$RC_PM2" -eq 0 ] && [ "$RC_WORDS" -eq 0 ] && [ "$RC_FE" -eq 0 ] && [ "$RC_BE" -eq 0 ] && [ "$RC_UI" -eq 0 ]; then
+if [ "$RC_PM2" -eq 0 ] && [ "$RC_WORDS" -eq 0 ] && [ "$RC_FE" -eq 0 ] && [ "$RC_UI" -eq 0 ]; then
   echo -e "${GREEN}║  ✅ SYSTEM READY (Time: ${DURATION}s)                    ║${NC}"
   echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
   exit 0

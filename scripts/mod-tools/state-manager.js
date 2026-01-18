@@ -21,7 +21,7 @@ class StateManager {
         timestamp: new Date().toISOString(),
         pm2: JSON.parse(pm2Status.stdout),
         git: gitStatus.stdout.trim().split("\n").filter(Boolean),
-        env: process.env.IKAI_ENV || "unknown",
+        env: process.env.APP_ENV || "unknown",
       };
 
       return snapshot;

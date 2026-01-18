@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * ASANMOD v1.1.1 - Command Validator (Immutable Guardrail)
+ * ASANMOD v3.1.0 - Command Validator (Immutable Guardrail)
  *
  * Validates agent commands before execution.
  * Rejects direct PM2 calls and suggests correct wrapper usage.
@@ -9,13 +9,13 @@
  * Usage: node scripts/mod-tools/validate-command.cjs "<command>"
  *
  * @example
- * node scripts/mod-tools/validate-command.cjs "pm2 restart ikai-prod-backend"
- * → REJECT, suggests: ./scripts/mod-tools/pm prod restart backend
+ * node scripts/mod-tools/validate-command.cjs "pm2 restart app-prod"
+ * → REJECT, suggests: ./scripts/mod-tools/pm prod restart
  */
 
 const FORBIDDEN_PATTERNS = [
   // ═══════════════════════════════════════════════════════════════════════════
-  // ASANMOD v1.1.1 CRITICAL: BYPASS PREVENTION
+  // ASANMOD v3.1.0 CRITICAL: BYPASS PREVENTION
   // ═══════════════════════════════════════════════════════════════════════════
   {
     pattern: /--no-verify/i,
@@ -27,7 +27,7 @@ const FORBIDDEN_PATTERNS = [
     pattern: /pm2\s+delete/i,
     reason: "Direct PM2 delete operation (dangerous)",
     suggestion: () =>
-      "Use ./scripts/mod-tools/pm prod stop <service> instead. Direct delete bypasses ASANMOD controls.",
+      "Use ./scripts/mod-tools/pm prod stop instead. Direct delete bypasses ASANMOD controls.",
   },
   {
     pattern: /pm2\s+scale/i,
@@ -39,31 +39,29 @@ const FORBIDDEN_PATTERNS = [
     pattern: /pm2\s+monit/i,
     reason: "Direct PM2 monit command",
     suggestion: () =>
-      "Use ./scripts/mod-tools/pm prod status all for monitoring. Direct pm2 monit bypasses wrapper.",
+      "Use ./scripts/mod-tools/pm prod status for monitoring. Direct pm2 monit bypasses wrapper.",
   },
   // ═══════════════════════════════════════════════════════════════════════════
-  // EXISTING PATTERNS
+  // UNIVERSAL PATTERNS (No hardcoded project names)
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    pattern:
-      /pm2\s+(restart|stop|start|logs|show)\s+ikai-(prod|dev)-(backend|frontend)/i,
-    reason: "Direct PM2 command with full process name",
+    pattern: /pm2\s+(restart|stop|start|logs|show)\s+app-(prod|dev)/i,
+    reason: "Direct PM2 command with process name",
     suggestion: (match) => {
       const action = match[1].toLowerCase();
       const env = match[2].toLowerCase();
-      const service = match[3].toLowerCase();
-      return `./scripts/mod-tools/pm ${env} ${action} ${service}`;
+      return `./scripts/mod-tools/pm ${env} ${action}`;
     },
   },
   {
     pattern: /pm2\s+restart\s+all/i,
     reason: "Direct PM2 restart all",
-    suggestion: () => "./scripts/mod-tools/pm prod restart all",
+    suggestion: () => "./scripts/mod-tools/pm prod restart",
   },
   {
-    pattern: /pm2\s+logs\s+ikai/i,
+    pattern: /pm2\s+logs\s+app-/i,
     reason: "Direct PM2 logs command",
-    suggestion: () => "./scripts/mod-tools/pm prod logs backend",
+    suggestion: () => "./scripts/mod-tools/pm prod logs",
   },
   {
     pattern: /console\.log\s*\(/i,
@@ -73,9 +71,9 @@ const FORBIDDEN_PATTERNS = [
   },
   {
     pattern: /prisma\s+migrate\s+dev/i,
-    reason: "Prisma migrate without cd backend",
+    reason: "Prisma migrate without proper setup",
     suggestion: () =>
-      "cd backend && npx prisma migrate dev --name <descriptive_name>",
+      "npx prisma migrate dev --name <descriptive_name>",
   },
 ];
 
@@ -127,9 +125,9 @@ function main() {
     console.log('Usage: node validate-command.cjs "<command>"');
     console.log("");
     console.log("Examples:");
-    console.log('  node validate-command.cjs "pm2 restart ikai-prod-backend"');
+    console.log('  node validate-command.cjs "pm2 restart app-prod"');
     console.log(
-      '  node validate-command.cjs "./scripts/mod-tools/pm prod restart backend"'
+      '  node validate-command.cjs "./scripts/mod-tools/pm prod restart"'
     );
     process.exit(0);
   }
@@ -138,7 +136,7 @@ function main() {
   const result = validateCommand(command);
 
   console.log("╔════════════════════════════════════════════════════════╗");
-  console.log("║  🛡️  ASANMOD v1.1.1 COMMAND VALIDATOR                    ║");
+  console.log("║  🛡️  ASANMOD v3.1.0 COMMAND VALIDATOR                   ║");
   console.log("╚════════════════════════════════════════════════════════╝");
   console.log("");
   console.log(`📝 Command: "${command}"`);
@@ -159,7 +157,7 @@ function main() {
     console.log(`   ${result.suggestion}`);
     console.log("");
     console.log("─────────────────────────────────────────────────────────");
-    console.log("📖 Reference: docs/AGENT_QUICK_REF_COMPACT.md");
+    console.log("📖 Reference: docs/AGENT_QUICK_REF.md");
     process.exit(1);
   }
 }

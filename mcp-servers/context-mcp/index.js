@@ -198,7 +198,7 @@ function openNodes(graph, names) {
 }
 
 const server = new Server(
-  { name: "ikai-memory-mcp", version: "1.0.0" },
+  { name: "asanmod-memory-mcp", version: "1.0.0" },
   { capabilities: { tools: {} } }
 );
 
@@ -210,7 +210,7 @@ server.setRequestHandler(InitializeRequestSchema, async (request) => {
       tools: {},
     },
     serverInfo: {
-      name: "ikai-memory-mcp",
+      name: "asanmod-memory-mcp",
       version: "1.0.0",
     },
   };

@@ -14,10 +14,10 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-DEV_DB="ikai_dev_db"
-PROD_DB="ikai_prod_db"
-PGUSER="ikaiuser"
-PGPASSWORD="ikaipass2025"
+DEV_DB="${DEV_DB:-myapp_dev_db}"
+PROD_DB="${PROD_DB:-myapp_prod_db}"
+PGUSER="${DB_USER:-dbuser}"
+PGPASSWORD="${DB_PASSWORD:-dbpassword}"
 export PGPASSWORD
 
 # Script directory
