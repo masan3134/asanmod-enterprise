@@ -3,7 +3,7 @@ type: reference
 agent_role: ops_engineer
 context_depth: 3
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-18"
 ---
 
 # Project Credentials

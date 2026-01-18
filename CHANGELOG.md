@@ -3,14 +3,14 @@ type: documentation
 agent_role: all
 context_depth: 2
 required_knowledge: ["asanmod_core"]
-last_audited: "2026-01-14"
+last_audited: "2026-01-18"
 ---
 
 # Changelog
 
 All notable changes to this project will be documented in this file.
 
-## [2.2.0] - 2026-01-14
+## [2.2.0] - 2026-01-18
 
 ### Agent-Recommended Improvements (Week 1)
 
@@ -18,6 +18,39 @@ Based on real AI agent E2E test feedback, implemented 6 critical improvements:
 
 #### 🔴 Setup Automation
 - **Wizard Auto-Run**: `npm install` now auto-runs wizard on first run
+## [3.1.0] - 2026-01-18
+
+### 🤖 AI-Responsive PM2 Wrapper (v10.0)
+
+Major template upgrade with AI-native features:
+
+#### PM2 Commands (AI-Responsive)
+- `./scripts/mod-tools/pm dev errors` - Error scan with UTC+3 timestamps
+- `./scripts/mod-tools/pm prod diag` - Full diagnostic report for AI agents
+- `./scripts/mod-tools/pm dev health` - Quick service health check
+- `./scripts/mod-tools/pm dev memory` - Memory usage summary
+
+#### Template Universalization
+- Removed ALL project-specific (IKAI) references
+- Universal service naming: `app-dev`, `app-prod`
+- Environment variable based configuration
+- Config-driven port and database settings
+
+#### Documentation Sync
+- All agent protocols updated to v3.1.0
+- AI-responsive commands documented everywhere
+- Removed duplicate/legacy files
+
+#### Files Changed
+- `scripts/mod-tools/pm` - Universal v10.0 wrapper
+- `scripts/mod-tools/env-helper.cjs` - Config-based, no hardcoded values
+- `scripts/mod-tools/fast-verify.sh` - Universal checks
+- `scripts/mod-tools/validate-command.cjs` - Universal patterns
+- All agent protocols (GEMINI.md, CLAUDE.md, CURSOR.md)
+- docs/AGENT_QUICK_REF.md - v10.0 with AI commands
+
+---
+
   - Creates `.asanmod/wizard-completed` flag
   - Skips in CI environments (CI=true or SKIP_WIZARD=1)
 - **DB Bootstrap**: New `npm run db:bootstrap` for interactive PostgreSQL setup
@@ -58,7 +91,7 @@ npm run db:reset       # Push + seed combo
 
 ---
 
-## [2.1.0-alpha] - 2026-01-14
+## [2.1.0-alpha] - 2026-01-18
 
 ### AI-Native Infrastructure
 
@@ -70,7 +103,7 @@ npm run db:reset       # Push + seed combo
 
 ---
 
-## [2.0.2] - 2026-01-14
+## [2.0.2] - 2026-01-18
 
 ### Added
 - **Self-Healing Setup**: Added `npm run doctor` for deep environment diagnosis
@@ -84,7 +117,7 @@ npm run db:reset       # Push + seed combo
 
 ---
 
-## [2.0.1] - 2026-01-14
+## [2.0.1] - 2026-01-18
 
 ### Enterprise Certification (Green Run)
 - **Verified:** Passed all 6 quality gates (Lint, TSC, Test, Audit, Build, Env)
