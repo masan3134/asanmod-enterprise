@@ -59,7 +59,7 @@ ASANMOD v1.3.0 - CURSOR PROTOCOL
 ./scripts/mod-tools/pm dev memory     # Memory kullanımı
 ```
 
-## 🏥 DB PROTECTION (v1.2.0)
+## 🏥 DB PROTECTION (v3.1.0)
 
 ```bash
 npm run db:health          # DEV DB orphan kontrolü

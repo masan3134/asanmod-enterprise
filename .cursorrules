@@ -1,18 +1,18 @@
 ---
-description: ASANMOD v1.1.1 Agent Constitution
+description: ASANMOD v3.1.0 Agent Constitution
 globs: *
 ---
 
 <!--
-ASANMOD v1.1.1 - DOCUMENTATION HEADER
+ASANMOD v3.1.0 - DOCUMENTATION HEADER
 ID: CONST-004
 STATUS: ACTIVE
 TYPE: RULES
-LAST_UPDATED: 2026-01-13 (UTC)
-VERSION: v1.1.1
+LAST_UPDATED: 2026-01-18 (UTC)
+VERSION: v3.1.0
 -->
 
-# ASANMOD v1.1.1 AGENT CONSTITUTION (EXECUTABLE RULES)
+# ASANMOD v3.1.0 AGENT CONSTITUTION (EXECUTABLE RULES)
 
 > **PHILOSOPHY:** Rules are enforced by scripts, not documents.
 
@@ -20,7 +20,7 @@ VERSION: v1.1.1
 
 | Constraint | Enforcer |
 |------------|----------|
-| Commit format: `ID: <TASK> \| <Message>` | `.husky/commit-msg` REJECTS |
+| Commit format: `type(scope): message` | `.husky/commit-msg` REJECTS |
 | No `console.log` in backend | `.husky/pre-commit` REJECTS |
 | MCP-only file ops | `verify-core.cjs` blocks |
 | **version.json DOKUNMA** | `deploy-prod.sh` manage |
@@ -43,13 +43,18 @@ VERSION: v1.1.1
 2. `curl` ile TOKEN al.
 3. 200 OK alana kadar test et.
 
-## ⚡ v1.1.1 AUTOMATION (USE THESE!)
+## ⚡ v3.1.0 AUTOMATION (USE THESE!)
 
 ### PM2 Commands (NEVER write full names!)
 
 ```bash
 ./scripts/mod-tools/pm prod status           # All services
-./scripts/mod-tools/pm dev logs frontend     # Dev frontend logs
+./scripts/mod-tools/pm dev logs              # Dev logs
+
+# 🤖 AI-RESPONSIVE (v10.0)
+./scripts/mod-tools/pm dev errors            # Error scan (UTC+3)
+./scripts/mod-tools/pm prod diag             # Diagnostic report
+./scripts/mod-tools/pm dev health            # Service health
 ```
 
 ### Operations
@@ -62,7 +67,7 @@ npm run deploy-prod  # Production deploy
 
 ## 📖 SINGLE REFERENCE
 
-**Read ONLY this:** `docs/ASANMOD_DOC_REGISTRY.md`
+**Read ONLY this:** `docs/AGENT_QUICK_REF.md`
 
 ## 🔒 THE ZERO TOLERANCE DIRECTIVE
 
@@ -72,5 +77,5 @@ npm run deploy-prod  # Production deploy
 
 ## 🟢 INITIALIZATION
 
-1. Read `GEMINI.md` / `CURSOR.md`
-2. Report: "**ASANMOD v1.1.1 Online.**"
+1. Read `GEMINI.md` / `CURSOR.md` / `CLAUDE.md`
+2. Report: "**ASANMOD v3.1.0 Online.**"

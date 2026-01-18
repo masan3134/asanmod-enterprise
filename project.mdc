@@ -1,10 +1,10 @@
 <!--
-ASANMOD v3.0.0 - PROJECT CONTEXT
+ASANMOD v3.1.0 - PROJECT CONTEXT
 ID: CONST-005
 STATUS: TEMPLATE
 TYPE: RULES
-LAST_UPDATED: [WIZARD_WILL_FILL]
-VERSION: v3.0.0
+LAST_UPDATED: 2026-01-18
+VERSION: v3.1.0
 -->
 
 # [PROJECT_NAME] - ASANMOD PROJECT CONTEXT
@@ -13,7 +13,7 @@ VERSION: v3.0.0
 
 - **App:** [PROJECT_NAME] ([PROJECT_DESCRIPTION])
 - **Stack:** Next.js 15 (App Router), tRPC, Drizzle ORM, PostgreSQL, TailwindCSS
-- **Governance:** ASANMOD v3.0.0
+- **Governance:** ASANMOD v3.1.0
 
 ## 🚀 QUICK START
 
@@ -24,9 +24,18 @@ VERSION: v3.0.0
 ```bash
 npm run verify      # Quality check (0/0/0)
 npm run fix         # Auto-fix lint
-npm run status      # System dashboard
 npm run dev         # Start development
 npm run deploy-prod # Production deploy
+```
+
+### PM2 Commands (v10.0 AI-Responsive)
+
+```bash
+./scripts/mod-tools/pm dev status     # Check status
+./scripts/mod-tools/pm prod restart   # Restart prod
+./scripts/mod-tools/pm dev errors     # 🤖 Error scan
+./scripts/mod-tools/pm prod diag      # 🤖 Diagnostic
+./scripts/mod-tools/pm dev health     # 🤖 Health check
 ```
 
 ---
@@ -35,10 +44,10 @@ npm run deploy-prod # Production deploy
 
 > **SOURCE OF TRUTH:** `docs/asanmod-core.json`
 
-| Service | DEV | PROD |
-|---------|-----|------|
-| Frontend | 3000 | 3002 |
-| Backend | 3001 | 3003 |
+| Environment | PM2 Name | Port |
+|-------------|----------|------|
+| DEV | app-dev | 3000 |
+| PROD | app-prod | 3002 |
 
 **PROD Binding:** `127.0.0.1` (MANDATORY - No external access)
 
@@ -90,7 +99,7 @@ src/
 1. `read_file("docs/AGENT_QUICK_REF.md")`
 2. `read_file("docs/asanmod-core.json")`
 3. Check `.asanmod/installed.lock` exists
-4. Report: "**ASANMOD v3.0.0 ONLINE. Project: [PROJECT_NAME]**"
+4. Report: "**ASANMOD v3.1.0 ONLINE. Project: [PROJECT_NAME]**"
 
 ---
 
@@ -109,15 +118,6 @@ See `CREDENTIALS.md` for test accounts.
 ### ZERO-TRUST VERIFICATION
 **Never trust previous step output.** Always verify file existence with `ls` or `cat`.
 
-**Example**:
-```bash
-# ❌ Bad: Assume file exists
-cat manifest.json
-
-# ✅ Good: Verify first
-if [ -f "manifest.json" ]; then cat manifest.json; fi
-```
-
 ### CONTEXT PRESERVATION
 Every significant change MUST be logged in `CHANGELOG.md` using standard commit format:
 - `feat(scope): description`
@@ -127,23 +127,9 @@ Every significant change MUST be logged in `CHANGELOG.md` using standard commit 
 ### GHOST-DEV RULE
 If a command fails **3 consecutive times**, stop and request "Host Hardware Intervention".
 
-**Rationale**: After 3 failures, the issue is likely environmental (Postgres binary missing, port occupied, etc.), not fixable by agent alone.
-
 ### MANIFEST-FIRST STARTUP
-On project start, **always read `.asanmod/manifest.json`** as the very first action to understand system state.
-
-**Query examples**:
-```bash
-# Check if wizard was completed
-cat .asanmod/manifest.json | jq '.flags.wizard_completed'
-
-# Check verification status
-cat .asanmod/manifest.json | jq '.verification.gates_passed'
-
-# Check health
-cat .asanmod/manifest.json | jq '.health'
-```
+On project start, **always read `.asanmod/manifest.json`** as the very first action.
 
 ---
 
-*ASANMOD v3.0.0 - Agent Discipline Enabled*
+*ASANMOD v3.1.0 - AI-Responsive PM2*
