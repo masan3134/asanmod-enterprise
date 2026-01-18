@@ -4,7 +4,7 @@
  *
  * @module tools/versionUpdate
  * @version 1.0.0
- * @created 2025-12-15
+ * @created 2026-12-15
  */
 
 import { exec } from "child_process";
@@ -15,10 +15,10 @@ import { readFileMCP, fileExistsMCP } from "../utils/mcpClient.js";
 const execAsync = promisify(exec);
 
 // Files that contain ASANMOD version information
-// Updated: 2025-12-24 - Added doc files and updated fields
+// Updated: 2026-12-24 - Added doc files and updated fields
 const VERSION_FILES = [
   { path: ".cursorrules", fields: ["version", "tool_count"] },
-  { path: ".cursor/rules/ikai.mdc", fields: ["version", "date", "tool_count"] },
+  { path: ".cursor/rules/asanmod.mdc", fields: ["version", "date", "tool_count"] },
   {
     path: "docs/workflow/ASANMOD-MASTER.md",
     fields: ["version", "date", "tool_count"],
@@ -34,9 +34,9 @@ const VERSION_FILES = [
   { path: "CURSOR.md", fields: ["version", "date"] },
   { path: "README.md", fields: ["version", "date"] },
   { path: "mcp-servers/asanmod-mcp/README.md", fields: ["version", "date"] },
-  { path: "mcp-servers/ikai-brain/README.md", fields: ["version", "date"] },
+  { path: "mcp-servers/asanmod-brain/README.md", fields: ["version", "date"] },
   {
-    path: "mcp-servers/ikai-brain/scripts/import-asanmod-data.ts",
+    path: "mcp-servers/asanmod-brain/scripts/import-asanmod-data.ts",
     fields: ["tool_count", "date"],
   },
   { path: ".git/hooks/pre-commit", fields: ["version"] },
@@ -77,7 +77,7 @@ interface UpdateResult {
 }
 
 const PROJECT_ROOT =
-  process.env.PROJECT_ROOT || "/home/root/projects/ikaicursor";
+  process.env.PROJECT_ROOT || "/home/root/projects/asanmodcursor";
 
 /**
  * Extract version information from a file

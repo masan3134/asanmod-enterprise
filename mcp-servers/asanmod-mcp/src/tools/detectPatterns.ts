@@ -1,15 +1,15 @@
 /**
- * ASANMOD MCP Tool: detectIkaiPatterns
- * IKAI codebase'de yeni pattern'leri otomatik olarak tespit eder
+ * ASANMOD MCP Tool: detectPatterns
+ * ASANMOD codebase'de yeni pattern'leri otomatik olarak tespit eder
  *
- * Phase 5: IKAI-Specific Customization
+ * Phase 5: ASANMOD-Specific Customization
  */
 
 import { existsSync, readFileSync } from "fs";
 import { execSync } from "child_process";
 import { join } from "path";
 
-interface DetectIkaiPatternsResult {
+interface DetectASANMODPatternsResult {
   success: boolean;
   detectedPatterns: DetectedPattern[];
   totalPatterns: number;
@@ -24,7 +24,7 @@ interface DetectedPattern {
   source: string; // File path where pattern was found
   codeSnippet?: string;
   confidence: "high" | "medium" | "low";
-  suggestedEntityName: string; // PATTERN_IKAI_*
+  suggestedEntityName: string; // PATTERN_ASANMOD_*
 }
 
 /**
@@ -85,13 +85,13 @@ function detectRBACPatterns(projectRoot: string): DetectedPattern[] {
 
           if (rbacLine) {
             patterns.push({
-              name: "IKAI RBAC Pattern",
+              name: "ASANMOD RBAC Pattern",
               type: "RBAC",
               description: `RBAC pattern with organizationId filtering: ${rbacLine.trim()}`,
               source: file.replace(projectRoot + "/", ""),
               codeSnippet: rbacLine.trim(),
               confidence: "high",
-              suggestedEntityName: "PATTERN_IKAI_RBAC",
+              suggestedEntityName: "PATTERN_ASANMOD_RBAC",
             });
           }
         }
@@ -130,13 +130,13 @@ function detectMultiTenantPatterns(projectRoot: string): DetectedPattern[] {
 
         if (content.includes("enforceOrganizationIsolation")) {
           patterns.push({
-            name: "IKAI Multi-Tenant Pattern",
+            name: "ASANMOD Multi-Tenant Pattern",
             type: "MultiTenant",
             description:
               "Multi-tenant pattern with enforceOrganizationIsolation middleware",
             source: file.replace(projectRoot + "/", ""),
             confidence: "high",
-            suggestedEntityName: "PATTERN_IKAI_MULTI_TENANT",
+            suggestedEntityName: "PATTERN_ASANMOD_MULTI_TENANT",
           });
         }
       }
@@ -170,12 +170,12 @@ function detectMCPFirstPatterns(projectRoot: string): DetectedPattern[] {
 
     if (mcpFiles.length > 0) {
       patterns.push({
-        name: "IKAI MCP-First Pattern",
+        name: "ASANMOD MCP-First Pattern",
         type: "MCPFirst",
         description: `MCP-First pattern: ${mcpFiles.length} files using MCP tools`,
         source: `${mcpFiles.length} files`,
         confidence: "high",
-        suggestedEntityName: "PATTERN_IKAI_MCP_FIRST",
+        suggestedEntityName: "PATTERN_ASANMOD_MCP_FIRST",
       });
     }
   } catch (error) {
@@ -194,7 +194,7 @@ function detectDevProdPatterns(projectRoot: string): DetectedPattern[] {
   try {
     // Search for DEV-PROD related code
     const devProdFiles = execSync(
-      `find ${projectRoot}/backend -type f \\( -name "*.ts" -o -name "*.js" \\) -exec grep -l "ikai_dev_db\|ikai_prod_db\|environmentCheck" {} \\; 2>/dev/null | head -10`,
+      `find ${projectRoot}/backend -type f \\( -name "*.ts" -o -name "*.js" \\) -exec grep -l "asanmod_dev_db\|asanmod_prod_db\|environmentCheck" {} \\; 2>/dev/null | head -10`,
       {
         encoding: "utf-8",
         cwd: projectRoot,
@@ -207,14 +207,14 @@ function detectDevProdPatterns(projectRoot: string): DetectedPattern[] {
 
     if (devProdFiles.length > 0) {
       patterns.push({
-        name: "IKAI DEV-PROD Isolation Pattern",
+        name: "ASANMOD DEV-PROD Isolation Pattern",
         type: "DevProd",
         description: "DEV-PROD environment isolation pattern",
         source:
           devProdFiles[0]?.replace(projectRoot + "/", "") ||
           "backend/config/environmentCheck.js",
         confidence: "high",
-        suggestedEntityName: "PATTERN_IKAI_DEV_PROD",
+        suggestedEntityName: "PATTERN_ASANMOD_DEV_PROD",
       });
     }
   } catch (error) {
@@ -225,18 +225,18 @@ function detectDevProdPatterns(projectRoot: string): DetectedPattern[] {
 }
 
 /**
- * Detect IKAI patterns in codebase
+ * Detect ASANMOD patterns in codebase
  */
-export async function detectIkaiPatterns(
+export async function detectPatterns(
   path?: string
-): Promise<DetectIkaiPatternsResult> {
+): Promise<DetectASANMODPatternsResult> {
   const projectRoot = path || getProjectRoot();
 
   if (!projectRoot) {
     throw new Error("Project root not found");
   }
 
-  const result: DetectIkaiPatternsResult = {
+  const result: DetectASANMODPatternsResult = {
     success: true,
     detectedPatterns: [],
     totalPatterns: 0,
@@ -342,8 +342,8 @@ export function generatePatternEntities(patterns: DetectedPattern[]): Array<{
 /**
  * MCP Tool Handler
  */
-export async function handleDetectIkaiPatterns(args: {
+export async function handleDetectPatterns(args: {
   path?: string;
-}): Promise<DetectIkaiPatternsResult> {
-  return detectIkaiPatterns(args.path);
+}): Promise<DetectASANMODPatternsResult> {
+  return detectPatterns(args.path);
 }

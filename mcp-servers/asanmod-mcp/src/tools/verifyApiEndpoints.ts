@@ -26,7 +26,7 @@ export async function verifyApiEndpoints(
   try {
     const baseUrl =
       environment === "prod"
-        ? "https://ikai.com.tr"
+        ? "https://asanmod.com.tr"
         : environment === "dev"
           ? "http://84.247.136.34:8202"
           : "http://localhost:8202";

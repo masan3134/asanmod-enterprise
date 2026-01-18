@@ -54,7 +54,7 @@ export async function verifyConsoleErrors(): Promise<ConsoleErrorsResult> {
       };
     }
 
-    const baseUrl = process.env.IKAI_FRONTEND_URL || "http://localhost:8203";
+    const baseUrl = process.env.ASANMOD_FRONTEND_URL || "http://localhost:8203";
     const urlsEnv = process.env.ASANMOD_CONSOLE_URLS;
     const urls = urlsEnv
       ? urlsEnv

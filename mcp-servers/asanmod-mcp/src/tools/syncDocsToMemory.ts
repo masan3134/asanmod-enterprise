@@ -241,24 +241,24 @@ export async function syncDocsToMemory(
       }
     }
 
-    // Parse IKAI Project info
+    // Parse ASANMOD Project info
     if (
-      docContent.includes("IKAI HR Platform") ||
-      docContent.includes("IKAI_PROJECT")
+      docContent.includes("ASANMOD Application") ||
+      docContent.includes("ASANMOD_PROJECT")
     ) {
-      const ikaiContent: string[] = [];
-      let inIkaiSection = false;
+      const asanmodContent: string[] = [];
+      let inASANMODSection = false;
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        if (line.match(/IKAI|ikai/i) && line.match(/Project|Platform/i)) {
-          inIkaiSection = true;
-          ikaiContent.push(line.trim());
+        if (line.match(/ASANMOD|asanmod/i) && line.match(/Project|Platform/i)) {
+          inASANMODSection = true;
+          asanmodContent.push(line.trim());
           continue;
         }
 
-        if (inIkaiSection) {
+        if (inASANMODSection) {
           if (line.match(/^##\s+/) || (line.trim() === "" && i > 50)) {
             break;
           }
@@ -269,17 +269,17 @@ export async function syncDocsToMemory(
               line.includes("DEV:") ||
               line.includes("PROD:"))
           ) {
-            ikaiContent.push(line.trim());
+            asanmodContent.push(line.trim());
           }
         }
       }
 
-      if (ikaiContent.length > 0) {
+      if (asanmodContent.length > 0) {
         const timestamp = new Date().toISOString();
         result.memoryObservationsFormat.push({
-          entityName: "IKAI_PROJECT",
+          entityName: "ASANMOD_PROJECT",
           contents: [
-            `[CURRENT v${Date.now()}] ${ikaiContent.join(" | ")} - Synced from docs: ${timestamp}`,
+            `[CURRENT v${Date.now()}] ${asanmodContent.join(" | ")} - Synced from docs: ${timestamp}`,
           ],
         });
         result.parsedEntities++;

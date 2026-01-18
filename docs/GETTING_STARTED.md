@@ -33,7 +33,7 @@ Optional:
 ### If Cloning from GitHub (Recommended)
 ```bash
 git clone https://github.com/masan3134/asanmod-enterprise.git my-app
-cd my-app/asan-enterprise-template
+cd my-app
 ```
 
 ### If Starting Fresh

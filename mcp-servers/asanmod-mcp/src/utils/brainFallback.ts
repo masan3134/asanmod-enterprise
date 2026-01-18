@@ -115,7 +115,7 @@ function getStaticFallback(endpoint: string): BrainResponse {
     "/brain/health": {
       status: "unknown",
       fallback: true,
-      service: "ikai-brain",
+      service: "asanmod-brain",
       version: "1.0.0",
       timestamp: new Date().toISOString(),
     },

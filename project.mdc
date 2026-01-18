@@ -1,10 +1,10 @@
 <!--
-ASANMOD v3.1.0 - PROJECT CONTEXT
+ASANMOD v3.2.0 - PROJECT CONTEXT
 ID: CONST-005
 STATUS: TEMPLATE
 TYPE: RULES
 LAST_UPDATED: 2026-01-18
-VERSION: v3.1.0
+VERSION: v3.2.0
 -->
 
 # [PROJECT_NAME] - ASANMOD PROJECT CONTEXT
@@ -13,7 +13,7 @@ VERSION: v3.1.0
 
 - **App:** [PROJECT_NAME] ([PROJECT_DESCRIPTION])
 - **Stack:** Next.js 15 (App Router), tRPC, Drizzle ORM, PostgreSQL, TailwindCSS
-- **Governance:** ASANMOD v3.1.0
+- **Governance:** ASANMOD v3.2.0
 
 ## 🚀 QUICK START
 
@@ -32,10 +32,9 @@ npm run deploy-prod # Production deploy
 
 ```bash
 ./scripts/mod-tools/pm dev status     # Check status
-./scripts/mod-tools/pm prod restart   # Restart prod
-./scripts/mod-tools/pm dev errors     # 🤖 Error scan
-./scripts/mod-tools/pm prod diag      # 🤖 Diagnostic
-./scripts/mod-tools/pm dev health     # 🤖 Health check
+./scripts/mod-tools/pm dev errors     # 🤖 Error scan (UTC+3)
+./scripts/mod-tools/pm prod diag      # 🤖 Full diagnostic
+./scripts/mod-tools/pm dev health     # �� Health check
 ```
 
 ---
@@ -51,10 +50,6 @@ npm run deploy-prod # Production deploy
 
 **PROD Binding:** `127.0.0.1` (MANDATORY - No external access)
 
-**Verification:**
-- **Dev Check:** `curl -I http://localhost:3000`
-- **Prod Check:** `curl -I http://localhost:3002`
-
 ---
 
 ## 🧩 CODING PATTERNS (STRICT)
@@ -65,41 +60,22 @@ npm run deploy-prod # Production deploy
 
 ### 2. TypeScript Safety
 - **No `any`:** Prohibited. Use proper types or `unknown`.
-- **Async/Await:** Always handle with `try/catch`.
 
 ### 3. tRPC Patterns
 - **Routers:** `src/server/routers/`
-- **Validation:** Zod schemas required for all inputs
-- **Naming:** Singular endpoints (`/customer` not `/customers`)
+- **Validation:** Zod schemas required for all inputs.
 
 ### 4. ASANMOD Protocols
-- **Verify:** `npm run verify` before commit
-- **Fix:** `npm run fix` for auto-linting
-- **State:** Track progress in `.asanmod/state/`
-
----
-
-## 📁 FILE STRUCTURE
-
-```
-src/
-├── app/          → Pages (Next.js App Router)
-├── components/   → UI Components
-├── server/       → tRPC routers
-│   └── routers/  → Module routers
-├── db/           → Drizzle schema
-│   └── schema/   → Table definitions
-└── lib/          → Utility functions
-```
+- **Verify:** `npm run verify` before commit.
+- **Fix:** `npm run fix` for auto-linting.
 
 ---
 
 ## 🟢 AGENT INITIALIZATION
 
-1. `read_file("docs/AGENT_QUICK_REF.md")`
-2. `read_file("docs/asanmod-core.json")`
-3. Check `.asanmod/installed.lock` exists
-4. Report: "**ASANMOD v3.1.0 ONLINE. Project: [PROJECT_NAME]**"
+1. Read `docs/AGENT_QUICK_REF.md`
+2. Run `npm run verify`
+3. Report: "**ASANMOD v3.2.0 ONLINE. Project: [PROJECT_NAME]**"
 
 ---
 
@@ -107,29 +83,17 @@ src/
 
 [WIZARD_WILL_FILL: List of enabled modules]
 
-## 🔐 CREDENTIALS
-
-See `CREDENTIALS.md` for test accounts.
-
----
-
 ## 🛡️ AGENT DISCIPLINE (Hard Constraints)
 
 ### ZERO-TRUST VERIFICATION
-**Never trust previous step output.** Always verify file existence with `ls` or `cat`.
+**Never trust previous step output.** Always verify file existence.
 
 ### CONTEXT PRESERVATION
-Every significant change MUST be logged in `CHANGELOG.md` using standard commit format:
-- `feat(scope): description`
-- `fix(scope): description`
-- `docs(scope): description`
+Log changes in `CHANGELOG.md` using `type(scope): description`.
 
 ### GHOST-DEV RULE
 If a command fails **3 consecutive times**, stop and request "Host Hardware Intervention".
 
-### MANIFEST-FIRST STARTUP
-On project start, **always read `.asanmod/manifest.json`** as the very first action.
-
 ---
 
-*ASANMOD v3.1.0 - AI-Responsive PM2*
+*ASANMOD v3.2.0 - AI-Responsive PM2*

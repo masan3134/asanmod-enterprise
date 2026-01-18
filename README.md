@@ -7,7 +7,7 @@ last_audited: "2026-01-18"
 critical: true
 ---
 
-# ASANMOD Enterprise Template v3.1.0
+# ASANMOD Enterprise Template v3.2.0
 
 > **The World's First AI-Native Enterprise Template** ✨
 > Production-ready Next.js 15 + tRPC + PostgreSQL with autonomous agent support
@@ -75,7 +75,7 @@ npm run dev
 - ✅ **Role-Based Access** - Admin, user, custom roles
 - ✅ **Password Hashing** - bcrypt with proper salting
 
-### AI-Native Features (NEW in v3.1.0)
+### AI-Native Features (NEW in v3.2.0)
 - ✅ **`.asanmod/manifest.json`** - Runtime state tracking
 - ✅ **YAML Frontmatter** - Machine-readable metadata on all docs
 - ✅ **Context-Aware Wizard** - 100% autonomous placeholder purging
@@ -145,7 +145,7 @@ npm run dev
 
 - **[Getting Started](./docs/GETTING_STARTED.md)** - Detailed setup guide
 - **[Agent Quick Reference](./docs/AGENT_QUICK_REF.md)** - All commands, ports, rules in one page
-- **[Architecture](./docs/ARCH.md)** - System design and agent roles
+- **[Architecture](./docs/ARCHITECTURE.md)** - System design and agent roles
 - **[Ultimate E2E Test](./docs/ULTIMATE_E2E_TEST.md)** - Validation test scenario
 - **[Deployment](./docs/DEPLOYMENT.md)** - Production deployment guide
 
@@ -246,4 +246,4 @@ This template is **specifically optimized** for autonomous agents:
 ---
 
 **Built with ❤️ by the ASANMOD team**
-*ASANMOD Enterprise Template v3.1.0* - The World's First AI-Native Enterprise Template
+*ASANMOD Enterprise Template v3.2.0* - The World's First AI-Native Enterprise Template

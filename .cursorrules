@@ -1,18 +1,18 @@
 ---
-description: ASANMOD v3.1.0 Agent Constitution
+description: ASANMOD v3.2.0 Agent Constitution
 globs: *
 ---
 
 <!--
-ASANMOD v3.1.0 - DOCUMENTATION HEADER
+ASANMOD v3.2.0 - DOCUMENTATION HEADER
 ID: CONST-004
 STATUS: ACTIVE
 TYPE: RULES
 LAST_UPDATED: 2026-01-18 (UTC)
-VERSION: v3.1.0
+VERSION: v3.2.0
 -->
 
-# ASANMOD v3.1.0 AGENT CONSTITUTION (EXECUTABLE RULES)
+# ASANMOD v3.2.0 AGENT CONSTITUTION (EXECUTABLE RULES)
 
 > **PHILOSOPHY:** Rules are enforced by scripts, not documents.
 
@@ -31,30 +31,19 @@ VERSION: v3.1.0
 | Environment | PM2 Name | Port | Access |
 |-------------|----------|------|--------|
 | **DEV** | `app-dev` | **3000** | IP (Hot Reload) |
-| **PROD** | `app-prod` | **3002** | Domain (Stable) |
+| **PROD** | `app-prod` | **3002** | Stable (PROD) |
 
 **RULE:** NEVER touch Prod files manually. Use `npm run deploy-prod`.
 
-## 🔴 API DOĞRULAMA PROTOKOLÜ
+## ⚡ v3.2.0 AUTOMATION (USE THESE!)
 
-> **HER değişiklik curl ile test edilmeli!**
-
-1. `docs/CREDENTIALS.md` oku.
-2. `curl` ile TOKEN al.
-3. 200 OK alana kadar test et.
-
-## ⚡ v3.1.0 AUTOMATION (USE THESE!)
-
-### PM2 Commands (NEVER write full names!)
+### PM2 Commands (v10.0 AI-Responsive)
 
 ```bash
-./scripts/mod-tools/pm prod status           # All services
-./scripts/mod-tools/pm dev logs              # Dev logs
-
-# 🤖 AI-RESPONSIVE (v10.0)
-./scripts/mod-tools/pm dev errors            # Error scan (UTC+3)
-./scripts/mod-tools/pm prod diag             # Diagnostic report
-./scripts/mod-tools/pm dev health            # Service health
+./scripts/mod-tools/pm dev status           # Check status
+./scripts/mod-tools/pm dev errors           # 🤖 Error scan (UTC+3)
+./scripts/mod-tools/pm prod diag            # 🤖 Diagnostic report
+./scripts/mod-tools/pm dev health           # 🤖 Service health
 ```
 
 ### Operations
@@ -66,16 +55,14 @@ npm run deploy-prod  # Production deploy
 ```
 
 ## 📖 SINGLE REFERENCE
-
 **Read ONLY this:** `docs/AGENT_QUICK_REF.md`
 
 ## 🔒 THE ZERO TOLERANCE DIRECTIVE
-
 - **NO TERMINAL IO:** Use `view_file`, `read_file`.
 - **QUALITY:** `0/0/0` (Enforced by `verify-core.cjs`).
 - **LANGUAGE:** TURKISH (Always, except for code).
 
 ## 🟢 INITIALIZATION
-
-1. Read `GEMINI.md` / `CURSOR.md` / `CLAUDE.md`
-2. Report: "**ASANMOD v3.1.0 Online.**"
+1. Read `docs/AGENT_QUICK_REF.md`
+2. Run `npm run verify`
+3. Report: "**ASANMOD v3.2.0 Online.**"

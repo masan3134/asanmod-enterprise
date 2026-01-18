@@ -1,5 +1,5 @@
 #!/bin/bash
-# ASANMOD v3.0.0: One-Command Installer
+# ASANMOD v3.2.0: One-Command Installer
 # Usage: curl -fsSL https://raw.githubusercontent.com/masan3134/asanmod-enterprise/main/install.sh | bash
 
 set -e
@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}🚀 ASANMOD v3.0.0: Enterprise Template Installer${NC}"
+echo -e "${BLUE}🚀 ASANMOD v3.2.0: Enterprise Template Installer${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -55,7 +55,7 @@ echo ""
 # Clone repository with tag pin
 echo -e "${YELLOW}📦 Cloning template...${NC}"
 git clone --depth 1 --branch main https://github.com/masan3134/asanmod-enterprise.git "$PROJECT_NAME"
-cd "$PROJECT_NAME/asan-enterprise-template"
+cd "$PROJECT_NAME"
 
 # Install dependencies
 echo ""
@@ -76,7 +76,7 @@ echo ""
 echo "📂 Project location: $(pwd)"
 echo ""
 echo "📋 Next steps:"
-echo "   1. cd $PROJECT_NAME/asan-enterprise-template"
+echo "   1. cd $PROJECT_NAME"
 echo "   2. Update .env with your DATABASE_URL"
 echo "   3. npm run db:push"
 echo "   4. npm run seed (optional)"
@@ -85,5 +85,5 @@ echo ""
 echo "📚 Documentation: README.md & docs/GETTING_STARTED.md"
 echo "🤖 Agent Protocol: GEMINI.md (or CURSOR.md / CLAUDE.md)"
 echo ""
-echo "🎯 ASANMOD v3.0.0 - Production Ready"
+echo "🎯 ASANMOD v3.2.0 - Production Ready"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

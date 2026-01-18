@@ -1,17 +1,17 @@
 {
-  "version": "3.0.0",
+  "version": "3.2.0",
   "name": "ASANMOD - Autonomous Governance System",
-  "lastUpdated": "2026-01-15T02:05:00.000Z",
+  "lastUpdated": "2026-01-18T15:14:24.230Z",
   "description": "AI-Native Software Factory Protocol for Enterprise Applications",
   "network": {
     "dev": {
       "frontend": 3000,
-      "backend": 3001,
+      "backend": 3000,
       "binding": "0.0.0.0"
     },
     "prod": {
       "frontend": 3002,
-      "backend": 3003,
+      "backend": 3002,
       "binding": "127.0.0.1"
     }
   },
@@ -68,7 +68,7 @@
     "readme": "README.md"
   },
   "agent_config": {
-    "protocol_version": "1.1.1",
+    "protocol_version": "3.2.0",
     "strict_mode": true,
     "auto_fix_lint": false,
     "observability_file": ".asanmod/manifest.json"
@@ -116,8 +116,9 @@
     ]
   },
   "_meta": {
-    "schema": "1.1.1",
-    "generator": "ASANMOD Enterprise Template v3.0.0",
+    "schema": "3.2.0",
+    "generator": "ASANMOD Enterprise Template v3.2.0",
     "note": "This file is the single source of truth. Configure for your project."
-  }
+  },
+  "lockedVersion": "3.2.0"
 }

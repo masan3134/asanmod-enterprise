@@ -99,7 +99,7 @@ export function compactify(data: any): CompactOutput {
   if (data.metadata) {
     result.m = {
       ts: Date.now(),
-      // workerId and taskId removed - WORKER system eliminated (2025-12-17)
+      // workerId and taskId removed - WORKER system eliminated (2026-12-17)
     };
   }
 

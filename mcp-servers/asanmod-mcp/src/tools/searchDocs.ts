@@ -41,7 +41,7 @@ const DOC_INDEX: Record<string, string[]> = {
   mod: ["MOD-BASLATMA-PROMPT.txt", "ASANMOD-MASTER.md"],
   rules: ["ASANMOD-MASTER.md", "CURSOR-RULES-COMPLETE.md"],
   rbac: ["ASANMOD-MASTER.md", "RBAC-PATTERNS.md"],
-  mcp: ["MCP-USAGE-GUIDE-IKAI.md", "ASANMOD-MASTER.md"],
+  mcp: ["MCP-USAGE-GUIDE-ASANMOD.md", "ASANMOD-MASTER.md"],
   deployment: ["DEPLOYMENT-TRACKING-SYSTEM.md", "ASANMOD-MASTER.md"],
   "prod fix": ["PROD-FIX-DEV-SYNC-SYSTEM.md", "ASANMOD-MASTER.md"],
   "state tracking": ["STATE-TRACKING-GUIDE.md", "ASANMOD-MASTER.md"],

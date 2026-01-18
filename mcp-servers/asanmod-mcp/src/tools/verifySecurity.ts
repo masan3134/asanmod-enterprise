@@ -31,7 +31,7 @@ export async function verifySecurity(path?: string): Promise<SecurityResult> {
   const projectRoot = getWorkspaceRoot(undefined);
   const roots = resolveScanRoots(projectRoot, path);
 
-  // STRICT SECRETS PATTERNS (Updated 2025-12-19)
+  // STRICT SECRETS PATTERNS (Updated 2026-12-19)
   const securityPatterns = [
     // Secrets / Keys
     {

@@ -98,10 +98,10 @@ export async function verifyDevProdSync(): Promise<DevProdSyncResult> {
   // Schema comparison (simplified - using psql)
   try {
     const devTables = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_dev_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_dev_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
       {
         encoding: "utf-8",
-        env: { ...process.env, PGPASSWORD: "ikaipass2025" },
+        env: { ...process.env, PGPASSWORD: "asanmodpass2026" },
       }
     ).trim();
     result.schema.devTables = parseInt(devTables) || 0;
@@ -111,10 +111,10 @@ export async function verifyDevProdSync(): Promise<DevProdSyncResult> {
 
   try {
     const prodTables = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_prod_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_prod_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
       {
         encoding: "utf-8",
-        env: { ...process.env, PGPASSWORD: "ikaipass2025" },
+        env: { ...process.env, PGPASSWORD: "asanmodpass2026" },
       }
     ).trim();
     result.schema.prodTables = parseInt(prodTables) || 0;

@@ -7,7 +7,7 @@ last_audited: "2026-01-18"
 critical: true
 ---
 
-# 🚀 AGENT QUICK REFERENCE (v10.0)
+# 🚀 ASANMOD AGENT QUICK REFERENCE (v3.2.0)
 
 > **Single page, all information. Read asanmod-core.json first.**
 

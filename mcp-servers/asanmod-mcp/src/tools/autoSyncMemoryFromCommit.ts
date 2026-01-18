@@ -73,8 +73,8 @@ function parseCommitMessage(commitMessage: string): {
       .slice(1)
       .filter((l) => !l.match(/^\[MOD\]|^\[W[1-6]\]/));
 
-    // Extract pattern: Pattern: PATTERN_IKAI_*
-    const patternMatch = commitMessage.match(/Pattern:\s*(PATTERN_IKAI_\w+)/i);
+    // Extract pattern: Pattern: PATTERN_ASANMOD_*
+    const patternMatch = commitMessage.match(/Pattern:\s*(PATTERN_ASANMOD_\w+)/i);
     const pattern = patternMatch ? patternMatch[1] : undefined;
 
     // Extract breaking change
@@ -218,49 +218,49 @@ export async function autoSyncMemoryFromCommit(params: {
     // Generate Memory MCP observations
     const observations: Array<{ entityName: string; contents: string[] }> = [];
 
-    // 1. IKAI_PROJECT Entity Update
-    const ikaiProjectContents: string[] = [
+    // 1. ASANMOD_PROJECT Entity Update
+    const asanmodProjectContents: string[] = [
       `[COMMIT ${commitHash}] ${parsed.description} - ${commitTimestamp}`,
     ];
 
     if (parsed.module) {
-      ikaiProjectContents.push(`Module: ${parsed.module}`);
+      asanmodProjectContents.push(`Module: ${parsed.module}`);
     }
 
     if (parsed.type) {
-      ikaiProjectContents.push(`Type: ${parsed.type}`);
+      asanmodProjectContents.push(`Type: ${parsed.type}`);
     }
 
     if (changedFiles.length > 0) {
-      ikaiProjectContents.push(`Changed files: ${changedFiles.length} file(s)`);
+      asanmodProjectContents.push(`Changed files: ${changedFiles.length} file(s)`);
       if (categorized.backend.length > 0) {
-        ikaiProjectContents.push(
+        asanmodProjectContents.push(
           `  - Backend: ${categorized.backend.length} file(s)`
         );
       }
       if (categorized.frontend.length > 0) {
-        ikaiProjectContents.push(
+        asanmodProjectContents.push(
           `  - Frontend: ${categorized.frontend.length} file(s)`
         );
       }
       if (categorized.asanmod.length > 0) {
-        ikaiProjectContents.push(
+        asanmodProjectContents.push(
           `  - ASANMOD: ${categorized.asanmod.length} file(s)`
         );
       }
     }
 
     if (parsed.details && parsed.details.length > 0) {
-      ikaiProjectContents.push(`Details: ${parsed.details.join("; ")}`);
+      asanmodProjectContents.push(`Details: ${parsed.details.join("; ")}`);
     }
 
     if (parsed.breaking) {
-      ikaiProjectContents.push(`⚠️ BREAKING CHANGE`);
+      asanmodProjectContents.push(`⚠️ BREAKING CHANGE`);
     }
 
     observations.push({
-      entityName: "IKAI_PROJECT",
-      contents: ikaiProjectContents,
+      entityName: "ASANMOD_PROJECT",
+      contents: asanmodProjectContents,
     });
 
     // 2. ASANMOD_SYSTEM Entity Update (if ASANMOD change)
@@ -313,8 +313,8 @@ export async function autoSyncMemoryFromCommit(params: {
     if (categorized.backend.length > 5 || categorized.frontend.length > 5) {
       const moduleEntityName =
         categorized.backend.length > categorized.frontend.length
-          ? "IKAI_BACKEND"
-          : "IKAI_FRONTEND";
+          ? "ASANMOD_BACKEND"
+          : "ASANMOD_FRONTEND";
 
       const moduleContents: string[] = [
         `[COMMIT ${commitHash}] ${parsed.description} - ${commitTimestamp}`,

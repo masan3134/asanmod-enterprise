@@ -188,7 +188,7 @@ export const WORKFLOW_PATTERNS: WorkflowPattern = {
   ],
 };
 
-// MCP List (12 Total - Updated 2025-11-11)
+// MCP List (12 Total - Updated 2026-11-11)
 export const MCP_LIST = [
   "postgres-official - Database queries, Prisma verification",
   "git (custom) - Git operations, commit management",

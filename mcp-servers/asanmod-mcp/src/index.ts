@@ -54,17 +54,17 @@ import {
 } from "./tools/updateMemory.js";
 import { handleAddPattern, generatePatternEntity } from "./tools/addPattern.js";
 import {
-  handleDetectIkaiPatterns,
+  handleDetectPatterns,
   generatePatternEntities,
-} from "./tools/detectIkaiPatterns.js";
+} from "./tools/detectPatterns.js";
 import {
-  handleIkaiLearning,
+  handleLearning,
   generateLearningObservations,
-} from "./tools/ikaiLearning.js";
+} from "./tools/learning.js";
 import {
-  handleIkaiContextLoad,
-  generateIkaiContextQueries,
-} from "./tools/ikaiContextLoad.js";
+  handleContextLoad,
+  generateContextQueries,
+} from "./tools/contextLoad.js";
 import {
   autoSyncMemoryFromCommit,
   generateAutoSyncMemoryObservations,
@@ -86,7 +86,7 @@ import {
 const server = new Server(
   {
     name: "asanmod-mcp",
-    version: "1.0.0",
+    version: "3.2.0",
   },
   {
     capabilities: {
@@ -104,7 +104,7 @@ server.setRequestHandler(InitializeRequestSchema, async (request) => {
     },
     serverInfo: {
       name: "asanmod-mcp",
-      version: "8.0.0",
+      version: "3.2.0",
     },
   };
 });
@@ -365,18 +365,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "asanmod_pm2_restart",
       description:
-        "PM2 process restart with environment variable update. Uses stop/start from ecosystem.config.cjs to ensure env vars are updated (ikai-dev-backend, ikai-dev-frontend, ikai-prod-backend, ikai-prod-frontend, ikai-brain).",
+        "PM2 process restart with environment variable update. Uses stop/start from ecosystem.config.cjs to ensure env vars are updated (asanmod-dev-backend, asanmod-dev-frontend, asanmod-prod-backend, asanmod-prod-frontend, asanmod-brain).",
       inputSchema: {
         type: "object",
         properties: {
           processName: {
             type: "string",
             enum: [
-              "ikai-dev-backend",
-              "ikai-dev-frontend",
-              "ikai-prod-backend",
-              "ikai-prod-frontend",
-              "ikai-brain",
+              "asanmod-dev-backend",
+              "asanmod-dev-frontend",
+              "asanmod-prod-backend",
+              "asanmod-prod-frontend",
+              "asanmod-brain",
             ],
             description: "Restart edilecek process adı",
           },
@@ -387,18 +387,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "asanmod_pm2_stop",
       description:
-        "PM2 process stop (ikai-dev-backend, ikai-dev-frontend, ikai-prod-backend, ikai-prod-frontend, ikai-brain).",
+        "PM2 process stop (asanmod-dev-backend, asanmod-dev-frontend, asanmod-prod-backend, asanmod-prod-frontend, asanmod-brain).",
       inputSchema: {
         type: "object",
         properties: {
           processName: {
             type: "string",
             enum: [
-              "ikai-dev-backend",
-              "ikai-dev-frontend",
-              "ikai-prod-backend",
-              "ikai-prod-frontend",
-              "ikai-brain",
+              "asanmod-dev-backend",
+              "asanmod-dev-frontend",
+              "asanmod-prod-backend",
+              "asanmod-prod-frontend",
+              "asanmod-brain",
             ],
             description: "Stop edilecek process adı",
           },
@@ -409,18 +409,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "asanmod_pm2_start",
       description:
-        "PM2 process start from ecosystem.config.cjs to ensure correct environment variables (ikai-dev-backend, ikai-dev-frontend, ikai-prod-backend, ikai-prod-frontend, ikai-brain).",
+        "PM2 process start from ecosystem.config.cjs to ensure correct environment variables (asanmod-dev-backend, asanmod-dev-frontend, asanmod-prod-backend, asanmod-prod-frontend, asanmod-brain).",
       inputSchema: {
         type: "object",
         properties: {
           processName: {
             type: "string",
             enum: [
-              "ikai-dev-backend",
-              "ikai-dev-frontend",
-              "ikai-prod-backend",
-              "ikai-prod-frontend",
-              "ikai-brain",
+              "asanmod-dev-backend",
+              "asanmod-dev-frontend",
+              "asanmod-prod-backend",
+              "asanmod-prod-frontend",
+              "asanmod-brain",
             ],
             description: "Start edilecek process adı",
           },
@@ -555,13 +555,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "asanmod_add_pattern",
       description:
-        "Yeni pattern'leri Memory MCP'ye otomatik olarak ekler. IKAI-specific pattern detection için kullanılır.",
+        "Yeni pattern'leri Memory MCP'ye otomatik olarak ekler. ASANMOD-specific pattern detection için kullanılır.",
       inputSchema: {
         type: "object",
         properties: {
           patternName: {
             type: "string",
-            description: "Pattern adı (örn: PATTERN_IKAI_RBAC)",
+            description: "Pattern adı (örn: PATTERN_ASANMOD_RBAC)",
           },
           description: {
             type: "string",
@@ -589,9 +589,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "asanmod_detect_ikai_patterns",
+      name: "asanmod_detect_patterns",
       description:
-        "IKAI codebase'de yeni pattern'leri otomatik olarak tespit eder. RBAC, Multi-Tenant, MCP-First, DEV-PROD pattern'lerini bulur.",
+        "ASANMOD codebase'de yeni pattern'leri otomatik olarak tespit eder. RBAC, Multi-Tenant, MCP-First, DEV-PROD pattern'lerini bulur.",
       inputSchema: {
         type: "object",
         properties: {
@@ -604,9 +604,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "asanmod_ikai_learning",
+      name: "asanmod_learning",
       description:
-        "Task'tan öğrenilen pattern'leri, best practice'leri ve hata pattern'lerini Memory MCP'ye kaydeder. IKAI learning system.",
+        "Task'tan öğrenilen pattern'leri, best practice'leri ve hata pattern'lerini Memory MCP'ye kaydeder. ASANMOD learning system.",
       inputSchema: {
         type: "object",
         properties: {
@@ -655,9 +655,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "asanmod_ikai_context_load",
+      name: "asanmod_context_load",
       description:
-        "Session başlangıcında IKAI context'ini otomatik yükler. IKAI_PROJECT, pattern'ler, rule'lar ve MCP'leri yükler.",
+        "Session başlangıcında ASANMOD context'ini otomatik yükler. ASANMOD_PROJECT, pattern'ler, rule'lar ve MCP'leri yükler.",
       inputSchema: {
         type: "object",
         properties: {
@@ -1144,39 +1144,39 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             },
           ],
         };
-      case "asanmod_detect_ikai_patterns":
+      case "asanmod_detect_patterns":
         return {
           content: [
             {
               type: "text",
               text: JSON.stringify(
-                await handleDetectIkaiPatterns((args as any).path),
+                await handleDetectASANMODPatterns((args as any).path),
                 null,
                 2
               ),
             },
           ],
         };
-      case "asanmod_ikai_learning":
+      case "asanmod_learning":
         return {
           content: [
             {
               type: "text",
               text: JSON.stringify(
-                await handleIkaiLearning(args as any),
+                await handleASANMODLearning(args as any),
                 null,
                 2
               ),
             },
           ],
         };
-      case "asanmod_ikai_context_load":
+      case "asanmod_context_load":
         return {
           content: [
             {
               type: "text",
               text: JSON.stringify(
-                await handleIkaiContextLoad((args as any).path),
+                await handleASANMODContextLoad((args as any).path),
                 null,
                 2
               ),

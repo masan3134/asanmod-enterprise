@@ -1,6 +1,6 @@
 /**
- * ASANMOD MCP Tool: Test IKAI-Specific Features
- * IKAI pattern detection ve learning system testi
+ * ASANMOD MCP Tool: Test ASANMOD-Specific Features
+ * ASANMOD pattern detection ve learning system testi
  *
  * Phase 7: Testing & Validation
  */
@@ -8,7 +8,7 @@
 import { existsSync } from "fs";
 import { join } from "path";
 
-interface TestIkaiSpecificResult {
+interface TestASANMODSpecificResult {
   success: boolean;
   testSteps: Array<{
     step: string;
@@ -44,18 +44,18 @@ function getProjectRoot(): string {
 }
 
 /**
- * Test IKAI-specific features
+ * Test ASANMOD-specific features
  */
-export async function testIkaiSpecific(
+export async function testSpecific(
   path?: string
-): Promise<TestIkaiSpecificResult> {
+): Promise<TestASANMODSpecificResult> {
   const projectRoot = path || getProjectRoot();
 
   if (!projectRoot) {
     throw new Error("Project root not found");
   }
 
-  const result: TestIkaiSpecificResult = {
+  const result: TestASANMODSpecificResult = {
     success: true,
     testSteps: [],
     overallStatus: "passed",
@@ -65,23 +65,23 @@ export async function testIkaiSpecific(
   };
 
   try {
-    // Step 1: Check detect_ikai_patterns tool
+    // Step 1: Check detect_asanmod_patterns tool
     result.testSteps.push({
-      step: "1. Check asanmod_detect_ikai_patterns tool",
+      step: "1. Check asanmod_detect_asanmod_patterns tool",
       status: "passed",
       details: "Tool exists in index.ts",
     });
 
-    // Step 2: Check ikai_learning tool
+    // Step 2: Check asanmod_learning tool
     result.testSteps.push({
-      step: "2. Check asanmod_ikai_learning tool",
+      step: "2. Check asanmod_asanmod_learning tool",
       status: "passed",
       details: "Tool exists in index.ts",
     });
 
-    // Step 3: Check ikai_context_load tool
+    // Step 3: Check asanmod_context_load tool
     result.testSteps.push({
-      step: "3. Check asanmod_ikai_context_load tool",
+      step: "3. Check asanmod_asanmod_context_load tool",
       status: "passed",
       details: "Tool exists in index.ts",
     });
@@ -93,17 +93,17 @@ export async function testIkaiSpecific(
       "asanmod-mcp",
       "src",
       "tools",
-      "detectIkaiPatterns.ts"
+      "detectPatterns.ts"
     );
     if (existsSync(detectPatternsFile)) {
       result.testSteps.push({
-        step: "4. Verify detectIkaiPatterns.ts exists",
+        step: "4. Verify detectPatterns.ts exists",
         status: "passed",
         details: `File exists: ${detectPatternsFile}`,
       });
     } else {
       result.testSteps.push({
-        step: "4. Verify detectIkaiPatterns.ts exists",
+        step: "4. Verify detectPatterns.ts exists",
         status: "failed",
         details: `File not found: ${detectPatternsFile}`,
       });
@@ -118,17 +118,17 @@ export async function testIkaiSpecific(
       "asanmod-mcp",
       "src",
       "tools",
-      "ikaiLearning.ts"
+      "asanmodLearning.ts"
     );
     if (existsSync(learningFile)) {
       result.testSteps.push({
-        step: "5. Verify ikaiLearning.ts exists",
+        step: "5. Verify asanmodLearning.ts exists",
         status: "passed",
         details: `File exists: ${learningFile}`,
       });
     } else {
       result.testSteps.push({
-        step: "5. Verify ikaiLearning.ts exists",
+        step: "5. Verify asanmodLearning.ts exists",
         status: "failed",
         details: `File not found: ${learningFile}`,
       });
@@ -143,17 +143,17 @@ export async function testIkaiSpecific(
       "asanmod-mcp",
       "src",
       "tools",
-      "ikaiContextLoad.ts"
+      "asanmodContextLoad.ts"
     );
     if (existsSync(contextLoadFile)) {
       result.testSteps.push({
-        step: "6. Verify ikaiContextLoad.ts exists",
+        step: "6. Verify asanmodContextLoad.ts exists",
         status: "passed",
         details: `File exists: ${contextLoadFile}`,
       });
     } else {
       result.testSteps.push({
-        step: "6. Verify ikaiContextLoad.ts exists",
+        step: "6. Verify asanmodContextLoad.ts exists",
         status: "failed",
         details: `File not found: ${contextLoadFile}`,
       });
@@ -173,7 +173,7 @@ export async function testIkaiSpecific(
     result.testSteps.push({
       step: "8. Verify learning system can generate observations",
       status: "passed",
-      details: "ikaiLearning.ts generates Memory MCP observation format",
+      details: "asanmodLearning.ts generates Memory MCP observation format",
     });
 
     return result;
@@ -192,8 +192,8 @@ export async function testIkaiSpecific(
 /**
  * MCP Tool Handler
  */
-export async function handleTestIkaiSpecific(args: {
+export async function handleTestSpecific(args: {
   path?: string;
-}): Promise<TestIkaiSpecificResult> {
-  return testIkaiSpecific(args.path);
+}): Promise<TestASANMODSpecificResult> {
+  return testSpecific(args.path);
 }

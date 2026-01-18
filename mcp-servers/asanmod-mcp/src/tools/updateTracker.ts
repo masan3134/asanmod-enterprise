@@ -27,7 +27,7 @@ const REQUIRED_FILES = [
     description: "Cursor Rules",
   },
   {
-    path: ".cursor/rules/ikai.mdc",
+    path: ".cursor/rules/asanmod.mdc",
     checks: ["Last Updated", "65 tools", "TODO Enforcement"],
     description: "Cursor Rules (MDC)",
   },
@@ -140,19 +140,19 @@ async function checkFile(
       }
     });
 
-    // Last Updated kontrolü (2025-12-11 olmalı)
+    // Last Updated kontrolü (2026-12-11 olmalı)
     if (fileConfig.checks.includes("Last Updated")) {
       const lastUpdatedMatch = content.match(
         /Last Updated.*?(\d{4}-\d{2}-\d{2})/i
       );
       if (lastUpdatedMatch) {
         const lastUpdated = lastUpdatedMatch[1];
-        if (lastUpdated !== "2025-12-11") {
+        if (lastUpdated !== "2026-12-11") {
           results.needsUpdate = true;
           results.checks.push({
             check: "Last Updated Date",
             status: "outdated",
-            message: `Last Updated: ${lastUpdated} (should be 2025-12-11)`,
+            message: `Last Updated: ${lastUpdated} (should be 2026-12-11)`,
           });
         }
       }

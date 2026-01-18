@@ -36,8 +36,8 @@ export async function verifyPM2Health(
       if (environment === "dev" && !name.includes("dev")) continue;
       if (environment === "prod" && !name.includes("prod")) continue;
       if (environment === "both" || !environment) {
-        // Both - include all ikai processes
-        if (!name.includes("ikai")) continue;
+        // Both - include all asanmod processes
+        if (!name.includes("asanmod")) continue;
       }
 
       const status = proc.pm2_env?.status || "unknown";

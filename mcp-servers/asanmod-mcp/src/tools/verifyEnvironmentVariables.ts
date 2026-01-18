@@ -49,7 +49,7 @@ export async function verifyEnvironmentVariables(
       }
 
       // DEV database kontrolü
-      if (envDev.includes("DATABASE_URL") && envDev.includes("ikai_prod_db")) {
+      if (envDev.includes("DATABASE_URL") && envDev.includes("asanmod_prod_db")) {
         issues.push({
           environment: "dev",
           issue: "DEV .env contains PROD database reference",
@@ -73,7 +73,7 @@ export async function verifyEnvironmentVariables(
       }
 
       // PROD database kontrolü
-      if (envProd.includes("DATABASE_URL") && envProd.includes("ikai_dev_db")) {
+      if (envProd.includes("DATABASE_URL") && envProd.includes("asanmod_dev_db")) {
         issues.push({
           environment: "prod",
           issue: "PROD .env contains DEV database reference",

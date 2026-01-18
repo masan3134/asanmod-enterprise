@@ -53,12 +53,12 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
     errors: [],
   };
 
-  const env = { ...process.env, PGPASSWORD: "ikaipass2025" };
+  const env = { ...process.env, PGPASSWORD: "asanmodpass2026" };
 
   // Schema comparison
   try {
     const devTables = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_dev_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_dev_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.devTables = parseInt(devTables) || 0;
@@ -68,7 +68,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
 
   try {
     const prodTables = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_prod_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_prod_db -t -c "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' AND tablename NOT LIKE '\\_%';" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.prodTables = parseInt(prodTables) || 0;
@@ -78,7 +78,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
 
   try {
     const devEnums = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_dev_db -t -c "SELECT COUNT(*) FROM pg_type WHERE typtype = 'e' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_dev_db -t -c "SELECT COUNT(*) FROM pg_type WHERE typtype = 'e' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.devEnums = parseInt(devEnums) || 0;
@@ -88,7 +88,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
 
   try {
     const prodEnums = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_prod_db -t -c "SELECT COUNT(*) FROM pg_type WHERE typtype = 'e' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_prod_db -t -c "SELECT COUNT(*) FROM pg_type WHERE typtype = 'e' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.prodEnums = parseInt(prodEnums) || 0;
@@ -99,7 +99,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
   // Index comparison
   try {
     const devIndexes = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_dev_db -t -c "SELECT COUNT(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname NOT LIKE '%_pkey';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_dev_db -t -c "SELECT COUNT(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname NOT LIKE '%_pkey';" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.devIndexes = parseInt(devIndexes) || 0;
@@ -109,7 +109,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
 
   try {
     const prodIndexes = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_prod_db -t -c "SELECT COUNT(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname NOT LIKE '%_pkey';" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_prod_db -t -c "SELECT COUNT(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname NOT LIKE '%_pkey';" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.schema.prodIndexes = parseInt(prodIndexes) || 0;
@@ -125,7 +125,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
   // Constraints comparison
   try {
     const devConstraints = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_dev_db -t -c "SELECT COUNT(*) FROM pg_constraint WHERE connamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND contype IN ('u', 'f', 'c');" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_dev_db -t -c "SELECT COUNT(*) FROM pg_constraint WHERE connamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND contype IN ('u', 'f', 'c');" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.constraints.devConstraints = parseInt(devConstraints) || 0;
@@ -135,7 +135,7 @@ export async function verifyMigrationSync(): Promise<MigrationSyncResult> {
 
   try {
     const prodConstraints = execSync(
-      `psql -h localhost -U ikaiuser -d ikai_prod_db -t -c "SELECT COUNT(*) FROM pg_constraint WHERE connamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND contype IN ('u', 'f', 'c');" 2>/dev/null || echo "0"`,
+      `psql -h localhost -U asanmoduser -d asanmod_prod_db -t -c "SELECT COUNT(*) FROM pg_constraint WHERE connamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND contype IN ('u', 'f', 'c');" 2>/dev/null || echo "0"`,
       { encoding: "utf-8", env }
     ).trim();
     result.constraints.prodConstraints = parseInt(prodConstraints) || 0;

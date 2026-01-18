@@ -54,7 +54,7 @@ export async function verifyGitCommitMessage(): Promise<GitCommitMessageResult> 
       });
     }
 
-    // Identity tag kontrolü ([MOD] only - WORKER system removed 2025-12-17)
+    // Identity tag kontrolü ([MOD] only - WORKER system removed 2026-12-17)
     const hasIdentityTag = /\[MOD\]/i.test(commitMessage);
     if (!hasIdentityTag) {
       violations.push({

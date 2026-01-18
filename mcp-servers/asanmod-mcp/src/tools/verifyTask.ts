@@ -1,6 +1,6 @@
 /**
  * Tool: asanmod_verify_task
- * Task doğrulama - WORKER system removed (2025-12-17)
+ * Task doğrulama - WORKER system removed (2026-12-17)
  */
 
 import { verifyLint } from "./verifyLint.js";

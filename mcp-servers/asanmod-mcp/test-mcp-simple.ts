@@ -61,7 +61,7 @@ try {
 console.log("\n=== Test 3: Fallback Mechanism ===\n");
 try {
   const testFile =
-    "/home/root/projects/ikaicursor/mcp-servers/asanmod-mcp/package.json";
+    "/home/root/projects/ASANMODcursor/mcp-servers/asanmod-mcp/package.json";
   if (fs.existsSync(testFile)) {
     const content = fs.readFileSync(testFile, "utf-8");
     console.log(`✅ Fallback fs.readFileSync works (${content.length} bytes)`);

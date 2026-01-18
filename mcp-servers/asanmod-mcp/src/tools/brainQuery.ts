@@ -1,10 +1,10 @@
 /**
  * ASANMOD MCP - Brain Query Tools
- * Tools for querying and interacting with the IKAI Brain Daemon
+ * Tools for querying and interacting with the ASANMOD Brain Daemon
  *
  * @module tools/brainQuery
  * @version 1.0.0
- * @created 2025-12-13
+ * @created 2026-12-13
  */
 
 import { cache } from "../cache.js";
@@ -479,7 +479,7 @@ export const brainToolDefinitions = [
         },
         pattern: {
           type: "string",
-          description: "PATTERN_IKAI_* pattern name (optional)",
+          description: "PATTERN_ASANMOD_* pattern name (optional)",
         },
         tags: {
           type: "array",

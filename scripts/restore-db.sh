@@ -3,7 +3,7 @@
 # Database Restore Script
 # Restores database from a backup file.
 #
-# Usage: npm run restore -- backups/backup_20240115.sql
+# Usage: npm run restore -- backups/backup_20260115.sql
 #
 
 set -e
@@ -17,7 +17,7 @@ BACKUP_FILE=$1
 
 if [ -z "$BACKUP_FILE" ]; then
   echo "❌ Usage: npm run restore -- <backup_file>"
-  echo "   Example: npm run restore -- backups/backup_20240115_120000.sql"
+  echo "   Example: npm run restore -- backups/backup_20260115_120000.sql"
   exit 1
 fi
 

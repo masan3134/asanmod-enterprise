@@ -67,7 +67,7 @@ export const TOOL_TIERS = {
       "asanmod_brain_mark_solution",
       "asanmod_update_memory",
       "asanmod_add_pattern",
-      "asanmod_ikai_learning",
+      "asanmod_asanmod_learning",
       "asanmod_auto_sync_memory_from_commit",
     ], // 10 tools
   },
@@ -81,7 +81,7 @@ export const TOOL_TIERS = {
       "asanmod_bidirectional_sync",
       // Detection tools
       "asanmod_detect_changes",
-      "asanmod_detect_ikai_patterns",
+      "asanmod_detect_asanmod_patterns",
       "asanmod_comprehensive_change_detection",
       "asanmod_automatic_pattern_learning",
       // Cursor tools
@@ -92,7 +92,7 @@ export const TOOL_TIERS = {
       // Test tools
       "asanmod_test_self_update",
       "asanmod_test_context_preservation",
-      "asanmod_test_ikai_specific",
+      "asanmod_test_asanmod_specific",
       "asanmod_test_cursor_integration",
       "asanmod_test_performance",
       // Other

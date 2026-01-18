@@ -76,7 +76,7 @@ Get user by ID.
   "email": "user@example.com",
   "name": "John Doe",
   "role": "user",
-  "createdAt": "2024-01-01T00:00:00Z"
+  "createdAt": "2026-01-01T00:00:00Z"
 }
 ```
 

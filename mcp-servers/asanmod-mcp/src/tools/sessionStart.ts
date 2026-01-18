@@ -1,7 +1,7 @@
 /**
  * Session Start Simplification Tool
  * MOD session start için tüm işlemleri tek seferde yapar (9 adım → 1 function)
- * WORKER system removed - MOD-only (2025-12-17)
+ * WORKER system removed - MOD-only (2026-12-17)
  */
 
 import * as path from "path";
@@ -63,8 +63,8 @@ export async function sessionStart(): Promise<SessionStartResult> {
     // 1. MOD Identity Confirmation (Memory MCP simulation - actual MCP call will be done by agent)
     // Note: Gerçek implementasyonda Memory MCP'yi selective read ile çağırır
     // memory.get_mod_identity() → Sadece MOD kimliğini döner (tüm graph yerine)
-    // 🆕 Otomatik Memory MCP Context Yükleme (2025-12-12):
-    // - Agent otomatik olarak Memory MCP'den IKAI_PROJECT, ASANMOD_SYSTEM, pattern'leri yükler
+    // 🆕 Otomatik Memory MCP Context Yükleme (2026-12-12):
+    // - Agent otomatik olarak Memory MCP'den ASANMOD_PROJECT, ASANMOD_SYSTEM, pattern'leri yükler
     // - Son commit'lerden context oluşturur
     // - Pattern'leri yükler
     const modIdentity = {
@@ -85,7 +85,7 @@ export async function sessionStart(): Promise<SessionStartResult> {
       },
       autoMemorySync: {
         enabled: true,
-        note: "Agent otomatik olarak Memory MCP'den context yükler: IKAI_PROJECT, ASANMOD_SYSTEM, recent commits, patterns",
+        note: "Agent otomatik olarak Memory MCP'den context yükler: ASANMOD_PROJECT, ASANMOD_SYSTEM, recent commits, patterns",
       },
     };
 

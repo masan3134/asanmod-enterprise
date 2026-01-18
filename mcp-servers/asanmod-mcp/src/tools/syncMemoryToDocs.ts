@@ -47,7 +47,7 @@ export async function syncMemoryToDocs(
     asanmodSystem?: any;
     rules?: any[];
     mcps?: any[];
-    ikaiProject?: any;
+    asanmodProject?: any;
     patterns?: any[];
   },
   path?: string
@@ -153,10 +153,10 @@ export async function syncMemoryToDocs(
       result.updatedSections += memoryData.mcps?.length || 0;
     }
 
-    // Update IKAI Project section if provided
-    if (memoryData.ikaiProject && memoryData.ikaiProject.observations) {
-      updatedSections.push("## 🎯 IKAI Project");
-      const currentObs = memoryData.ikaiProject.observations
+    // Update ASANMOD Project section if provided
+    if (memoryData.asanmodProject && memoryData.asanmodProject.observations) {
+      updatedSections.push("## 🎯 ASANMOD Project");
+      const currentObs = memoryData.asanmodProject.observations
         .filter(
           (obs: string) =>
             obs.includes("[CURRENT") || !obs.includes("[DEPRECATED")
@@ -193,7 +193,7 @@ export async function syncMemoryToDocs(
 export function generateDocSections(memoryData: {
   rules?: any[];
   mcps?: any[];
-  ikaiProject?: any;
+  asanmodProject?: any;
   patterns?: any[];
 }): {
   filePath: string;
@@ -258,7 +258,7 @@ export async function handleSyncMemoryToDocs(args: {
     asanmodSystem?: any;
     rules?: any[];
     mcps?: any[];
-    ikaiProject?: any;
+    asanmodProject?: any;
     patterns?: any[];
   };
   path?: string;

@@ -13,7 +13,7 @@ import {
 import * as fs from "fs";
 import { join } from "path";
 
-const PROJECT_ROOT = "/home/root/projects/ikaicursor";
+const PROJECT_ROOT = "/home/root/projects/ASANMODcursor";
 const TEST_FILE = join(PROJECT_ROOT, "mcp-servers/asanmod-mcp/package.json");
 
 interface MCPTestResult {

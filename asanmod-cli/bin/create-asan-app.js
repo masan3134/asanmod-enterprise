@@ -19,7 +19,7 @@ console.log('\n🚀 ASANMOD v1.0.0: Bootstrapping Enterprise Template...\n');
 console.log('📦 Step 1/5: Cloning template...');
 try {
   // For now, copy from local (in production, use git clone or degit)
-  const templateDir = path.join(__dirname, '../asan-enterprise-template');
+  const templateDir = path.join(__dirname, '../[PROJECT_NAME]');
   if (!fs.existsSync(templateDir)) {
     console.error('❌ Template directory not found. Run this from the packages directory.');
     process.exit(1);

@@ -1,14 +1,14 @@
 /**
- * ASANMOD MCP Tool: IKAI Learning System
+ * ASANMOD MCP Tool: ASANMOD Learning System
  * Task'tan öğrenilen pattern'leri Memory MCP'ye kaydeder
  *
- * Phase 5: IKAI-Specific Customization
+ * Phase 5: ASANMOD-Specific Customization
  */
 
 import { existsSync } from "fs";
 import { join } from "path";
 
-interface IkaiLearningResult {
+interface ASANMODLearningResult {
   success: boolean;
   learnedPatterns: number;
   learnedBestPractices: number;
@@ -61,14 +61,14 @@ function getProjectRoot(): string {
 export async function learnFromTask(
   learningData: LearningData,
   path?: string
-): Promise<IkaiLearningResult> {
+): Promise<ASANMODLearningResult> {
   const projectRoot = path || getProjectRoot();
 
   if (!projectRoot) {
     throw new Error("Project root not found");
   }
 
-  const result: IkaiLearningResult = {
+  const result: ASANMODLearningResult = {
     success: true,
     learnedPatterns: 0,
     learnedBestPractices: 0,
@@ -87,7 +87,7 @@ export async function learnFromTask(
         observations.push({
           entityName: pattern.name.startsWith("PATTERN_")
             ? pattern.name
-            : `PATTERN_IKAI_${pattern.name.toUpperCase().replace(/\s+/g, "_")}`,
+            : `PATTERN_ASANMOD_${pattern.name.toUpperCase().replace(/\s+/g, "_")}`,
           contents: [
             `Pattern description: ${pattern.description}`,
             `Pattern source: ${pattern.source}`,
@@ -113,7 +113,7 @@ export async function learnFromTask(
       }
 
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: bestPracticeObs,
       });
     }
@@ -129,7 +129,7 @@ export async function learnFromTask(
       }
 
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: errorObs,
       });
     }
@@ -137,7 +137,7 @@ export async function learnFromTask(
     // Task completion observation
     if (learningData.taskId || learningData.taskDescription) {
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: [
           `Task completed: ${learningData.taskId || "Unknown"}`,
           learningData.taskDescription
@@ -161,7 +161,7 @@ export async function learnFromTask(
   } catch (error) {
     result.success = false;
     throw new Error(
-      `IKAI learning failed: ${error instanceof Error ? error.message : String(error)}`
+      `ASANMOD learning failed: ${error instanceof Error ? error.message : String(error)}`
     );
   }
 }
@@ -181,7 +181,7 @@ export function generateLearningObservations(
       observations.push({
         entityName: pattern.name.startsWith("PATTERN_")
           ? pattern.name
-          : `PATTERN_IKAI_${pattern.name.toUpperCase().replace(/\s+/g, "_")}`,
+          : `PATTERN_ASANMOD_${pattern.name.toUpperCase().replace(/\s+/g, "_")}`,
         contents: [
           `Pattern description: ${pattern.description}`,
           `Pattern source: ${pattern.source}`,
@@ -198,7 +198,7 @@ export function generateLearningObservations(
   // Best practices
   if (learningData.bestPractices && learningData.bestPractices.length > 0) {
     observations.push({
-      entityName: "IKAI_PROJECT",
+      entityName: "ASANMOD_PROJECT",
       contents: learningData.bestPractices.map(
         (practice) => `[BEST PRACTICE] ${practice} - Learned: ${timestamp}`
       ),
@@ -208,7 +208,7 @@ export function generateLearningObservations(
   // Errors
   if (learningData.errors && learningData.errors.length > 0) {
     observations.push({
-      entityName: "IKAI_PROJECT",
+      entityName: "ASANMOD_PROJECT",
       contents: learningData.errors.map(
         (error) =>
           `[ERROR PATTERN] ${error.description} - Solution: ${error.solution} - Learned: ${timestamp}`
@@ -219,7 +219,7 @@ export function generateLearningObservations(
   // Task completion
   if (learningData.taskId || learningData.taskDescription) {
     observations.push({
-      entityName: "IKAI_PROJECT",
+      entityName: "ASANMOD_PROJECT",
       contents: [
         `Task completed: ${learningData.taskId || "Unknown"}`,
         learningData.taskDescription
@@ -236,7 +236,7 @@ export function generateLearningObservations(
 /**
  * MCP Tool Handler
  */
-export async function handleIkaiLearning(args: {
+export async function handleLearning(args: {
   taskId?: string;
   taskDescription?: string;
   patterns?: Array<{
@@ -251,7 +251,7 @@ export async function handleIkaiLearning(args: {
     solution: string;
   }>;
   path?: string;
-}): Promise<IkaiLearningResult> {
+}): Promise<ASANMODLearningResult> {
   const learningData: LearningData = {
     taskId: args.taskId,
     taskDescription: args.taskDescription,

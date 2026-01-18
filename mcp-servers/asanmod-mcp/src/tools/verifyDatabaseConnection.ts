@@ -48,7 +48,7 @@ export async function verifyDatabaseConnection(
         const dbMatch = envDev.match(/DATABASE_URL=["']?([^"'\s]+)["']?/);
         if (dbMatch) {
           const dbUrl = dbMatch[1];
-          const isDevDb = dbUrl.includes("ikai_dev_db");
+          const isDevDb = dbUrl.includes("asanmod_dev_db");
 
           try {
             // Basit connection test (psql ile)
@@ -61,14 +61,14 @@ export async function verifyDatabaseConnection(
 
             connections.push({
               environment: "dev",
-              database: "ikai_dev_db",
+              database: "asanmod_dev_db",
               status: "connected",
             });
           } catch (err: any) {
             failed++;
             connections.push({
               environment: "dev",
-              database: "ikai_dev_db",
+              database: "asanmod_dev_db",
               status: "failed",
               error: err.message || "Connection failed",
             });
@@ -84,7 +84,7 @@ export async function verifyDatabaseConnection(
         const dbMatch = envProd.match(/DATABASE_URL=["']?([^"'\s]+)["']?/);
         if (dbMatch) {
           const dbUrl = dbMatch[1];
-          const isProdDb = dbUrl.includes("ikai_prod_db");
+          const isProdDb = dbUrl.includes("asanmod_prod_db");
 
           try {
             // Basit connection test
@@ -97,14 +97,14 @@ export async function verifyDatabaseConnection(
 
             connections.push({
               environment: "prod",
-              database: "ikai_prod_db",
+              database: "asanmod_prod_db",
               status: "connected",
             });
           } catch (err: any) {
             failed++;
             connections.push({
               environment: "prod",
-              database: "ikai_prod_db",
+              database: "asanmod_prod_db",
               status: "failed",
               error: err.message || "Connection failed",
             });

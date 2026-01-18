@@ -68,10 +68,10 @@ export async function verifyProdProtection(
 
     // PROD database referansları
     const prodDbPatterns = [
-      /ikai_prod_db/gi,
-      /ikai-prod-/gi,
+      /asanmod_prod_db/gi,
+      /asanmod-prod-/gi,
       /8204|8205/gi, // PROD ports
-      /ikai-prod-files/gi, // PROD MinIO bucket
+      /asanmod-prod-files/gi, // PROD MinIO bucket
       /redis.*db.*1/gi, // PROD Redis DB
     ];
 
@@ -84,17 +84,17 @@ export async function verifyProdProtection(
 
       // PROD database referansı
       if (
-        content.includes("ikai_prod_db") &&
+        content.includes("asanmod_prod_db") &&
         !content.includes("// PROD") &&
         !content.includes("/* PROD")
       ) {
         for (let i = 0; i < lines.length; i++) {
-          if (lines[i].includes("ikai_prod_db")) {
+          if (lines[i].includes("asanmod_prod_db")) {
             violations.push({
               type: "database",
               file,
               line: i + 1,
-              issue: "PROD database reference found (ikai_prod_db)",
+              issue: "PROD database reference found (asanmod_prod_db)",
               code: lines[i].trim().substring(0, 100),
             });
             break;
@@ -104,17 +104,17 @@ export async function verifyProdProtection(
 
       // PROD process referansları
       if (
-        content.includes("ikai-prod-") &&
+        content.includes("asanmod-prod-") &&
         !content.includes("// PROD") &&
         !content.includes("/* PROD")
       ) {
         for (let i = 0; i < lines.length; i++) {
-          if (lines[i].includes("ikai-prod-")) {
+          if (lines[i].includes("asanmod-prod-")) {
             violations.push({
               type: "process",
               file,
               line: i + 1,
-              issue: "PROD PM2 process reference found (ikai-prod-*)",
+              issue: "PROD PM2 process reference found (asanmod-prod-*)",
               code: lines[i].trim().substring(0, 100),
             });
             break;
@@ -158,14 +158,14 @@ export async function verifyProdProtection(
 
       // PROD MinIO bucket
       if (
-        content.includes("ikai-prod-files") &&
+        content.includes("asanmod-prod-files") &&
         !content.includes("// PROD") &&
         !content.includes("/* PROD")
       ) {
         violations.push({
           type: "minio",
           file,
-          issue: "PROD MinIO bucket reference found (ikai-prod-files)",
+          issue: "PROD MinIO bucket reference found (asanmod-prod-files)",
         });
       }
 

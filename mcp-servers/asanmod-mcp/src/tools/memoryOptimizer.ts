@@ -72,18 +72,18 @@ export async function getModIdentity(): Promise<MemoryOptimizerResult> {
  * Memory MCP'den sadece proje context'ini okur (tüm graph yerine)
  *
  * Note: Bu function format döndürür - gerçek Memory MCP çağrısı agent tarafından yapılmalı
- * Agent şu query'yi kullanmalı: mcp_memory_open_nodes({names: ["IKAI_PROJECT"]})
- * veya mcp_memory_search_nodes({query: "IKAI HR Platform"})
+ * Agent şu query'yi kullanmalı: mcp_memory_open_nodes({names: ["ASANMOD_PROJECT"]})
+ * veya mcp_memory_search_nodes({query: "ASANMOD Application"})
  */
 export async function getProjectContext(): Promise<MemoryOptimizerResult> {
   try {
     // Format döndür - gerçek Memory MCP çağrısı agent tarafından yapılmalı
-    // Agent kullanmalı: mcp_memory_open_nodes({names: ["IKAI_PROJECT"]})
+    // Agent kullanmalı: mcp_memory_open_nodes({names: ["ASANMOD_PROJECT"]})
     return {
       success: true,
       data: {
-        project: "IKAI HR Platform",
-        location: "/home/root/projects/ikaicursor",
+        project: "ASANMOD Application",
+        location: "/home/root/projects/asanmodcursor",
         system: "ASANMOD v3.0.0",
         techStack: {
           backend: "Node.js + Express + Prisma + PostgreSQL",
@@ -97,12 +97,12 @@ export async function getProjectContext(): Promise<MemoryOptimizerResult> {
           dev: {
             frontend: "localhost:8203",
             backend: "localhost:8202",
-            database: "ikai_dev_db",
+            database: "asanmod_dev_db",
           },
           prod: {
-            frontend: "https://ikai.com.tr",
-            backend: "https://ikai.com.tr/api",
-            database: "ikai_prod_db",
+            frontend: "https://asanmod.com.tr",
+            backend: "https://asanmod.com.tr/api",
+            database: "asanmod_prod_db",
           },
         },
       },
@@ -123,15 +123,15 @@ export async function getProjectContext(): Promise<MemoryOptimizerResult> {
  * Memory MCP'den sadece pattern'leri okur (tüm graph yerine)
  *
  * Note: Bu function format döndürür - gerçek Memory MCP çağrısı agent tarafından yapılmalı
- * Agent şu query'yi kullanmalı: mcp_memory_search_nodes({query: query || "PATTERN_IKAI"})
- * veya mcp_memory_open_nodes({names: ["PATTERN_IKAI_RBAC", "PATTERN_IKAI_MULTI_TENANT", ...]})
+ * Agent şu query'yi kullanmalı: mcp_memory_search_nodes({query: query || "PATTERN_ASANMOD"})
+ * veya mcp_memory_open_nodes({names: ["PATTERN_ASANMOD_RBAC", "PATTERN_ASANMOD_MULTI_TENANT", ...]})
  */
 export async function getPatterns(
   query?: string
 ): Promise<MemoryOptimizerResult> {
   try {
     // Format döndür - gerçek Memory MCP çağrısı agent tarafından yapılmalı
-    // Agent kullanmalı: mcp_memory_search_nodes({query: query || "PATTERN_IKAI"})
+    // Agent kullanmalı: mcp_memory_search_nodes({query: query || "PATTERN_ASANMOD"})
     return {
       success: true,
       data: {
@@ -170,7 +170,7 @@ export async function getPatterns(
  * Selective Memory Read
  * Memory MCP'den sadece belirtilen entity'leri okur
  *
- * @param entities - Okunacak entity isimleri (örn: ["MOD CLAUDE", "IKAI Project"])
+ * @param entities - Okunacak entity isimleri (örn: ["MOD CLAUDE", "ASANMOD Project"])
  *
  * Note: Bu function format döndürür - gerçek Memory MCP çağrısı agent tarafından yapılmalı
  * Agent şu query'yi kullanmalı: mcp_memory_open_nodes({names: entities})

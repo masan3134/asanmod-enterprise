@@ -67,7 +67,7 @@ export async function watchAsanmodFiles(
     "docs/workflow/ASANMOD-MASTER.md",
     "docs/workflow/ASANMOD-REFERENCE-INDEX.md",
     ".cursorrules",
-    ".cursor/rules/ikai.mdc",
+    ".cursor/rules/asanmod.mdc",
     "docs/ASANMOD-UNIVERSAL-TEMPLATE.md",
     "docs/ASANMOD-QUICK-START.md",
     "docs/MCP-FILESYSTEM-CONFIG.md",

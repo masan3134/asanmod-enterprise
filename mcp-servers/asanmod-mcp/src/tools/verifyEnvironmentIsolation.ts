@@ -27,7 +27,7 @@ export async function verifyEnvironmentIsolation(
 
     if (existsSync(envDevPath)) {
       const envDev = readFileSync(envDevPath, "utf-8");
-      if (envDev.includes("ikai_prod_db")) {
+      if (envDev.includes("asanmod_prod_db")) {
         issues.push("DEV .env file contains PROD database reference");
       }
       if (envDev.includes("8204") || envDev.includes("8205")) {
@@ -37,7 +37,7 @@ export async function verifyEnvironmentIsolation(
 
     if (existsSync(envProdPath)) {
       const envProd = readFileSync(envProdPath, "utf-8");
-      if (envProd.includes("ikai_dev_db")) {
+      if (envProd.includes("asanmod_dev_db")) {
         issues.push("PROD .env file contains DEV database reference");
       }
       if (envProd.includes("8202") || envProd.includes("8203")) {
@@ -72,50 +72,50 @@ export async function verifyEnvironmentIsolation(
 
       // DEV process'ler PROD port'larını kullanıyor mu?
       if (
-        pm2Config.includes('name: "ikai-dev-backend"') &&
+        pm2Config.includes('name: "asanmod-dev-backend"') &&
         pm2Config.includes("8204")
       ) {
-        issues.push("DEV PM2 process (ikai-dev-backend) uses PROD port (8204)");
+        issues.push("DEV PM2 process (asanmod-dev-backend) uses PROD port (8204)");
       }
       if (
-        pm2Config.includes('name: "ikai-dev-frontend"') &&
+        pm2Config.includes('name: "asanmod-dev-frontend"') &&
         pm2Config.includes("8205")
       ) {
         issues.push(
-          "DEV PM2 process (ikai-dev-frontend) uses PROD port (8205)"
+          "DEV PM2 process (asanmod-dev-frontend) uses PROD port (8205)"
         );
       }
 
       // PROD process'ler DEV port'larını kullanıyor mu?
       if (
-        pm2Config.includes('name: "ikai-prod-backend"') &&
+        pm2Config.includes('name: "asanmod-prod-backend"') &&
         pm2Config.includes("8202")
       ) {
         issues.push(
-          "PROD PM2 process (ikai-prod-backend) uses DEV port (8202)"
+          "PROD PM2 process (asanmod-prod-backend) uses DEV port (8202)"
         );
       }
       if (
-        pm2Config.includes('name: "ikai-prod-frontend"') &&
+        pm2Config.includes('name: "asanmod-prod-frontend"') &&
         pm2Config.includes("8203")
       ) {
         issues.push(
-          "PROD PM2 process (ikai-prod-frontend) uses DEV port (8203)"
+          "PROD PM2 process (asanmod-prod-frontend) uses DEV port (8203)"
         );
       }
 
       // DEV process'ler PROD database'ini kullanıyor mu?
       if (
-        pm2Config.includes('name: "ikai-dev-backend"') &&
-        pm2Config.includes("ikai_prod_db")
+        pm2Config.includes('name: "asanmod-dev-backend"') &&
+        pm2Config.includes("asanmod_prod_db")
       ) {
         issues.push("DEV PM2 process uses PROD database");
       }
 
       // PROD process'ler DEV database'ini kullanıyor mu?
       if (
-        pm2Config.includes('name: "ikai-prod-backend"') &&
-        pm2Config.includes("ikai_dev_db")
+        pm2Config.includes('name: "asanmod-prod-backend"') &&
+        pm2Config.includes("asanmod_dev_db")
       ) {
         issues.push("PROD PM2 process uses DEV database");
       }
@@ -132,8 +132,8 @@ export async function verifyEnvironmentIsolation(
       for (const file of configFiles) {
         const content = readFileSync(file, "utf-8");
         if (
-          content.includes("ikai_prod_db") &&
-          content.includes("ikai_dev_db")
+          content.includes("asanmod_prod_db") &&
+          content.includes("asanmod_dev_db")
         ) {
           issues.push(
             `Config file ${file.replace(targetPath + "/", "")} mixes DEV and PROD references`

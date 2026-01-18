@@ -38,11 +38,11 @@ export async function restartPM2Process(
   try {
     // Validate process name
     const validProcesses = [
-      "ikai-dev-backend",
-      "ikai-dev-frontend",
-      "ikai-prod-backend",
-      "ikai-prod-frontend",
-      "ikai-brain",
+      "asanmod-dev-backend",
+      "asanmod-dev-frontend",
+      "asanmod-prod-backend",
+      "asanmod-prod-frontend",
+      "asanmod-brain",
     ];
 
     if (!validProcesses.includes(processName)) {
@@ -125,11 +125,11 @@ export async function stopPM2Process(
 ): Promise<PM2ActionResult> {
   try {
     const validProcesses = [
-      "ikai-dev-backend",
-      "ikai-dev-frontend",
-      "ikai-prod-backend",
-      "ikai-prod-frontend",
-      "ikai-brain",
+      "asanmod-dev-backend",
+      "asanmod-dev-frontend",
+      "asanmod-prod-backend",
+      "asanmod-prod-frontend",
+      "asanmod-brain",
     ];
 
     if (!validProcesses.includes(processName)) {
@@ -172,11 +172,11 @@ export async function startPM2Process(
 ): Promise<PM2ActionResult> {
   try {
     const validProcesses = [
-      "ikai-dev-backend",
-      "ikai-dev-frontend",
-      "ikai-prod-backend",
-      "ikai-prod-frontend",
-      "ikai-brain",
+      "asanmod-dev-backend",
+      "asanmod-dev-frontend",
+      "asanmod-prod-backend",
+      "asanmod-prod-frontend",
+      "asanmod-brain",
     ];
 
     if (!validProcesses.includes(processName)) {
@@ -249,8 +249,8 @@ export async function startPM2Process(
  * ⚠️ IMPORTANT: This function is DEPRECATED. Use filesystem MCP directly instead!
  *
  * PM2 logs okuma için filesystem MCP kullanılmalı:
- * - mcp_filesystem_read_text_file({path: "/root/.pm2/logs/ikai-dev-backend-out.log", tail: 50})
- * - mcp_filesystem_read_text_file({path: "/root/.pm2/logs/ikai-dev-backend-error.log", tail: 50})
+ * - mcp_filesystem_read_text_file({path: "/root/.pm2/logs/asanmod-dev-backend-out.log", tail: 50})
+ * - mcp_filesystem_read_text_file({path: "/root/.pm2/logs/asanmod-dev-backend-error.log", tail: 50})
  *
  * Rule 0-TERMINAL: Terminal komutları ve fs.readFileSync YASAK! Filesystem MCP ZORUNLU!
  */
@@ -261,11 +261,11 @@ export async function readPM2Logs(
 ): Promise<PM2LogsResult> {
   try {
     const validProcesses = [
-      "ikai-dev-backend",
-      "ikai-dev-frontend",
-      "ikai-prod-backend",
-      "ikai-prod-frontend",
-      "ikai-brain",
+      "asanmod-dev-backend",
+      "asanmod-dev-frontend",
+      "asanmod-prod-backend",
+      "asanmod-prod-frontend",
+      "asanmod-brain",
     ];
 
     if (!validProcesses.includes(processName)) {

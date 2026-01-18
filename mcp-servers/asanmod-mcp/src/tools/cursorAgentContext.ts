@@ -15,7 +15,7 @@ interface CursorAgentContextResult {
   contextSize: number;
   contextFormat: {
     asanmodSystem?: any;
-    ikaiProject?: any;
+    asanmodProject?: any;
     rules?: any[];
     patterns?: any[];
     mcps?: any[];
@@ -54,7 +54,7 @@ export function generateCursorAgentContext(): {
   searchQueries: string[];
   contextFormat: {
     asanmodSystem?: any;
-    ikaiProject?: any;
+    asanmodProject?: any;
     rules?: any[];
     patterns?: any[];
     mcps?: any[];
@@ -62,7 +62,7 @@ export function generateCursorAgentContext(): {
 } {
   const entitiesToLoad = [
     "ASANMOD_SYSTEM",
-    "IKAI_PROJECT",
+    "ASANMOD_PROJECT",
     "MOD_IDENTITY",
     "WORKER_IDENTITY",
     "RULE_0_PM2_LOGS",
@@ -80,10 +80,10 @@ export function generateCursorAgentContext(): {
     "RULE_10",
     "RULE_11",
     "RULE_14",
-    "PATTERN_IKAI_RBAC",
-    "PATTERN_IKAI_MULTI_TENANT",
-    "PATTERN_IKAI_DEV_PROD",
-    "PATTERN_IKAI_MCP_FIRST",
+    "PATTERN_ASANMOD_RBAC",
+    "PATTERN_ASANMOD_MULTI_TENANT",
+    "PATTERN_ASANMOD_DEV_PROD",
+    "PATTERN_ASANMOD_MCP_FIRST",
     "MCP_FILESYSTEM",
     "MCP_MEMORY",
     "MCP_ASANMOD",
@@ -100,9 +100,9 @@ export function generateCursorAgentContext(): {
 
   const searchQueries = [
     "ASANMOD",
-    "IKAI",
+    "ASANMOD",
     "RULE",
-    "PATTERN_IKAI",
+    "PATTERN_ASANMOD",
     "MCP",
     "MOD",
     "WORKER",
@@ -116,9 +116,9 @@ export function generateCursorAgentContext(): {
         entityName: "ASANMOD_SYSTEM",
         note: "Use mcp_memory_open_nodes({names: ['ASANMOD_SYSTEM']})",
       },
-      ikaiProject: {
-        entityName: "IKAI_PROJECT",
-        note: "Use mcp_memory_open_nodes({names: ['IKAI_PROJECT']})",
+      asanmodProject: {
+        entityName: "ASANMOD_PROJECT",
+        note: "Use mcp_memory_open_nodes({names: ['ASANMOD_PROJECT']})",
       },
       rules: entitiesToLoad
         .filter((e) => e.startsWith("RULE_"))
@@ -166,9 +166,9 @@ export async function loadCursorAgentContext(
     autoLoadInstructions: `Session başlangıcında şu Memory MCP query'lerini çalıştır:
 1. mcp_memory_open_nodes({names: ${JSON.stringify(entitiesToLoad)}})
 2. mcp_memory_search_nodes({query: "ASANMOD"})
-3. mcp_memory_search_nodes({query: "IKAI"})
+3. mcp_memory_search_nodes({query: "ASANMOD"})
 4. mcp_memory_search_nodes({query: "RULE"})
-5. mcp_memory_search_nodes({query: "PATTERN_IKAI"})
+5. mcp_memory_search_nodes({query: "PATTERN_ASANMOD"})
 6. mcp_memory_search_nodes({query: "MCP"})`,
     timestamp: new Date().toISOString(),
   };

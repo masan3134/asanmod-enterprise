@@ -46,13 +46,13 @@ export function generateCursorRulesContent(memoryData: {
   asanmodSystem?: any;
   rules?: any[];
   mcps?: any[];
-  ikaiProject?: any;
+  asanmodProject?: any;
 }): {
   sections: Array<{ section: string; content: string }>;
   fullContent: string;
 } {
   const sections: Array<{ section: string; content: string }> = [];
-  let fullContent = "# Cursor Rules - IKAI HR Platform - ASANMOD v3.0.0\n\n";
+  let fullContent = "# Cursor Rules - ASANMOD Application - ASANMOD v3.0.0\n\n";
 
   // MOD Identity section
   fullContent += "## MOD Identity\n\n";
@@ -67,7 +67,7 @@ export function generateCursorRulesContent(memoryData: {
   // Master Documentation section
   fullContent += "## Master Documentation\n\n";
   fullContent +=
-    "**READ THIS FIRST:** `docs/workflow/ASANMOD-MASTER.md` (~3400 lines, 9 parts, Last Updated: 2025-12-13)\n\n";
+    "**READ THIS FIRST:** `docs/workflow/ASANMOD-MASTER.md` (~3400 lines, 9 parts, Last Updated: 2026-12-13)\n\n";
 
   // Core Rules section
   if (memoryData.rules && memoryData.rules.length > 0) {
@@ -109,14 +109,14 @@ export function generateCursorRulesContent(memoryData: {
     fullContent += mcpList + "\n\n";
   }
 
-  // IKAI Project section
-  if (memoryData.ikaiProject) {
-    fullContent += "## IKAI Project\n\n";
-    const ikaiObs = (memoryData.ikaiProject.observations || [])
+  // ASANMOD Project section
+  if (memoryData.asanmodProject) {
+    fullContent += "## ASANMOD Project\n\n";
+    const asanmodObs = (memoryData.asanmodProject.observations || [])
       .filter((obs: string) => !obs.includes("[DEPRECATED]"))
       .map((obs: string) => obs.replace(/^\[CURRENT\]\s*/, ""));
 
-    for (const obs of ikaiObs) {
+    for (const obs of asanmodObs) {
       fullContent += `- ${obs}\n`;
     }
     fullContent += "\n";
@@ -150,7 +150,7 @@ export async function syncMemoryToCursorRules(
     asanmodSystem?: any;
     rules?: any[];
     mcps?: any[];
-    ikaiProject?: any;
+    asanmodProject?: any;
   },
   path?: string
 ): Promise<SyncMemoryToCursorRulesResult> {

@@ -602,7 +602,7 @@ export async function comprehensiveChangeDetection(params: {
 
     if (totalFilesChanged > 0) {
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: [
           `[COMMIT ${commitHash}] Codebase changes detected - ${totalFilesChanged} file(s) changed`,
           `Backend: ${result.codebaseChanges.backend.length} file(s)`,
@@ -619,7 +619,7 @@ export async function comprehensiveChangeDetection(params: {
       result.databaseChanges.schemaChanges.length > 0
     ) {
       observations.push({
-        entityName: "IKAI_DATABASE",
+        entityName: "ASANMOD_DATABASE",
         contents: [
           `[COMMIT ${commitHash}] Database changes detected`,
           `Migrations: ${result.databaseChanges.migrations.length}`,
@@ -637,7 +637,7 @@ export async function comprehensiveChangeDetection(params: {
     // Environment changes observation
     if (result.environmentChanges.envFiles.length > 0) {
       observations.push({
-        entityName: "IKAI_ENVIRONMENT",
+        entityName: "ASANMOD_ENVIRONMENT",
         contents: [
           `[COMMIT ${commitHash}] Environment changes detected`,
           ...result.environmentChanges.envFiles.map((env) => {
@@ -664,7 +664,7 @@ export async function comprehensiveChangeDetection(params: {
       result.significantChanges.architectureChanges.length > 0
     ) {
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: [
           `[COMMIT ${commitHash}] Significant changes detected`,
           `New files: ${result.significantChanges.newFiles.length}`,

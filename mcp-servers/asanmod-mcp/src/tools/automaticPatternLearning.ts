@@ -38,7 +38,7 @@ interface DetectedPattern {
   source: string; // File path or commit hash
   codeSnippet?: string;
   confidence: "high" | "medium" | "low";
-  suggestedEntityName: string; // PATTERN_IKAI_*
+  suggestedEntityName: string; // PATTERN_ASANMOD_*
   usage?: string;
 }
 
@@ -74,11 +74,11 @@ function detectPatternsFromCommitMessage(
   const patterns: DetectedPattern[] = [];
 
   // Check for explicit pattern mention
-  const patternMatch = commitMessage.match(/Pattern:\s*(PATTERN_IKAI_\w+)/i);
+  const patternMatch = commitMessage.match(/Pattern:\s*(PATTERN_ASANMOD_\w+)/i);
   if (patternMatch) {
     const patternName = patternMatch[1];
     patterns.push({
-      name: patternName.replace("PATTERN_IKAI_", "").replace(/_/g, " "),
+      name: patternName.replace("PATTERN_ASANMOD_", "").replace(/_/g, " "),
       type: "Other",
       description: `Pattern mentioned in commit: ${commitMessage.split("\n")[0]}`,
       source: `commit:${commitHash}`,
@@ -100,7 +100,7 @@ function detectPatternsFromCommitMessage(
       description: "RBAC pattern detected from commit message",
       source: `commit:${commitHash}`,
       confidence: "medium",
-      suggestedEntityName: "PATTERN_IKAI_RBAC",
+      suggestedEntityName: "PATTERN_ASANMOD_RBAC",
       usage: commitMessage,
     });
   }
@@ -117,7 +117,7 @@ function detectPatternsFromCommitMessage(
       description: "Multi-tenant pattern detected from commit message",
       source: `commit:${commitHash}`,
       confidence: "medium",
-      suggestedEntityName: "PATTERN_IKAI_MULTI_TENANT",
+      suggestedEntityName: "PATTERN_ASANMOD_MULTI_TENANT",
       usage: commitMessage,
     });
   }
@@ -133,7 +133,7 @@ function detectPatternsFromCommitMessage(
       description: "MCP-First pattern detected from commit message",
       source: `commit:${commitHash}`,
       confidence: "medium",
-      suggestedEntityName: "PATTERN_IKAI_MCP_FIRST",
+      suggestedEntityName: "PATTERN_ASANMOD_MCP_FIRST",
       usage: commitMessage,
     });
   }
@@ -150,7 +150,7 @@ function detectPatternsFromCommitMessage(
       description: "DEV-PROD isolation pattern detected from commit message",
       source: `commit:${commitHash}`,
       confidence: "medium",
-      suggestedEntityName: "PATTERN_IKAI_DEV_PROD",
+      suggestedEntityName: "PATTERN_ASANMOD_DEV_PROD",
       usage: commitMessage,
     });
   }
@@ -209,7 +209,7 @@ function detectPatternsFromCode(
               source: file,
               codeSnippet: routeMatch[0],
               confidence: "high",
-              suggestedEntityName: `PATTERN_IKAI_API_${routeMatch[1].toUpperCase()}`,
+              suggestedEntityName: `PATTERN_ASANMOD_API_${routeMatch[1].toUpperCase()}`,
               usage: `API endpoint: ${routeMatch[1].toUpperCase()} ${routeMatch[2]}`,
             });
           }
@@ -238,7 +238,7 @@ function detectPatternsFromCode(
               description: `React component pattern: ${componentMatch[2]}`,
               source: file,
               confidence: "high",
-              suggestedEntityName: `PATTERN_IKAI_COMPONENT_${componentMatch[2].toUpperCase()}`,
+              suggestedEntityName: `PATTERN_ASANMOD_COMPONENT_${componentMatch[2].toUpperCase()}`,
               usage: `Component: ${componentMatch[2]}`,
             });
           }
@@ -264,7 +264,7 @@ function detectPatternsFromCode(
               description: `Service pattern: ${serviceMatch[1]}`,
               source: file,
               confidence: "high",
-              suggestedEntityName: `PATTERN_IKAI_SERVICE_${serviceMatch[1].toUpperCase()}`,
+              suggestedEntityName: `PATTERN_ASANMOD_SERVICE_${serviceMatch[1].toUpperCase()}`,
               usage: `Service: ${serviceMatch[1]}`,
             });
           }
@@ -292,7 +292,7 @@ function detectPatternsFromCode(
               "RBAC pattern with organizationId filtering detected in code",
             source: file,
             confidence: "high",
-            suggestedEntityName: "PATTERN_IKAI_RBAC_ORG_FILTER",
+            suggestedEntityName: "PATTERN_ASANMOD_RBAC_ORG_FILTER",
             usage: "RBAC pattern with organization isolation",
           });
         }
@@ -401,7 +401,7 @@ export async function automaticPatternLearning(params: {
     // Summary observation
     if (result.patternsDetected.length > 0) {
       observations.push({
-        entityName: "IKAI_PROJECT",
+        entityName: "ASANMOD_PROJECT",
         contents: [
           `[COMMIT ${commitHash}] ${result.patternsDetected.length} pattern(s) learned automatically`,
           ...result.patternsDetected.map(

@@ -48,7 +48,7 @@ function sanitizeForFilename(value: string): string {
 
 export async function verifyLighthouse(): Promise<LighthouseResult> {
   const projectRoot = getWorkspaceRoot(import.meta.url);
-  const baseUrl = process.env.IKAI_FRONTEND_URL || "http://localhost:8203";
+  const baseUrl = process.env.ASANMOD_FRONTEND_URL || "http://localhost:8203";
   const urls = parseUrls(baseUrl);
 
   let lighthouse: any;

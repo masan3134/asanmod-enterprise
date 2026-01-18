@@ -1,7 +1,7 @@
 /**
  * Unified Status Dashboard
  * Tüm durumu tek seferde döner (PM2, git, tasks hepsi bir arada)
- * WORKER system removed - MOD-only (2025-12-17)
+ * WORKER system removed - MOD-only (2026-12-17)
  */
 
 import { sessionStart } from "./sessionStart.js";

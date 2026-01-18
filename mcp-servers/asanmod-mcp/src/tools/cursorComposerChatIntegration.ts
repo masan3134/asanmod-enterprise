@@ -61,27 +61,27 @@ export function generatePatternSuggestions(): Array<{
 }> {
   return [
     {
-      pattern: "PATTERN_IKAI_RBAC",
+      pattern: "PATTERN_ASANMOD_RBAC",
       description: "RBAC pattern with organizationId filtering",
       usage:
         "Use when implementing role-based access control with organization isolation",
       confidence: "high",
     },
     {
-      pattern: "PATTERN_IKAI_MULTI_TENANT",
+      pattern: "PATTERN_ASANMOD_MULTI_TENANT",
       description:
         "Multi-tenant pattern with enforceOrganizationIsolation middleware",
       usage: "Use when implementing multi-tenant features",
       confidence: "high",
     },
     {
-      pattern: "PATTERN_IKAI_DEV_PROD",
+      pattern: "PATTERN_ASANMOD_DEV_PROD",
       description: "DEV-PROD environment isolation pattern",
       usage: "Use when implementing environment-specific logic",
       confidence: "high",
     },
     {
-      pattern: "PATTERN_IKAI_MCP_FIRST",
+      pattern: "PATTERN_ASANMOD_MCP_FIRST",
       description: "MCP-First pattern (Filesystem MCP, Memory MCP mandatory)",
       usage: "Use when implementing file operations or context management",
       confidence: "high",
@@ -113,13 +113,13 @@ export function generateContextSuggestions(): Array<{
     {
       context: "RBAC implementation",
       suggestion:
-        "Use PATTERN_IKAI_RBAC - organizationId filter for ADMIN/MANAGER/HR_SPECIALIST, no filter for SUPER_ADMIN",
-      source: "PATTERN_IKAI_RBAC",
+        "Use PATTERN_ASANMOD_RBAC - organizationId filter for ADMIN/MANAGER/HR_SPECIALIST, no filter for SUPER_ADMIN",
+      source: "PATTERN_ASANMOD_RBAC",
     },
     {
       context: "Environment-specific code",
       suggestion:
-        "Use PATTERN_IKAI_DEV_PROD - Default DEV, PROD only when explicitly requested",
+        "Use PATTERN_ASANMOD_DEV_PROD - Default DEV, PROD only when explicitly requested",
       source: "RULE_7_PROD_PROTECTION",
     },
     {

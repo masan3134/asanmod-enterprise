@@ -11,8 +11,8 @@ import {
 } from "./src/utils/mcpClient.js";
 
 const TEST_FILE =
-  "/home/root/projects/ikaicursor/mcp-servers/asanmod-mcp/package.json";
-const PROJECT_ROOT = "/home/root/projects/ikaicursor";
+  "/home/root/projects/ASANMODcursor/mcp-servers/asanmod-mcp/package.json";
+const PROJECT_ROOT = "/home/root/projects/ASANMODcursor";
 
 async function testWithTimeout<T>(
   name: string,

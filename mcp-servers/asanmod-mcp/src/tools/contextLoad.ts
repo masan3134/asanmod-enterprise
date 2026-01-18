@@ -1,14 +1,14 @@
 /**
- * ASANMOD MCP Tool: IKAI Context Auto-Load
- * Session başlangıcında IKAI context'ini otomatik yükler
+ * ASANMOD MCP Tool: ASANMOD Context Auto-Load
+ * Session başlangıcında ASANMOD context'ini otomatik yükler
  *
- * Phase 5: IKAI-Specific Customization
+ * Phase 5: ASANMOD-Specific Customization
  */
 
 import { existsSync } from "fs";
 import { join } from "path";
 
-interface IkaiContextLoadResult {
+interface ASANMODContextLoadResult {
   success: boolean;
   loadedEntities: string[];
   loadedPatterns: number;
@@ -16,7 +16,7 @@ interface IkaiContextLoadResult {
   contextSize: number;
   timestamp: string;
   contextFormat: {
-    ikaiProject?: any;
+    asanmodProject?: any;
     patterns?: any[];
     rules?: any[];
     mcps?: any[];
@@ -46,19 +46,19 @@ function getProjectRoot(): string {
 }
 
 /**
- * Load IKAI context from Memory MCP
+ * Load ASANMOD context from Memory MCP
  * Returns the format for Memory MCP queries
  */
-export async function loadIkaiContext(
+export async function loadContext(
   path?: string
-): Promise<IkaiContextLoadResult> {
+): Promise<ASANMODContextLoadResult> {
   const projectRoot = path || getProjectRoot();
 
   if (!projectRoot) {
     throw new Error("Project root not found");
   }
 
-  const result: IkaiContextLoadResult = {
+  const result: ASANMODContextLoadResult = {
     success: true,
     loadedEntities: [],
     loadedPatterns: 0,
@@ -71,11 +71,11 @@ export async function loadIkaiContext(
   try {
     // Define entities to load
     const entitiesToLoad = [
-      "IKAI_PROJECT",
-      "PATTERN_IKAI_RBAC",
-      "PATTERN_IKAI_MULTI_TENANT",
-      "PATTERN_IKAI_DEV_PROD",
-      "PATTERN_IKAI_MCP_FIRST",
+      "ASANMOD_PROJECT",
+      "PATTERN_ASANMOD_RBAC",
+      "PATTERN_ASANMOD_MULTI_TENANT",
+      "PATTERN_ASANMOD_DEV_PROD",
+      "PATTERN_ASANMOD_MCP_FIRST",
       "RULE_6_DEV_PROD",
       "RULE_7_PROD_PROTECTION",
       "MCP_FILESYSTEM",
@@ -88,91 +88,91 @@ export async function loadIkaiContext(
     // The actual Memory MCP call should be made by the caller
 
     result.contextFormat = {
-      ikaiProject: {
-        entityName: "IKAI_PROJECT",
-        note: "Use mcp_memory_open_nodes({names: ['IKAI_PROJECT']}) to load",
+      asanmodProject: {
+        entityName: "ASANMOD_PROJECT",
+        note: "Use mcp_memory_open_nodes({names: ['ASANMOD_PROJECT']}) to load",
       },
       patterns: [
         {
-          entityName: "PATTERN_IKAI_RBAC",
-          note: "Use mcp_memory_search_nodes({query: 'PATTERN_IKAI'}) to load all IKAI patterns",
+          entityName: "PATTERN_ASANMOD_RBAC",
+          note: "Use mcp_memory_search_nodes({query: 'PATTERN_ASANMOD'}) to load all ASANMOD patterns",
         },
         {
-          entityName: "PATTERN_IKAI_MULTI_TENANT",
+          entityName: "PATTERN_ASANMOD_MULTI_TENANT",
         },
         {
-          entityName: "PATTERN_IKAI_DEV_PROD",
+          entityName: "PATTERN_ASANMOD_DEV_PROD",
         },
         {
-          entityName: "PATTERN_IKAI_MCP_FIRST",
+          entityName: "PATTERN_ASANMOD_MCP_FIRST",
         },
       ],
       rules: [
         {
           entityName: "RULE_6_DEV_PROD",
-          note: "IKAI-specific rule",
+          note: "ASANMOD-specific rule",
         },
         {
           entityName: "RULE_7_PROD_PROTECTION",
-          note: "IKAI-specific rule",
+          note: "ASANMOD-specific rule",
         },
       ],
       mcps: [
         {
           entityName: "MCP_FILESYSTEM",
-          note: "Core MCP for IKAI",
+          note: "Core MCP for ASANMOD",
         },
         {
           entityName: "MCP_MEMORY",
-          note: "Core MCP for IKAI",
+          note: "Core MCP for ASANMOD",
         },
         {
           entityName: "MCP_ASANMOD",
-          note: "ASANMOD MCP for IKAI",
+          note: "ASANMOD MCP for ASANMOD",
         },
       ],
     };
 
     result.loadedEntities = entitiesToLoad;
-    result.loadedPatterns = 4; // 4 IKAI patterns
-    result.loadedRules = 2; // 2 IKAI-specific rules
+    result.loadedPatterns = 4; // 4 ASANMOD patterns
+    result.loadedRules = 2; // 2 ASANMOD-specific rules
     result.contextSize = entitiesToLoad.length;
 
     return result;
   } catch (error) {
     result.success = false;
     throw new Error(
-      `IKAI context load failed: ${error instanceof Error ? error.message : String(error)}`
+      `ASANMOD context load failed: ${error instanceof Error ? error.message : String(error)}`
     );
   }
 }
 
 /**
- * Generate Memory MCP query format for IKAI context
+ * Generate Memory MCP query format for ASANMOD context
  */
-export function generateIkaiContextQueries(): {
+export function generateContextQueries(): {
   openNodes: string[];
   searchQueries: string[];
 } {
   return {
     openNodes: [
-      "IKAI_PROJECT",
-      "PATTERN_IKAI_RBAC",
-      "PATTERN_IKAI_MULTI_TENANT",
-      "PATTERN_IKAI_DEV_PROD",
-      "PATTERN_IKAI_MCP_FIRST",
+      "ASANMOD_PROJECT",
+      "PATTERN_ASANMOD_RBAC",
+      "PATTERN_ASANMOD_MULTI_TENANT",
+      "PATTERN_ASANMOD_DEV_PROD",
+      "PATTERN_ASANMOD_MCP_FIRST",
       "RULE_6_DEV_PROD",
       "RULE_7_PROD_PROTECTION",
     ],
-    searchQueries: ["PATTERN_IKAI", "IKAI RBAC", "IKAI DEV PROD", "IKAI MCP"],
+    searchQueries: ["PATTERN_ASANMOD", "ASANMOD RBAC", "ASANMOD DEV PROD", "ASANMOD MCP"],
   };
 }
 
 /**
  * MCP Tool Handler
  */
-export async function handleIkaiContextLoad(args: {
+export async function handleContextLoad(args: {
   path?: string;
-}): Promise<IkaiContextLoadResult> {
-  return loadIkaiContext(args.path);
+}): Promise<ASANMODContextLoadResult> {
+  return loadContext(args.path);
 }

@@ -63,11 +63,11 @@ export function generateCursorMCPSettings(): {
   const projectRoot = getProjectRoot();
 
   // Get database connection from env or use defaults
-  const dbUser = process.env.DB_USER || "ikaiuser";
-  const dbPass = process.env.DB_PASS || "ikaipass2025";
+  const dbUser = process.env.DB_USER || "asanmoduser";
+  const dbPass = process.env.DB_PASS || "asanmodpass2026";
   const dbHost = process.env.DB_HOST || "localhost";
   const dbPort = process.env.DB_PORT || "5432";
-  const dbName = process.env.DB_NAME || "ikai_dev_db";
+  const dbName = process.env.DB_NAME || "asanmod_dev_db";
   const databaseUrl =
     process.env.DATABASE_URL ||
     `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
@@ -111,7 +111,7 @@ export function generateCursorMCPSettings(): {
     {
       name: "memory",
       command: "node",
-      args: [join(projectRoot, "mcp-servers", "ikai-memory-mcp", "index.js")],
+      args: [join(projectRoot, "mcp-servers", "asanmod-memory-mcp", "index.js")],
       env: {
         MEMORY_FILE_PATH: join(projectRoot, ".memory", "memory.jsonl"),
       },

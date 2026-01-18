@@ -15,7 +15,7 @@ export interface ProdDeploymentResult {
     totalSize?: string;
   };
   environmentVariables: {
-    ikaiEnvSet: boolean;
+    asanmodEnvSet: boolean;
     nodeEnvSet: boolean;
   };
   buildOutput: {
@@ -40,7 +40,7 @@ export async function verifyProdDeployment(): Promise<ProdDeploymentResult> {
       directories: [],
     },
     environmentVariables: {
-      ikaiEnvSet: false,
+      asanmodEnvSet: false,
       nodeEnvSet: false,
     },
     buildOutput: {
@@ -88,7 +88,7 @@ export async function verifyProdDeployment(): Promise<ProdDeploymentResult> {
   }
 
   // Environment variables kontrolü
-  result.environmentVariables.ikaiEnvSet = process.env.IKAI_ENV === "prod";
+  result.environmentVariables.asanmodEnvSet = process.env.ASANMOD_ENV === "prod";
   result.environmentVariables.nodeEnvSet =
     process.env.NODE_ENV === "production";
 
@@ -144,7 +144,7 @@ export async function verifyProdDeployment(): Promise<ProdDeploymentResult> {
   // Success kontrolü
   if (
     !result.buildOutput.exists ||
-    !result.environmentVariables.ikaiEnvSet ||
+    !result.environmentVariables.asanmodEnvSet ||
     result.errors.length > 0
   ) {
     result.success = false;

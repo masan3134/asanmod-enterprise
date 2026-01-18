@@ -49,7 +49,7 @@ npm run build
     "git": {
       "command": "node",
       "args": [
-        "/Users/apple/Desktop/projects/ikaicursor/mcp-servers/git-mcp/dist/index.js"
+        "/Users/apple/Desktop/projects/ASANMODcursor/mcp-servers/git-mcp/dist/index.js"
       ]
     }
   }
