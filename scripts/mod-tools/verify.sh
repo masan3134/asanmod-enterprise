@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v3.1.0: AGENTIC-OS FAST-VERIFY
+# ASANMOD v3.2.0: AGENTIC-OS FAST-VERIFY
 # [ULTRA-SPEED] Parallel execution with Agentic-OS optimizations.
 
 # 🎨 Colors

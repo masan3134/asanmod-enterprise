@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * ASANMOD v3.0.0: Project Initialization
+ * ASANMOD v3.2.0: Project Initialization
  * Creates required directories and initial .env
  */
 
 const fs = require('fs');
 const path = require('path');
 
-console.log("🚀 ASANMOD v3.0.0: Initializing Project...");
+console.log("🚀 ASANMOD v3.2.0: Initializing Project...");
 
 const PROJECT_ROOT = process.cwd();
 const ENV_PATH = path.join(PROJECT_ROOT, ".env");

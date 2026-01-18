@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ASANMOD v1.1.1: QUICK STATUS
+ * ASANMOD v3.2.0: QUICK STATUS
  * Fast, token-efficient system status for AI agents.
  */
 const { exec } = require("child_process");

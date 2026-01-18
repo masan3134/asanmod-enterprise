@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ASANMOD v1.1.1: IRON GIT GUARD
+# ASANMOD v3.2.0: IRON GIT GUARD
 # "Bizde hata halının altına süpürülmez, çözülür."
 
 function git() {

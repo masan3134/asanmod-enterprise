@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-# ASANMOD v10: PM2 ALIAS WRAPPER - Universal Edition
+# ASANMOD v10.0: PM2 ALIAS WRAPPER - Universal Edition
 # ═══════════════════════════════════════════════════════════════════
 # Usage: ./scripts/mod-tools/pm <env> <action>
 #
@@ -51,7 +51,7 @@ get_log_path() {
 print_usage() {
     echo ""
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}${BOLD}ASANMOD v10: PM2 ALIAS WRAPPER${NC}"
+    echo -e "${GREEN}${BOLD}ASANMOD v10.0: PM2 ALIAS WRAPPER${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo "Usage: ./scripts/mod-tools/pm <env> <action>"
